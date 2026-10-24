@@ -4,26 +4,30 @@
 
 import { VercelCore } from "../core.js";
 import { encodeFormQuery, encodeSimple } from "../lib/encodings.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
+import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
 import { pathToFunc } from "../lib/url.js";
+import {
+  GetProjectDomainRequest,
+  GetProjectDomainRequest$outboundSchema,
+  GetProjectDomainResponseBody,
+  GetProjectDomainResponseBody$inboundSchema,
+} from "../models/getprojectdomainop.js";
 import {
   ConnectionError,
   InvalidRequestError,
   RequestAbortedError,
   RequestTimeoutError,
   UnexpectedClientError,
-} from "../models/errors/httpclienterrors.js";
-import { SDKError } from "../models/errors/sdkerror.js";
-import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
-import {
-  GetProjectDomainRequest,
-  GetProjectDomainRequest$outboundSchema,
-  GetProjectDomainResponseBody,
-  GetProjectDomainResponseBody$inboundSchema,
-} from "../models/operations/getprojectdomain.js";
+} from "../models/httpclienterrors.js";
+import { ResponseValidationError } from "../models/responsevalidationerror.js";
+import { SDKValidationError } from "../models/sdkvalidationerror.js";
+import { VercelError } from "../models/vercelerror.js";
+import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
@@ -31,22 +35,52 @@ import { Result } from "../types/fp.js";
  *
  * @remarks
  * Get project domain by project id/name and domain name.
+ *
+ * If set, this operation will use {@link Security.bearerToken} from the global security.
  */
-export async function projectsGetProjectDomain(
+export function projectsGetProjectDomain(
+  client: VercelCore,
+  request: GetProjectDomainRequest,
+  options?: RequestOptions,
+): APIPromise<
+  Result<
+    GetProjectDomainResponseBody,
+    | VercelError
+    | ResponseValidationError
+    | ConnectionError
+    | RequestAbortedError
+    | RequestTimeoutError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
+  >
+> {
+  return new APIPromise($do(
+    client,
+    request,
+    options,
+  ));
+}
+
+async function $do(
   client: VercelCore,
   request: GetProjectDomainRequest,
   options?: RequestOptions,
 ): Promise<
-  Result<
-    GetProjectDomainResponseBody,
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
-    | RequestAbortedError
-    | RequestTimeoutError
-    | ConnectionError
-  >
+  [
+    Result<
+      GetProjectDomainResponseBody,
+      | VercelError
+      | ResponseValidationError
+      | ConnectionError
+      | RequestAbortedError
+      | RequestTimeoutError
+      | InvalidRequestError
+      | UnexpectedClientError
+      | SDKValidationError
+    >,
+    APICall,
+  ]
 > {
   const parsed = safeParse(
     request,
@@ -54,7 +88,7 @@ export async function projectsGetProjectDomain(
     "Input validation failed",
   );
   if (!parsed.ok) {
-    return parsed;
+    return [parsed, { status: "invalid" }];
   }
   const payload = parsed.value;
   const body = null;
@@ -69,7 +103,6 @@ export async function projectsGetProjectDomain(
       charEncoding: "percent",
     }),
   };
-
   const path = pathToFunc("/v9/projects/{idOrName}/domains/{domain}")(
     pathParams,
   );
@@ -79,17 +112,19 @@ export async function projectsGetProjectDomain(
     "teamId": payload.teamId,
   });
 
-  const headers = new Headers({
+  const headers = new Headers(compactMap({
     Accept: "application/json",
-  });
+  }));
 
   const secConfig = await extractSecurity(client._options.bearerToken);
   const securityInput = secConfig == null ? {} : { bearerToken: secConfig };
-  const requestSecurity = resolveGlobalSecurity(securityInput);
+  const requestSecurity = resolveGlobalSecurity(securityInput, [0]);
 
   const context = {
+    options: client._options,
+    baseURL: options?.serverURL ?? client._baseURL ?? "",
     operationID: "getProjectDomain",
-    oAuth2Scopes: [],
+    oAuth2Scopes: null,
 
     resolvedSecurity: requestSecurity,
 
@@ -103,44 +138,49 @@ export async function projectsGetProjectDomain(
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
     method: "GET",
+    baseURL: options?.serverURL,
     path: path,
     headers: headers,
     query: query,
     body: body,
+    userAgent: client._options.userAgent,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
   }, options);
   if (!requestRes.ok) {
-    return requestRes;
+    return [requestRes, { status: "invalid" }];
   }
   const req = requestRes.value;
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: ["400", "401", "403", "4XX", "5XX"],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
   if (!doResult.ok) {
-    return doResult;
+    return [doResult, { status: "request-error", request: req }];
   }
   const response = doResult.value;
 
   const [result] = await M.match<
     GetProjectDomainResponseBody,
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
+    | VercelError
+    | ResponseValidationError
+    | ConnectionError
     | RequestAbortedError
     | RequestTimeoutError
-    | ConnectionError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
   >(
     M.json(200, GetProjectDomainResponseBody$inboundSchema),
-    M.fail([400, 401, 403, "4XX", "5XX"]),
-  )(response);
+    M.fail([400, 401, 403, 404, 410, "4XX"]),
+    M.fail("5XX"),
+  )(response, req);
   if (!result.ok) {
-    return result;
+    return [result, { status: "complete", request: req, response }];
   }
 
-  return result;
+  return [result, { status: "complete", request: req, response }];
 }

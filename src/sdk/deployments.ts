@@ -6,41 +6,45 @@ import { deploymentsCancelDeployment } from "../funcs/deploymentsCancelDeploymen
 import { deploymentsCreateDeployment } from "../funcs/deploymentsCreateDeployment.js";
 import { deploymentsDeleteDeployment } from "../funcs/deploymentsDeleteDeployment.js";
 import { deploymentsGetDeployment } from "../funcs/deploymentsGetDeployment.js";
-import { deploymentsGetDeploymentEvents } from "../funcs/deploymentsGetDeploymentEvents.js";
+import {
+  deploymentsGetDeploymentEvents,
+  GetDeploymentEventsAcceptEnum,
+} from "../funcs/deploymentsGetDeploymentEvents.js";
 import { deploymentsGetDeploymentFileContents } from "../funcs/deploymentsGetDeploymentFileContents.js";
 import { deploymentsGetDeployments } from "../funcs/deploymentsGetDeployments.js";
 import { deploymentsListDeploymentFiles } from "../funcs/deploymentsListDeploymentFiles.js";
+import { deploymentsUpdateIntegrationDeploymentAction } from "../funcs/deploymentsUpdateIntegrationDeploymentAction.js";
 import { deploymentsUploadFile } from "../funcs/deploymentsUploadFile.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
-import { FileTree } from "../models/components/filetree.js";
-import {
-  CancelDeploymentRequest,
-  CancelDeploymentResponseBody,
-} from "../models/operations/canceldeployment.js";
-import {
-  CreateDeploymentRequest,
-  CreateDeploymentResponseBody,
-} from "../models/operations/createdeployment.js";
+import { CancelDeploymentResponseBody } from "../models/canceldeploymentresponsebody.js";
+import { CreateDeploymentRequest } from "../models/createdeploymentgitsource1.js";
+import { CreateDeploymentResponseBody } from "../models/createdeploymentresponsebody.js";
 import {
   DeleteDeploymentRequest,
   DeleteDeploymentResponseBody,
-} from "../models/operations/deletedeployment.js";
+} from "../models/deletedeploymentop.js";
+import { FileTree } from "../models/filetree.js";
 import {
-  GetDeploymentRequest,
-  GetDeploymentResponseBody,
-} from "../models/operations/getdeployment.js";
-import { GetDeploymentEventsRequest } from "../models/operations/getdeploymentevents.js";
-import { GetDeploymentFileContentsRequest } from "../models/operations/getdeploymentfilecontents.js";
+  GetDeploymentEventsRequest,
+  GetDeploymentEventsResponse,
+} from "../models/getdeploymenteventsop.js";
+import { GetDeploymentFileContentsRequest } from "../models/getdeploymentfilecontentsop.js";
+import { GetDeploymentRequest } from "../models/getdeploymentgitsourcedeploymentsresponse200applicationjsonresponsebody219type.js";
+import { GetDeploymentResponseBody } from "../models/getdeploymentresponsebody.js";
 import {
   GetDeploymentsRequest,
   GetDeploymentsResponseBody,
-} from "../models/operations/getdeployments.js";
-import { ListDeploymentFilesRequest } from "../models/operations/listdeploymentfiles.js";
+} from "../models/getdeploymentsop.js";
+import { ListDeploymentFilesRequest } from "../models/listdeploymentfilesop.js";
+import { CancelDeploymentRequest } from "../models/readystate.js";
+import { UpdateIntegrationDeploymentActionRequest } from "../models/updateintegrationdeploymentactionop.js";
 import {
   UploadFileRequest,
   UploadFileResponseBody,
-} from "../models/operations/uploadfile.js";
+} from "../models/uploadfileop.js";
 import { unwrapAsync } from "../types/fp.js";
+
+export { GetDeploymentEventsAcceptEnum } from "../funcs/deploymentsGetDeploymentEvents.js";
 
 export class Deployments extends ClientSDK {
   /**
@@ -51,9 +55,28 @@ export class Deployments extends ClientSDK {
    */
   async getDeploymentEvents(
     request: GetDeploymentEventsRequest,
+    options?: RequestOptions & {
+      acceptHeaderOverride?: GetDeploymentEventsAcceptEnum;
+    },
+  ): Promise<GetDeploymentEventsResponse> {
+    return unwrapAsync(deploymentsGetDeploymentEvents(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Update deployment integration action
+   *
+   * @remarks
+   * Updates the deployment integration action for the specified integration installation
+   */
+  async updateIntegrationDeploymentAction(
+    request: UpdateIntegrationDeploymentActionRequest,
     options?: RequestOptions,
   ): Promise<void> {
-    return unwrapAsync(deploymentsGetDeploymentEvents(
+    return unwrapAsync(deploymentsUpdateIntegrationDeploymentAction(
       this,
       request,
       options,
@@ -81,7 +104,7 @@ export class Deployments extends ClientSDK {
    * Create a new deployment
    *
    * @remarks
-   * Create a new deployment with all the required and intended data. If the deployment is not a git deployment, all files must be provided with the request, either referenced or inlined. Additionally, a deployment id can be specified to redeploy a previous deployment.
+   * Creates a new deployment for the authenticated team or user. For non-git deployments, upload files first via the file upload API, then reference them here by SHA — or inline small files directly in the request body. To redeploy an existing deployment, provide its `deploymentId`; all settings are inherited unless explicitly overridden. The deployment begins building immediately and transitions through `QUEUED` → `INITIALIZING` → `BUILDING` before reaching `READY` or `ERROR`.
    */
   async createDeployment(
     request: CreateDeploymentRequest,
@@ -98,7 +121,7 @@ export class Deployments extends ClientSDK {
    * Cancel a deployment
    *
    * @remarks
-   * This endpoint allows you to cancel a deployment which is currently building, by supplying its `id` in the URL.
+   * Cancels a deployment that is currently in progress, stopping the build before it completes. Use this to recover quickly from accidental deploys, wrong-branch pushes, or builds with known errors — without waiting for them to finish. Returns 400 if the deployment is no longer cancelable (already `READY`, `ERROR`, or `CANCELED`). Returns the updated deployment object with `readyState: 'CANCELED'` on success.
    */
   async cancelDeployment(
     request: CancelDeploymentRequest,
@@ -132,7 +155,7 @@ export class Deployments extends ClientSDK {
    * List Deployment Files
    *
    * @remarks
-   * Allows to retrieve the file structure of a deployment by supplying the deployment unique identifier.
+   * Allows to retrieve the file structure of the source code of a deployment by supplying the deployment unique identifier. If the deployment was created with the Vercel CLI or the API directly with the `files` key, it will have a file tree that can be retrievable.
    */
   async listDeploymentFiles(
     request: ListDeploymentFilesRequest,

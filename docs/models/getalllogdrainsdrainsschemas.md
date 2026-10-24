@@ -1,0 +1,21 @@
+# GetAllLogDrainsDrainsSchemas
+
+## Example Usage
+
+```typescript
+import { GetAllLogDrainsDrainsSchemas } from "@vercel/sdk/models/getalllogdrainsop.js";
+
+let value: GetAllLogDrainsDrainsSchemas = {};
+```
+
+## Fields
+
+| Field                                                                                                          | Type                                                                                                           | Required                                                                                                       | Description                                                                                                    |
+| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `aiGateway`                                                                                                    | [models.GetAllLogDrainsDrainsAiGateway](../models/getalllogdrainsdrainsaigateway.md)                           | :heavy_minus_sign:                                                                                             | N/A                                                                                                            |
+| `analytics`                                                                                                    | [models.GetAllLogDrainsDrainsAnalytics](../models/getalllogdrainsdrainsanalytics.md)                           | :heavy_minus_sign:                                                                                             | N/A                                                                                                            |
+| `auditLog`                                                                                                     | [models.GetAllLogDrainsDrainsAuditLog](../models/getalllogdrainsdrainsauditlog.md)                             | :heavy_minus_sign:                                                                                             | N/A                                                                                                            |
+| `connect`                                                                                                      | [models.GetAllLogDrainsDrainsConnect](../models/getalllogdrainsdrainsconnect.md)                               | :heavy_minus_sign:                                                                                             | N/A                                                                                                            |
+| `log`                                                                                                          | [models.GetAllLogDrainsDrainsLog](../models/getalllogdrainsdrainslog.md)                                       | :heavy_minus_sign:                                                                                             | N/A                                                                                                            |
+| `speedInsights`                                                                                                | [models.GetAllLogDrainsDrainsLogDrainsSpeedInsights](../models/getalllogdrainsdrainslogdrainsspeedinsights.md) | :heavy_minus_sign:                                                                                             | N/A                                                                                                            |
+| `trace`                                                                                                        | [models.GetAllLogDrainsDrainsTrace](../models/getalllogdrainsdrainstrace.md)                                   | :heavy_minus_sign:                                                                                             | N/A                                                                                                            |

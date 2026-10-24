@@ -1,0 +1,16 @@
+# GetConfigurationResponseBodyIntegrationsDisabledReason
+
+## Example Usage
+
+```typescript
+import { GetConfigurationResponseBodyIntegrationsDisabledReason } from "@vercel/sdk/models/getconfigurationop.js";
+
+let value: GetConfigurationResponseBodyIntegrationsDisabledReason =
+  "feature-not-available";
+```
+
+## Values
+
+```typescript
+"account-plan-downgrade" | "disabled-by-admin" | "disabled-by-owner" | "feature-not-available" | "original-owner-left-the-team" | "original-owner-role-downgraded"
+```

@@ -1,5 +1,4 @@
 # Webhooks
-(*webhooks*)
 
 ## Overview
 
@@ -16,6 +15,7 @@ Creates a webhook
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="createWebhook" method="post" path="/v1/webhooks" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -24,9 +24,19 @@ const vercel = new Vercel({
 });
 
 async function run() {
-  const result = await vercel.webhooks.createWebhook({});
+  const result = await vercel.webhooks.createWebhook({
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      url: "https://experienced-sailor.biz/",
+      events: [
+        "deployment.promoted",
+        "deployment.error",
+        "deployment.integration.action.cancel",
+      ],
+    },
+  });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -48,16 +58,24 @@ const vercel = new VercelCore({
 });
 
 async function run() {
-  const res = await webhooksCreateWebhook(vercel, {});
-
-  if (!res.ok) {
-    throw res.error;
+  const res = await webhooksCreateWebhook(vercel, {
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      url: "https://experienced-sailor.biz/",
+      events: [
+        "deployment.promoted",
+        "deployment.error",
+        "deployment.integration.action.cancel",
+      ],
+    },
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("webhooksCreateWebhook failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -67,20 +85,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.CreateWebhookRequest](../../models/operations/createwebhookrequest.md)                                                                                             | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.CreateWebhookRequest](../../models/createwebhookrequest.md)                                                                                                            | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.CreateWebhookResponseBody](../../models/operations/createwebhookresponsebody.md)\>**
+**Promise\<[models.CreateWebhookResponseBody](../../models/createwebhookresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getWebhooks
 
@@ -88,6 +106,7 @@ Get a list of webhooks
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getWebhooks" method="get" path="/v1/webhooks" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -96,9 +115,11 @@ const vercel = new Vercel({
 });
 
 async function run() {
-  const result = await vercel.webhooks.getWebhooks({});
+  const result = await vercel.webhooks.getWebhooks({
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -120,16 +141,16 @@ const vercel = new VercelCore({
 });
 
 async function run() {
-  const res = await webhooksGetWebhooks(vercel, {});
-
-  if (!res.ok) {
-    throw res.error;
+  const res = await webhooksGetWebhooks(vercel, {
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("webhooksGetWebhooks failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -139,20 +160,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetWebhooksRequest](../../models/operations/getwebhooksrequest.md)                                                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetWebhooksRequest](../../models/getwebhooksrequest.md)                                                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetWebhooksResponseBody](../../models/operations/getwebhooksresponsebody.md)\>**
+**Promise\<[models.GetWebhooksResponseBody](../../models/getwebhooksresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getWebhook
 
@@ -160,6 +181,7 @@ Get a webhook
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getWebhook" method="get" path="/v1/webhooks/{id}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -170,9 +192,10 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.webhooks.getWebhook({
     id: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -196,16 +219,15 @@ const vercel = new VercelCore({
 async function run() {
   const res = await webhooksGetWebhook(vercel, {
     id: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("webhooksGetWebhook failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -215,20 +237,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetWebhookRequest](../../models/operations/getwebhookrequest.md)                                                                                                   | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetWebhookRequest](../../models/getwebhookrequest.md)                                                                                                                  | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetWebhookResponseBody](../../models/operations/getwebhookresponsebody.md)\>**
+**Promise\<[models.GetWebhookResponseBody](../../models/getwebhookresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## deleteWebhook
 
@@ -236,6 +258,7 @@ Deletes a webhook
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="deleteWebhook" method="delete" path="/v1/webhooks/{id}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -246,6 +269,8 @@ const vercel = new Vercel({
 async function run() {
   await vercel.webhooks.deleteWebhook({
     id: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
 
@@ -271,15 +296,15 @@ const vercel = new VercelCore({
 async function run() {
   const res = await webhooksDeleteWebhook(vercel, {
     id: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("webhooksDeleteWebhook failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  
 }
 
 run();
@@ -289,7 +314,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.DeleteWebhookRequest](../../models/operations/deletewebhookrequest.md)                                                                                             | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.DeleteWebhookRequest](../../models/deletewebhookrequest.md)                                                                                                            | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -302,4 +327,4 @@ run();
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |

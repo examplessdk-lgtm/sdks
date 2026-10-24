@@ -1,0 +1,22 @@
+# TwoHundredAndFive
+
+The payload of the event, if requested.
+
+## Example Usage
+
+```typescript
+import { TwoHundredAndFive } from "@vercel/sdk/models/usereventpayload174target.js";
+
+let value: TwoHundredAndFive = {
+  issuerId: "<id>",
+  issuerName: "<value>",
+};
+```
+
+## Fields
+
+| Field              | Type               | Required           | Description        |
+| ------------------ | ------------------ | ------------------ | ------------------ |
+| `issuerId`         | *string*           | :heavy_check_mark: | N/A                |
+| `issuerName`       | *string*           | :heavy_check_mark: | N/A                |
+| `keyId`            | *string*           | :heavy_minus_sign: | N/A                |

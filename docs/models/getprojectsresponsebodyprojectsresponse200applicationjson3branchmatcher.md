@@ -1,0 +1,20 @@
+# GetProjectsResponseBodyProjectsResponse200ApplicationJson3BranchMatcher
+
+## Example Usage
+
+```typescript
+import { GetProjectsResponseBodyProjectsResponse200ApplicationJson3BranchMatcher } from "@vercel/sdk/models/getprojectsresponsebodyprojectsresponse200applicationjson3checksconclusion.js";
+
+let value:
+  GetProjectsResponseBodyProjectsResponse200ApplicationJson3BranchMatcher = {
+    pattern: "<value>",
+    type: "equals",
+  };
+```
+
+## Fields
+
+| Field                                                                                                                                                                                                                            | Type                                                                                                                                                                                                                             | Required                                                                                                                                                                                                                         | Description                                                                                                                                                                                                                      |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pattern`                                                                                                                                                                                                                        | *string*                                                                                                                                                                                                                         | :heavy_check_mark:                                                                                                                                                                                                               | The pattern to match against branch names                                                                                                                                                                                        |
+| `type`                                                                                                                                                                                                                           | [models.GetProjectsResponseBodyProjectsResponse200ApplicationJson3ProjectsLatestDeploymentsBranchMatcherType](../models/getprojectsresponsebodyprojectsresponse200applicationjson3projectslatestdeploymentsbranchmatchertype.md) | :heavy_check_mark:                                                                                                                                                                                                               | The type of matching to perform                                                                                                                                                                                                  |

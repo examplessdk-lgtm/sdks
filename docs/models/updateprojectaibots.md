@@ -1,0 +1,18 @@
+# UpdateProjectAiBots
+
+## Example Usage
+
+```typescript
+import { UpdateProjectAiBots } from "@vercel/sdk/models/updateprojectprojectsresponse200action.js";
+
+let value: UpdateProjectAiBots = {
+  active: true,
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                                                          | Type                                                                                                                                                                                                           | Required                                                                                                                                                                                                       | Description                                                                                                                                                                                                    |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `action`                                                                                                                                                                                                       | [models.UpdateProjectProjectsResponse200ApplicationJSONResponseBodySecurityManagedRulesAiBotsAction](../models/updateprojectprojectsresponse200applicationjsonresponsebodysecuritymanagedrulesaibotsaction.md) | :heavy_minus_sign:                                                                                                                                                                                             | N/A                                                                                                                                                                                                            |
+| `active`                                                                                                                                                                                                       | *boolean*                                                                                                                                                                                                      | :heavy_check_mark:                                                                                                                                                                                             | N/A                                                                                                                                                                                                            |

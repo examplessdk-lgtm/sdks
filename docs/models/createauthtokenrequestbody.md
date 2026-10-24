@@ -1,0 +1,19 @@
+# CreateAuthTokenRequestBody
+
+## Example Usage
+
+```typescript
+import { CreateAuthTokenRequestBody } from "@vercel/sdk/models/createauthtokenop.js";
+
+let value: CreateAuthTokenRequestBody = {
+  name: "<value>",
+};
+```
+
+## Fields
+
+| Field                                        | Type                                         | Required                                     | Description                                  |
+| -------------------------------------------- | -------------------------------------------- | -------------------------------------------- | -------------------------------------------- |
+| `name`                                       | *string*                                     | :heavy_check_mark:                           | N/A                                          |
+| `expiresAt`                                  | *number*                                     | :heavy_minus_sign:                           | N/A                                          |
+| `projectId`                                  | *string*                                     | :heavy_minus_sign:                           | The ID of the project to scope this token to |

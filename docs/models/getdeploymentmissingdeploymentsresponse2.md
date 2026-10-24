@@ -1,0 +1,20 @@
+# GetDeploymentMissingDeploymentsResponse2
+
+## Example Usage
+
+```typescript
+import { GetDeploymentMissingDeploymentsResponse2 } from "@vercel/sdk/models/getdeploymentservicesmiddlewareruntime.js";
+
+let value: GetDeploymentMissingDeploymentsResponse2 = {
+  key: "<key>",
+  type: "header",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                        | Type                                                                                                                                                                         | Required                                                                                                                                                                     | Description                                                                                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `key`                                                                                                                                                                        | *string*                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                           | N/A                                                                                                                                                                          |
+| `type`                                                                                                                                                                       | [models.GetDeploymentMissingDeploymentsResponse200ApplicationJSONResponseBody2Type](../models/getdeploymentmissingdeploymentsresponse200applicationjsonresponsebody2type.md) | :heavy_check_mark:                                                                                                                                                           | N/A                                                                                                                                                                          |
+| `value`                                                                                                                                                                      | *models.GetDeploymentMissingDeploymentsResponse200ApplicationJSONResponseBody2Value*                                                                                         | :heavy_minus_sign:                                                                                                                                                           | N/A                                                                                                                                                                          |

@@ -1,0 +1,20 @@
+# CreateIntegrationStoreDirectUiOptions3
+
+## Example Usage
+
+```typescript
+import { CreateIntegrationStoreDirectUiOptions3 } from "@vercel/sdk/models/createintegrationstoredirectpropertiesintegrationsresponse200uioptions.js";
+
+let value: CreateIntegrationStoreDirectUiOptions3 = {
+  value: "<value>",
+};
+```
+
+## Fields
+
+| Field                                                              | Type                                                               | Required                                                           | Description                                                        |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| `description`                                                      | *string*                                                           | :heavy_minus_sign:                                                 | N/A                                                                |
+| `disabled`                                                         | *models.CreateIntegrationStoreDirectUiOptionsIntegrationsDisabled* | :heavy_minus_sign:                                                 | N/A                                                                |
+| `hidden`                                                           | *models.CreateIntegrationStoreDirectUiOptionsIntegrationsHidden*   | :heavy_minus_sign:                                                 | N/A                                                                |
+| `value`                                                            | *string*                                                           | :heavy_check_mark:                                                 | N/A                                                                |

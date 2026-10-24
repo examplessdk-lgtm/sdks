@@ -1,0 +1,33 @@
+# CreateAuthTokenResponseBody
+
+Successful response.
+
+## Example Usage
+
+```typescript
+import { CreateAuthTokenResponseBody } from "@vercel/sdk/models/createauthtokenop.js";
+
+let value: CreateAuthTokenResponseBody = {
+  bearerToken: "uRKJSTt0L4RaSkiMj41QTkxM",
+  token: {
+    activeAt: 1632816536002,
+    createdAt: 1632816536002,
+    expiresAt: 1632816536002,
+    id: "5d9f2ebd38ddca62e5d51e9c1704c72530bdc8bfdd41e782a6687c48399e8391",
+    leakedAt: 1632816536002,
+    name: "<value>",
+    origin: "github",
+    prefix: "vcp_",
+    revokedAt: 1632816536002,
+    suffix: "abc123",
+    type: "oauth2-token",
+  },
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                     | Type                                                                                                                                                                      | Required                                                                                                                                                                  | Description                                                                                                                                                               | Example                                                                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bearerToken`                                                                                                                                                             | *string*                                                                                                                                                                  | :heavy_check_mark:                                                                                                                                                        | The authentication token's actual value. This token is only provided in this response, and can never be retrieved again in the future. Be sure to save it somewhere safe! | uRKJSTt0L4RaSkiMj41QTkxM                                                                                                                                                  |
+| `token`                                                                                                                                                                   | [models.AuthToken](../models/authtoken.md)                                                                                                                                | :heavy_check_mark:                                                                                                                                                        | Authentication token metadata.                                                                                                                                            |                                                                                                                                                                           |

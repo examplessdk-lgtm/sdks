@@ -1,0 +1,29 @@
+# UpdateRouteVersionsVersion
+
+A version of routing rules stored in S3.
+
+## Example Usage
+
+```typescript
+import { UpdateRouteVersionsVersion } from "@vercel/sdk/models/updaterouteversionsop.js";
+
+let value: UpdateRouteVersionsVersion = {
+  createdBy: "<value>",
+  id: "<id>",
+  lastModified: 6250.45,
+  s3Key: "<value>",
+};
+```
+
+## Fields
+
+| Field                                                              | Type                                                               | Required                                                           | Description                                                        |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| `alias`                                                            | *string*                                                           | :heavy_minus_sign:                                                 | The staging alias for previewing this version.                     |
+| `createdBy`                                                        | *string*                                                           | :heavy_check_mark:                                                 | The user who created this version.                                 |
+| `id`                                                               | *string*                                                           | :heavy_check_mark:                                                 | Unique identifier for the version.                                 |
+| `isLive`                                                           | *boolean*                                                          | :heavy_minus_sign:                                                 | Whether this version is currently live in production.              |
+| `isStaging`                                                        | *boolean*                                                          | :heavy_minus_sign:                                                 | Whether this version is staged and not yet promoted to production. |
+| `lastModified`                                                     | *number*                                                           | :heavy_check_mark:                                                 | Timestamp of when this version was last modified.                  |
+| `ruleCount`                                                        | *number*                                                           | :heavy_minus_sign:                                                 | The number of routing rules in this version.                       |
+| `s3Key`                                                            | *string*                                                           | :heavy_check_mark:                                                 | The S3 key where the routing rules are stored.                     |

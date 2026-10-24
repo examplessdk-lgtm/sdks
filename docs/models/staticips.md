@@ -1,0 +1,20 @@
+# StaticIps
+
+## Example Usage
+
+```typescript
+import { StaticIps } from "@vercel/sdk/models/threehundredandfourteen.js";
+
+let value: StaticIps = {
+  enabled: false,
+};
+```
+
+## Fields
+
+| Field              | Type               | Required           | Description        |
+| ------------------ | ------------------ | ------------------ | ------------------ |
+| `buildRegion`      | *string*           | :heavy_minus_sign: | N/A                |
+| `builds`           | *boolean*          | :heavy_minus_sign: | N/A                |
+| `enabled`          | *boolean*          | :heavy_check_mark: | N/A                |
+| `regions`          | *string*[]         | :heavy_minus_sign: | N/A                |

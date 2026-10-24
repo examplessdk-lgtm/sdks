@@ -1,0 +1,19 @@
+# Builder
+
+## Example Usage
+
+```typescript
+import { Builder } from "@vercel/sdk/models/canceldeploymentresponsebody.js";
+
+let value: Builder = {
+  use: "<value>",
+};
+```
+
+## Fields
+
+| Field                                                | Type                                                 | Required                                             | Description                                          |
+| ---------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- |
+| `config`                                             | [models.ServicesConfig](../models/servicesconfig.md) | :heavy_minus_sign:                                   | N/A                                                  |
+| `src`                                                | *string*                                             | :heavy_minus_sign:                                   | N/A                                                  |
+| `use`                                                | *string*                                             | :heavy_check_mark:                                   | N/A                                                  |

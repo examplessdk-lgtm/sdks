@@ -1,0 +1,25 @@
+# ThreeHundredAndSeventyFour
+
+The payload of the event, if requested.
+
+## Example Usage
+
+```typescript
+import { ThreeHundredAndSeventyFour } from "@vercel/sdk/models/threehundredandfourteen.js";
+
+let value: ThreeHundredAndSeventyFour = {
+  email: "Hollie74@hotmail.com",
+  githubLogin: "<value>",
+  zeitAccount: "<value>",
+  zeitAccountType: "<value>",
+};
+```
+
+## Fields
+
+| Field              | Type               | Required           | Description        |
+| ------------------ | ------------------ | ------------------ | ------------------ |
+| `email`            | *string*           | :heavy_check_mark: | N/A                |
+| `githubLogin`      | *string*           | :heavy_check_mark: | N/A                |
+| `zeitAccount`      | *string*           | :heavy_check_mark: | N/A                |
+| `zeitAccountType`  | *string*           | :heavy_check_mark: | N/A                |

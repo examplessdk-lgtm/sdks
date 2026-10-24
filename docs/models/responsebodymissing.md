@@ -1,0 +1,41 @@
+# ResponseBodyMissing
+
+
+## Supported Types
+
+### `models.GetRoutesMissing1`
+
+```typescript
+const value: models.GetRoutesMissing1 = {
+  type: "host",
+  value: "<value>",
+};
+```
+
+### `models.GetRoutesMissing2`
+
+```typescript
+const value: models.GetRoutesMissing2 = {
+  key: "<key>",
+  type: "cookie",
+};
+```
+
+### `models.GetRoutesMissing2`
+
+```typescript
+const value: models.GetRoutesMissing2 = {
+  key: "<key>",
+  type: "cookie",
+};
+```
+
+### `models.GetRoutesMissing2`
+
+```typescript
+const value: models.GetRoutesMissing2 = {
+  key: "<key>",
+  type: "cookie",
+};
+```
+

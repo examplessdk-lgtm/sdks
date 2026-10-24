@@ -1,0 +1,33 @@
+# GetSessionSnapshotResponseBody
+
+## Example Usage
+
+```typescript
+import { GetSessionSnapshotResponseBody } from "@vercel/sdk/models/getsessionsnapshotop.js";
+
+let value: GetSessionSnapshotResponseBody = {
+  snapshot: {
+    createdAt: 1750344501629,
+    creationMethod: "manual",
+    expiresAt: 1750344501629,
+    id: "snap_123a6c5209bc3778245d011443644c8d27dc2c50",
+    lastUsedAt: 1750344501629,
+    parentId: "snap_parent123",
+    region: "iad1",
+    regions: [
+      "iad1",
+      "sfo1",
+    ],
+    sizeBytes: 104857600,
+    sourceSessionId: "sbx_123a6c5209bc3778245d011443644c8d27dc2c50",
+    status: "created",
+    updatedAt: 1750344501629,
+  },
+};
+```
+
+## Fields
+
+| Field                                                                                        | Type                                                                                         | Required                                                                                     | Description                                                                                  |
+| -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `snapshot`                                                                                   | [models.Snapshot](../models/snapshot.md)                                                     | :heavy_check_mark:                                                                           | This object contains information related to a Snapshot of a Vercel Sandbox session (v2 API). |

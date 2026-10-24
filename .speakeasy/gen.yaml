@@ -7,47 +7,94 @@ generation:
   maintainOpenAPIOrder: true
   usageSnippets:
     optionalPropertyRendering: withExample
+    sdkInitStyle: constructor
   useClassNamesForArrayFields: true
   fixes:
     nameResolutionDec2023: true
+    nameResolutionFeb2025: false
     parameterOrderingFeb2024: true
     requestResponseComponentNamesFeb2024: true
+    securityFeb2025: false
+    sharedErrorComponentsApr2025: true
+    sharedNestedComponentsJan2026: false
+    nameOverrideFeb2026: false
   auth:
     oAuth2ClientCredentialsEnabled: false
     oAuth2PasswordEnabled: false
+    hoistGlobalSecurity: true
+  schemas:
+    allOfMergeStrategy: shallowMerge
+  requestBodyFieldName: ""
+  versioningStrategy: automatic
+  persistentEdits: {}
+  tests:
+    generateTests: false
+    generateNewTests: false
+    skipResponseBodyAssertions: true
 typescript:
-  version: 14.0.0-canary.9
+  version: 1.28.46
+  acceptHeaderEnum: true
   additionalDependencies:
     dependencies: {}
     devDependencies: {}
     peerDependencies: {}
-  additionalPackageJSON: {}
+  additionalPackageJSON:
+    license: Apache-2.0
+  additionalScripts:
+    test: npm run test:connect-environments
+    test:connect-environments: npm run build && node --test tests/connect-integration-resource-to-project.test.mjs
+  alwaysIncludeInboundAndOutbound: false
+  apiPromiseHelpers: false
   author: Speakeasy
+  baseErrorName: VercelError
   clientServerStatusCodesAsErrors: true
-  compileCommand:
-    - pnpm
-    - install
-    - --filter
-    - '@vercel/sdk'
+  constFieldsAlwaysOptional: false
   defaultErrorName: SDKError
+  enableCustomCodeRegions: false
+  enableMCPServer: false
   enableReactQuery: false
   enumFormat: union
+  eventStreamClassName: EventStream
+  exportZodModelNamespace: false
+  fixEnumNameSanitization: false
+  flatAdditionalProperties: false
   flattenGlobalSecurity: true
   flatteningOrder: body-first
+  formStringArrayEncodeMode: encoded-string
+  forwardCompatibleEnumsByDefault: false
+  forwardCompatibleUnionsByDefault: "false"
+  generateExamples: true
   imports:
     option: openapi
     paths:
-      callbacks: models/callbacks
-      errors: models/errors
-      operations: models/operations
-      shared: models/components
-      webhooks: models/webhooks
+      callbacks: models
+      errors: models
+      operations: models
+      shared: models
+      webhooks: models
+  inferUnionDiscriminators: true
   inputModelSuffix: input
+  jsonpath: legacy
+  laxMode: lax
+  legacyFileNaming: true
   maxMethodParams: 0
   methodArguments: require-security-and-request
+  modelPropertyCasing: camel
   moduleFormat: esm
+  multipartArrayFormat: legacy
+  numericEnumMemberNames: legacy
   outputModelSuffix: output
   packageName: '@vercel/sdk'
+  preApplyUnionDiscriminators: true
+  preserveModelFieldNames: false
+  privateIdentifierPrefix: '#'
+  requestExtras: false
   responseFormat: flat
+  sseFlatResponse: false
   templateVersion: v2
+  unionStrategy: populated-fields
+  usageSDKInitImports: []
   useIndexModules: false
+  useOxlint: true
+  useTsgo: true
+  zodVersion: v3

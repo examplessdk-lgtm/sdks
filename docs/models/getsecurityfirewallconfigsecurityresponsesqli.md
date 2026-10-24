@@ -1,0 +1,19 @@
+# GetSecurityFirewallConfigSecurityResponseSqli
+
+## Example Usage
+
+```typescript
+import { GetSecurityFirewallConfigSecurityResponseSqli } from "@vercel/sdk/models/getsecurityfirewallconfigrulessecurityresponse200applicationjsonresponsebodydraft2actionaction.js";
+
+let value: GetSecurityFirewallConfigSecurityResponseSqli = {
+  action: "deny",
+  active: false,
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                                                        | Type                                                                                                                                                                                                         | Required                                                                                                                                                                                                     | Description                                                                                                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `action`                                                                                                                                                                                                     | [models.GetSecurityFirewallConfigSecurityResponse200ApplicationJSONResponseBodyActiveCrsSqliAction](../models/getsecurityfirewallconfigsecurityresponse200applicationjsonresponsebodyactivecrssqliaction.md) | :heavy_check_mark:                                                                                                                                                                                           | N/A                                                                                                                                                                                                          |
+| `active`                                                                                                                                                                                                     | *boolean*                                                                                                                                                                                                    | :heavy_check_mark:                                                                                                                                                                                           | N/A                                                                                                                                                                                                          |

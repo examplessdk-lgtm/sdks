@@ -1,0 +1,25 @@
+# GetDeploymentGitSourceDeployments12
+
+Allows custom git sources (local folder mounted to the container) in test mode
+
+## Example Usage
+
+```typescript
+import { GetDeploymentGitSourceDeployments12 } from "@vercel/sdk/models/getdeploymentgitsourcedeploymentsresponse200applicationjsonresponsebody219type.js";
+
+let value: GetDeploymentGitSourceDeployments12 = {
+  gitUrl: "https://bright-heartbeat.biz",
+  ref: "<value>",
+  sha: "<value>",
+  type: "custom",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                                | Type                                                                                                                                                                                 | Required                                                                                                                                                                             | Description                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `gitUrl`                                                                                                                                                                             | *string*                                                                                                                                                                             | :heavy_check_mark:                                                                                                                                                                   | N/A                                                                                                                                                                                  |
+| `ref`                                                                                                                                                                                | *string*                                                                                                                                                                             | :heavy_check_mark:                                                                                                                                                                   | N/A                                                                                                                                                                                  |
+| `sha`                                                                                                                                                                                | *string*                                                                                                                                                                             | :heavy_check_mark:                                                                                                                                                                   | N/A                                                                                                                                                                                  |
+| `type`                                                                                                                                                                               | [models.GetDeploymentGitSourceDeploymentsResponse200ApplicationJSONResponseBody312Type](../models/getdeploymentgitsourcedeploymentsresponse200applicationjsonresponsebody312type.md) | :heavy_check_mark:                                                                                                                                                                   | N/A                                                                                                                                                                                  |

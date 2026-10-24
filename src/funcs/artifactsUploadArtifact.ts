@@ -4,7 +4,9 @@
 
 import { VercelCore } from "../core.js";
 import { encodeFormQuery, encodeSimple } from "../lib/encodings.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
+import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
@@ -15,15 +17,17 @@ import {
   RequestAbortedError,
   RequestTimeoutError,
   UnexpectedClientError,
-} from "../models/errors/httpclienterrors.js";
-import { SDKError } from "../models/errors/sdkerror.js";
-import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
+} from "../models/httpclienterrors.js";
+import { ResponseValidationError } from "../models/responsevalidationerror.js";
+import { SDKValidationError } from "../models/sdkvalidationerror.js";
 import {
   UploadArtifactRequest,
   UploadArtifactRequest$outboundSchema,
   UploadArtifactResponseBody,
   UploadArtifactResponseBody$inboundSchema,
-} from "../models/operations/uploadartifact.js";
+} from "../models/uploadartifactop.js";
+import { VercelError } from "../models/vercelerror.js";
+import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
@@ -31,22 +35,52 @@ import { Result } from "../types/fp.js";
  *
  * @remarks
  * Uploads a cache artifact identified by the `hash` specified on the path. The cache artifact can then be downloaded with the provided `hash`.
+ *
+ * If set, this operation will use {@link Security.bearerToken} from the global security.
  */
-export async function artifactsUploadArtifact(
+export function artifactsUploadArtifact(
+  client: VercelCore,
+  request: UploadArtifactRequest,
+  options?: RequestOptions,
+): APIPromise<
+  Result<
+    UploadArtifactResponseBody,
+    | VercelError
+    | ResponseValidationError
+    | ConnectionError
+    | RequestAbortedError
+    | RequestTimeoutError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
+  >
+> {
+  return new APIPromise($do(
+    client,
+    request,
+    options,
+  ));
+}
+
+async function $do(
   client: VercelCore,
   request: UploadArtifactRequest,
   options?: RequestOptions,
 ): Promise<
-  Result<
-    UploadArtifactResponseBody,
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
-    | RequestAbortedError
-    | RequestTimeoutError
-    | ConnectionError
-  >
+  [
+    Result<
+      UploadArtifactResponseBody,
+      | VercelError
+      | ResponseValidationError
+      | ConnectionError
+      | RequestAbortedError
+      | RequestTimeoutError
+      | InvalidRequestError
+      | UnexpectedClientError
+      | SDKValidationError
+    >,
+    APICall,
+  ]
 > {
   const parsed = safeParse(
     request,
@@ -54,10 +88,12 @@ export async function artifactsUploadArtifact(
     "Input validation failed",
   );
   if (!parsed.ok) {
-    return parsed;
+    return [parsed, { status: "invalid" }];
   }
   const payload = parsed.value;
-  const body = payload.RequestBody;
+  const body = payload.RequestBody instanceof Uint8Array
+    ? new Uint8Array(payload.RequestBody).buffer
+    : payload.RequestBody;
 
   const pathParams = {
     hash: encodeSimple("hash", payload.hash, {
@@ -65,7 +101,6 @@ export async function artifactsUploadArtifact(
       charEncoding: "percent",
     }),
   };
-
   const path = pathToFunc("/v8/artifacts/{hash}")(pathParams);
 
   const query = encodeFormQuery({
@@ -73,7 +108,7 @@ export async function artifactsUploadArtifact(
     "teamId": payload.teamId,
   });
 
-  const headers = new Headers({
+  const headers = new Headers(compactMap({
     "Content-Type": "application/octet-stream",
     Accept: "application/json",
     "Content-Length": encodeSimple(
@@ -91,9 +126,19 @@ export async function artifactsUploadArtifact(
       payload["x-artifact-client-interactive"],
       { explode: false, charEncoding: "none" },
     ),
+    "x-artifact-dirty-hash": encodeSimple(
+      "x-artifact-dirty-hash",
+      payload["x-artifact-dirty-hash"],
+      { explode: false, charEncoding: "none" },
+    ),
     "x-artifact-duration": encodeSimple(
       "x-artifact-duration",
       payload["x-artifact-duration"],
+      { explode: false, charEncoding: "none" },
+    ),
+    "x-artifact-sha": encodeSimple(
+      "x-artifact-sha",
+      payload["x-artifact-sha"],
       { explode: false, charEncoding: "none" },
     ),
     "x-artifact-tag": encodeSimple(
@@ -101,15 +146,17 @@ export async function artifactsUploadArtifact(
       payload["x-artifact-tag"],
       { explode: false, charEncoding: "none" },
     ),
-  });
+  }));
 
   const secConfig = await extractSecurity(client._options.bearerToken);
   const securityInput = secConfig == null ? {} : { bearerToken: secConfig };
-  const requestSecurity = resolveGlobalSecurity(securityInput);
+  const requestSecurity = resolveGlobalSecurity(securityInput, [0]);
 
   const context = {
+    options: client._options,
+    baseURL: options?.serverURL ?? client._baseURL ?? "",
     operationID: "uploadArtifact",
-    oAuth2Scopes: [],
+    oAuth2Scopes: null,
 
     resolvedSecurity: requestSecurity,
 
@@ -123,44 +170,49 @@ export async function artifactsUploadArtifact(
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
     method: "PUT",
+    baseURL: options?.serverURL,
     path: path,
     headers: headers,
     query: query,
     body: body,
+    userAgent: client._options.userAgent,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
   }, options);
   if (!requestRes.ok) {
-    return requestRes;
+    return [requestRes, { status: "invalid" }];
   }
   const req = requestRes.value;
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: ["400", "401", "402", "403", "4XX", "5XX"],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
   if (!doResult.ok) {
-    return doResult;
+    return [doResult, { status: "request-error", request: req }];
   }
   const response = doResult.value;
 
   const [result] = await M.match<
     UploadArtifactResponseBody,
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
+    | VercelError
+    | ResponseValidationError
+    | ConnectionError
     | RequestAbortedError
     | RequestTimeoutError
-    | ConnectionError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
   >(
     M.json(202, UploadArtifactResponseBody$inboundSchema),
-    M.fail([400, 401, 402, 403, "4XX", "5XX"]),
-  )(response);
+    M.fail([400, 401, 402, 403, 404, 410, "4XX"]),
+    M.fail("5XX"),
+  )(response, req);
   if (!result.ok) {
-    return result;
+    return [result, { status: "complete", request: req, response }];
   }
 
-  return result;
+  return [result, { status: "complete", request: req, response }];
 }

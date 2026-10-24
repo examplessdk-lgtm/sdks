@@ -4,73 +4,104 @@
 
 import { VercelCore } from "../core.js";
 import { encodeJSON } from "../lib/encodings.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
+import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { pathToFunc } from "../lib/url.js";
+import {
+  ExchangeSsoTokenRequestBody,
+  ExchangeSsoTokenRequestBody$outboundSchema,
+  ExchangeSsoTokenResponseBody,
+  ExchangeSsoTokenResponseBody$inboundSchema,
+} from "../models/exchangessotokenop.js";
 import {
   ConnectionError,
   InvalidRequestError,
   RequestAbortedError,
   RequestTimeoutError,
   UnexpectedClientError,
-} from "../models/errors/httpclienterrors.js";
-import { SDKError } from "../models/errors/sdkerror.js";
-import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
-import {
-  ExchangeSsoTokenRequestBody,
-  ExchangeSsoTokenRequestBody$outboundSchema,
-  ExchangeSsoTokenResponseBody,
-  ExchangeSsoTokenResponseBody$inboundSchema,
-} from "../models/operations/exchangessotoken.js";
+} from "../models/httpclienterrors.js";
+import { ResponseValidationError } from "../models/responsevalidationerror.js";
+import { SDKValidationError } from "../models/sdkvalidationerror.js";
+import { VercelError } from "../models/vercelerror.js";
+import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
  * SSO Token Exchange
  *
  * @remarks
- * During the autorization process, Vercel sends the user to the provider [redirectLoginUrl](https://vercel.com/docs/integrations/create-integration/submit-integration#redirect-login-url), that includes the OAuth authorization `code` parameter. The provider then calls the SSO Token Exchange endpoint with the sent code and receives the OIDC token. They log the user in based on this token and redirects the user back to the Vercel account using deep-link parameters included the redirectLoginUrl. This is used to verify the identity of the user during the [**Open in Provider** flow](https://vercel.com/docs/integrations/marketplace-flows#open-in-provider-button-flow). Providers should not persist the returned `id_token` in a database since the token will expire.
+ * During the autorization process, Vercel sends the user to the provider [redirectLoginUrl](https://vercel.com/docs/integrations/create-integration/submit-integration#redirect-login-url), that includes the OAuth authorization `code` parameter. The provider then calls the SSO Token Exchange endpoint with the sent code and receives the OIDC token. They log the user in based on this token and redirects the user back to the Vercel account using deep-link parameters included the redirectLoginUrl. Providers should not persist the returned `id_token` in a database since the token will expire. See [**Authentication with SSO**](https://vercel.com/docs/integrations/create-integration/marketplace-api#authentication-with-sso) for more details.
  */
-export async function marketplaceExchangeSsoToken(
+export function marketplaceExchangeSsoToken(
   client: VercelCore,
-  request?: ExchangeSsoTokenRequestBody | undefined,
+  request: ExchangeSsoTokenRequestBody,
   options?: RequestOptions,
-): Promise<
+): APIPromise<
   Result<
     ExchangeSsoTokenResponseBody,
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
+    | VercelError
+    | ResponseValidationError
+    | ConnectionError
     | RequestAbortedError
     | RequestTimeoutError
-    | ConnectionError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
   >
+> {
+  return new APIPromise($do(
+    client,
+    request,
+    options,
+  ));
+}
+
+async function $do(
+  client: VercelCore,
+  request: ExchangeSsoTokenRequestBody,
+  options?: RequestOptions,
+): Promise<
+  [
+    Result<
+      ExchangeSsoTokenResponseBody,
+      | VercelError
+      | ResponseValidationError
+      | ConnectionError
+      | RequestAbortedError
+      | RequestTimeoutError
+      | InvalidRequestError
+      | UnexpectedClientError
+      | SDKValidationError
+    >,
+    APICall,
+  ]
 > {
   const parsed = safeParse(
     request,
-    (value) =>
-      ExchangeSsoTokenRequestBody$outboundSchema.optional().parse(value),
+    (value) => ExchangeSsoTokenRequestBody$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
-    return parsed;
+    return [parsed, { status: "invalid" }];
   }
   const payload = parsed.value;
-  const body = payload === undefined
-    ? null
-    : encodeJSON("body", payload, { explode: true });
+  const body = encodeJSON("body", payload, { explode: true });
 
   const path = pathToFunc("/v1/integrations/sso/token")();
 
-  const headers = new Headers({
+  const headers = new Headers(compactMap({
     "Content-Type": "application/json",
     Accept: "application/json",
-  });
+  }));
 
   const context = {
+    options: client._options,
+    baseURL: options?.serverURL ?? client._baseURL ?? "",
     operationID: "exchange-sso-token",
-    oAuth2Scopes: [],
+    oAuth2Scopes: null,
 
     resolvedSecurity: null,
 
@@ -83,43 +114,48 @@ export async function marketplaceExchangeSsoToken(
 
   const requestRes = client._createRequest(context, {
     method: "POST",
+    baseURL: options?.serverURL,
     path: path,
     headers: headers,
     body: body,
+    userAgent: client._options.userAgent,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
   }, options);
   if (!requestRes.ok) {
-    return requestRes;
+    return [requestRes, { status: "invalid" }];
   }
   const req = requestRes.value;
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: ["400", "404", "4XX", "500", "5XX"],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
   if (!doResult.ok) {
-    return doResult;
+    return [doResult, { status: "request-error", request: req }];
   }
   const response = doResult.value;
 
   const [result] = await M.match<
     ExchangeSsoTokenResponseBody,
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
+    | VercelError
+    | ResponseValidationError
+    | ConnectionError
     | RequestAbortedError
     | RequestTimeoutError
-    | ConnectionError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
   >(
     M.json(200, ExchangeSsoTokenResponseBody$inboundSchema),
-    M.fail([400, 404, "4XX", 500, "5XX"]),
-  )(response);
+    M.fail([400, 403, "4XX"]),
+    M.fail([500, "5XX"]),
+  )(response, req);
   if (!result.ok) {
-    return result;
+    return [result, { status: "complete", request: req, response }];
   }
 
-  return result;
+  return [result, { status: "complete", request: req, response }];
 }

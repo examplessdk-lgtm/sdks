@@ -1,0 +1,24 @@
+# CreateSecurityFirewallConfigByConfigVersionActivateConditions
+
+## Example Usage
+
+```typescript
+import { CreateSecurityFirewallConfigByConfigVersionActivateConditions } from "@vercel/sdk/models/createsecurityfirewallconfigbyconfigversionactivateop.js";
+
+let value: CreateSecurityFirewallConfigByConfigVersionActivateConditions = {
+  active: false,
+  conditionGroup: [],
+  id: "<id>",
+  name: "<value>",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                        | Type                                                                                                                                                         | Required                                                                                                                                                     | Description                                                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `active`                                                                                                                                                     | *boolean*                                                                                                                                                    | :heavy_check_mark:                                                                                                                                           | N/A                                                                                                                                                          |
+| `conditionGroup`                                                                                                                                             | [models.CreateSecurityFirewallConfigByConfigVersionActivateConditionGroup](../models/createsecurityfirewallconfigbyconfigversionactivateconditiongroup.md)[] | :heavy_check_mark:                                                                                                                                           | N/A                                                                                                                                                          |
+| `description`                                                                                                                                                | *string*                                                                                                                                                     | :heavy_minus_sign:                                                                                                                                           | N/A                                                                                                                                                          |
+| `id`                                                                                                                                                         | *string*                                                                                                                                                     | :heavy_check_mark:                                                                                                                                           | N/A                                                                                                                                                          |
+| `name`                                                                                                                                                       | *string*                                                                                                                                                     | :heavy_check_mark:                                                                                                                                           | N/A                                                                                                                                                          |

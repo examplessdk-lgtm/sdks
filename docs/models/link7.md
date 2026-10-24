@@ -1,0 +1,39 @@
+# Link7
+
+## Example Usage
+
+```typescript
+import { Link7 } from "@vercel/sdk/models/createprojectfrom1.js";
+
+let value: Link7 = {
+  deployHooks: [
+    {
+      id: "<id>",
+      name: "<value>",
+      ref: "<value>",
+      url: "https://confused-dish.info",
+    },
+  ],
+  gitCredentialId: "<id>",
+  org: "<value>",
+  productionBranch: "<value>",
+  repo: "<value>",
+  repoId: "<id>",
+  type: "v0",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                  | Type                                                                                                                                                   | Required                                                                                                                                               | Description                                                                                                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `createdAt`                                                                                                                                            | *number*                                                                                                                                               | :heavy_minus_sign:                                                                                                                                     | N/A                                                                                                                                                    |
+| `deployHooks`                                                                                                                                          | [models.CreateProjectLinkProjectsResponse200ApplicationJSONDeployHooks](../models/createprojectlinkprojectsresponse200applicationjsondeployhooks.md)[] | :heavy_check_mark:                                                                                                                                     | N/A                                                                                                                                                    |
+| `gitCredentialId`                                                                                                                                      | *string*                                                                                                                                               | :heavy_check_mark:                                                                                                                                     | N/A                                                                                                                                                    |
+| `org`                                                                                                                                                  | *string*                                                                                                                                               | :heavy_check_mark:                                                                                                                                     | N/A                                                                                                                                                    |
+| `productionBranch`                                                                                                                                     | *string*                                                                                                                                               | :heavy_check_mark:                                                                                                                                     | N/A                                                                                                                                                    |
+| `repo`                                                                                                                                                 | *string*                                                                                                                                               | :heavy_check_mark:                                                                                                                                     | N/A                                                                                                                                                    |
+| `repoId`                                                                                                                                               | *string*                                                                                                                                               | :heavy_check_mark:                                                                                                                                     | N/A                                                                                                                                                    |
+| `sourceless`                                                                                                                                           | *boolean*                                                                                                                                              | :heavy_minus_sign:                                                                                                                                     | N/A                                                                                                                                                    |
+| `type`                                                                                                                                                 | *"v0"*                                                                                                                                                 | :heavy_check_mark:                                                                                                                                     | N/A                                                                                                                                                    |
+| `updatedAt`                                                                                                                                            | *number*                                                                                                                                               | :heavy_minus_sign:                                                                                                                                     | N/A                                                                                                                                                    |

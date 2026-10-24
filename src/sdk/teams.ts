@@ -3,6 +3,7 @@
  */
 
 import { teamsCreateTeam } from "../funcs/teamsCreateTeam.js";
+import { teamsDeleteMicrofrontendsGroup } from "../funcs/teamsDeleteMicrofrontendsGroup.js";
 import { teamsDeleteTeam } from "../funcs/teamsDeleteTeam.js";
 import { teamsDeleteTeamInviteCode } from "../funcs/teamsDeleteTeamInviteCode.js";
 import { teamsGetTeam } from "../funcs/teamsGetTeam.js";
@@ -12,56 +13,63 @@ import { teamsGetTeams } from "../funcs/teamsGetTeams.js";
 import { teamsInviteUserToTeam } from "../funcs/teamsInviteUserToTeam.js";
 import { teamsJoinTeam } from "../funcs/teamsJoinTeam.js";
 import { teamsPatchTeam } from "../funcs/teamsPatchTeam.js";
+import { teamsPostTeamDsyncRoles } from "../funcs/teamsPostTeamDsyncRoles.js";
 import { teamsRemoveTeamMember } from "../funcs/teamsRemoveTeamMember.js";
 import { teamsRequestAccessToTeam } from "../funcs/teamsRequestAccessToTeam.js";
+import { teamsUpdateMicrofrontendsGroup } from "../funcs/teamsUpdateMicrofrontendsGroup.js";
 import { teamsUpdateTeamMember } from "../funcs/teamsUpdateTeamMember.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import {
   CreateTeamRequestBody,
   CreateTeamResponseBody,
-} from "../models/operations/createteam.js";
+} from "../models/createteamop.js";
 import {
-  DeleteTeamRequest,
-  DeleteTeamResponseBody,
-} from "../models/operations/deleteteam.js";
+  DeleteMicrofrontendsGroupRequest,
+  DeleteMicrofrontendsGroupResponseBody,
+} from "../models/deletemicrofrontendsgroupop.js";
 import {
   DeleteTeamInviteCodeRequest,
   DeleteTeamInviteCodeResponseBody,
-} from "../models/operations/deleteteaminvitecode.js";
-import { GetTeamRequest } from "../models/operations/getteam.js";
+} from "../models/deleteteaminvitecodeop.js";
+import {
+  DeleteTeamRequest,
+  DeleteTeamResponseBody,
+} from "../models/deleteteamop.js";
 import {
   GetTeamAccessRequestRequest,
   GetTeamAccessRequestResponseBody,
-} from "../models/operations/getteamaccessrequest.js";
+} from "../models/getteamaccessrequestop.js";
 import {
   GetTeamMembersRequest,
   GetTeamMembersResponseBody,
-} from "../models/operations/getteammembers.js";
+} from "../models/getteammembersop.js";
+import { GetTeamRequest } from "../models/getteamop.js";
+import { GetTeamsRequest, GetTeamsResponseBody } from "../models/getteamsop.js";
+import { InvitedTeamMember } from "../models/invitedteammember.js";
+import { InviteUserToTeamRequest } from "../models/inviteusertoteamop.js";
+import { JoinTeamRequest, JoinTeamResponseBody } from "../models/jointeamop.js";
+import { PatchTeamRequest } from "../models/patchteamop.js";
 import {
-  GetTeamsRequest,
-  GetTeamsResponseBody,
-} from "../models/operations/getteams.js";
-import {
-  InviteUserToTeamRequest,
-  InviteUserToTeamResponseBody,
-} from "../models/operations/inviteusertoteam.js";
-import {
-  JoinTeamRequest,
-  JoinTeamResponseBody,
-} from "../models/operations/jointeam.js";
-import { PatchTeamRequest } from "../models/operations/patchteam.js";
+  PostTeamDsyncRolesRequest,
+  PostTeamDsyncRolesResponseBody,
+} from "../models/postteamdsyncrolesop.js";
 import {
   RemoveTeamMemberRequest,
   RemoveTeamMemberResponseBody,
-} from "../models/operations/removeteammember.js";
+} from "../models/removeteammemberop.js";
 import {
   RequestAccessToTeamRequest,
   RequestAccessToTeamResponseBody,
-} from "../models/operations/requestaccesstoteam.js";
+} from "../models/requestaccesstoteamop.js";
+import { Team } from "../models/team.js";
+import {
+  UpdateMicrofrontendsGroupRequest,
+  UpdateMicrofrontendsGroupResponseBody,
+} from "../models/updatemicrofrontendsgroupop.js";
 import {
   UpdateTeamMemberRequest,
   UpdateTeamMemberResponseBody,
-} from "../models/operations/updateteammember.js";
+} from "../models/updateteammemberop.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Teams extends ClientSDK {
@@ -86,12 +94,12 @@ export class Teams extends ClientSDK {
    * Invite a user
    *
    * @remarks
-   * Invite a user to join the team specified in the URL. The authenticated user needs to be an `OWNER` in order to successfully invoke this endpoint. The user can be specified with an email or an ID. If both email and ID are provided, ID will take priority.
+   * Invite a user to join the team specified in the URL. The authenticated user needs to be an `OWNER` in order to successfully invoke this endpoint. The user to be invited must be specified by email.
    */
   async inviteUserToTeam(
     request: InviteUserToTeamRequest,
     options?: RequestOptions,
-  ): Promise<InviteUserToTeamResponseBody> {
+  ): Promise<InvitedTeamMember> {
     return unwrapAsync(teamsInviteUserToTeam(
       this,
       request,
@@ -103,7 +111,7 @@ export class Teams extends ClientSDK {
    * Request access to a team
    *
    * @remarks
-   * Request access to a team as a member. An owner has to approve the request. Only 10 users can request access to a team at the same time.
+   * Request access to a team as a member. An owner has to approve the request. Only 100 users can request access to a team at the same time.
    */
   async requestAccessToTeam(
     request: RequestAccessToTeamRequest,
@@ -171,7 +179,7 @@ export class Teams extends ClientSDK {
    * Remove a Team Member
    *
    * @remarks
-   * Remove a Team Member from the Team, or dismiss a user that requested access, or leave a team.
+   * Remove a Team Member from the Team, or dismiss a user that requested access, or leave a team. Directory Sync members can be removed when their directory email is absent or does not match the user's primary or verified secondary emails.
    */
   async removeTeamMember(
     request: RemoveTeamMemberRequest,
@@ -193,7 +201,7 @@ export class Teams extends ClientSDK {
   async getTeam(
     request: GetTeamRequest,
     options?: RequestOptions,
-  ): Promise<{ [k: string]: any }> {
+  ): Promise<Team> {
     return unwrapAsync(teamsGetTeam(
       this,
       request,
@@ -210,7 +218,7 @@ export class Teams extends ClientSDK {
   async patchTeam(
     request: PatchTeamRequest,
     options?: RequestOptions,
-  ): Promise<{ [k: string]: any }> {
+  ): Promise<Team> {
     return unwrapAsync(teamsPatchTeam(
       this,
       request,
@@ -242,7 +250,7 @@ export class Teams extends ClientSDK {
    * Create a new Team under your account. You need to send a POST request with the desired Team slug, and optionally the Team name.
    */
   async createTeam(
-    request?: CreateTeamRequestBody | undefined,
+    request: CreateTeamRequestBody,
     options?: RequestOptions,
   ): Promise<CreateTeamResponseBody> {
     return unwrapAsync(teamsCreateTeam(
@@ -253,10 +261,27 @@ export class Teams extends ClientSDK {
   }
 
   /**
+   * Update Team Directory Sync Role Mappings
+   *
+   * @remarks
+   * Update the Directory Sync role mappings for a Team. This endpoint allows updating the mapping between directory groups and team roles or access groups.
+   */
+  async postTeamDsyncRoles(
+    request: PostTeamDsyncRolesRequest,
+    options?: RequestOptions,
+  ): Promise<PostTeamDsyncRolesResponseBody> {
+    return unwrapAsync(teamsPostTeamDsyncRoles(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
    * Delete a Team
    *
    * @remarks
-   * Delete a team under your account. You need to send a `DELETE` request with the desired team `id`. An optional array of reasons for deletion may also be sent.
+   * Delete a team under your account. You need to send a `DELETE` request with the desired team `id`. An optional array of reasons for deletion may also be sent. Enterprise teams can only be deleted in test billing mode and when not linked to an organization.
    */
   async deleteTeam(
     request: DeleteTeamRequest,
@@ -280,6 +305,40 @@ export class Teams extends ClientSDK {
     options?: RequestOptions,
   ): Promise<DeleteTeamInviteCodeResponseBody> {
     return unwrapAsync(teamsDeleteTeamInviteCode(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Update a microfrontends group
+   *
+   * @remarks
+   * Updates a microfrontends group's settings.
+   */
+  async updateMicrofrontendsGroup(
+    request: UpdateMicrofrontendsGroupRequest,
+    options?: RequestOptions,
+  ): Promise<UpdateMicrofrontendsGroupResponseBody> {
+    return unwrapAsync(teamsUpdateMicrofrontendsGroup(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Delete a microfrontends group
+   *
+   * @remarks
+   * Deletes a microfrontends group from the team associated with the group ID.
+   */
+  async deleteMicrofrontendsGroup(
+    request: DeleteMicrofrontendsGroupRequest,
+    options?: RequestOptions,
+  ): Promise<DeleteMicrofrontendsGroupResponseBody> {
+    return unwrapAsync(teamsDeleteMicrofrontendsGroup(
       this,
       request,
       options,

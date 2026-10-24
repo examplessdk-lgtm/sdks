@@ -1,0 +1,19 @@
+# GetMicrofrontendsInGroupSsoProtection
+
+## Example Usage
+
+```typescript
+import { GetMicrofrontendsInGroupSsoProtection } from "@vercel/sdk/models/getmicrofrontendsingroupresponsebody.js";
+
+let value: GetMicrofrontendsInGroupSsoProtection = {
+  deploymentType: "all_except_custom_domains",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                              | Type                                                                                                                                                               | Required                                                                                                                                                           | Description                                                                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `april2026SecurityIncidentMigrationAppliedFrom`                                                                                                                    | [models.GetMicrofrontendsInGroupApril2026SecurityIncidentMigrationAppliedFrom](../models/getmicrofrontendsingroupapril2026securityincidentmigrationappliedfrom.md) | :heavy_minus_sign:                                                                                                                                                 | N/A                                                                                                                                                                |
+| `cve55182MigrationAppliedFrom`                                                                                                                                     | [models.GetMicrofrontendsInGroupCve55182MigrationAppliedFrom](../models/getmicrofrontendsingroupcve55182migrationappliedfrom.md)                                   | :heavy_minus_sign:                                                                                                                                                 | N/A                                                                                                                                                                |
+| `deploymentType`                                                                                                                                                   | [models.GetMicrofrontendsInGroupMicrofrontendsResponseDeploymentType](../models/getmicrofrontendsingroupmicrofrontendsresponsedeploymenttype.md)                   | :heavy_check_mark:                                                                                                                                                 | N/A                                                                                                                                                                |

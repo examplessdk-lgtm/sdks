@@ -4,26 +4,30 @@
 
 import { VercelCore } from "../core.js";
 import { encodeFormQuery, encodeJSON, encodeSimple } from "../lib/encodings.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
+import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
 import { pathToFunc } from "../lib/url.js";
+import {
+  EditProjectEnvRequest,
+  EditProjectEnvRequest$outboundSchema,
+  EditProjectEnvResponseBody,
+  EditProjectEnvResponseBody$inboundSchema,
+} from "../models/editprojectenvop.js";
 import {
   ConnectionError,
   InvalidRequestError,
   RequestAbortedError,
   RequestTimeoutError,
   UnexpectedClientError,
-} from "../models/errors/httpclienterrors.js";
-import { SDKError } from "../models/errors/sdkerror.js";
-import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
-import {
-  EditProjectEnvRequest,
-  EditProjectEnvRequest$outboundSchema,
-  EditProjectEnvResponseBody,
-  EditProjectEnvResponseBody$inboundSchema,
-} from "../models/operations/editprojectenv.js";
+} from "../models/httpclienterrors.js";
+import { ResponseValidationError } from "../models/responsevalidationerror.js";
+import { SDKValidationError } from "../models/sdkvalidationerror.js";
+import { VercelError } from "../models/vercelerror.js";
+import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
@@ -31,22 +35,52 @@ import { Result } from "../types/fp.js";
  *
  * @remarks
  * Edit a specific environment variable for a given project by passing the environment variable identifier and either passing the project `id` or `name` in the URL.
+ *
+ * If set, this operation will use {@link Security.bearerToken} from the global security.
  */
-export async function projectsEditProjectEnv(
+export function projectsEditProjectEnv(
+  client: VercelCore,
+  request: EditProjectEnvRequest,
+  options?: RequestOptions,
+): APIPromise<
+  Result<
+    EditProjectEnvResponseBody,
+    | VercelError
+    | ResponseValidationError
+    | ConnectionError
+    | RequestAbortedError
+    | RequestTimeoutError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
+  >
+> {
+  return new APIPromise($do(
+    client,
+    request,
+    options,
+  ));
+}
+
+async function $do(
   client: VercelCore,
   request: EditProjectEnvRequest,
   options?: RequestOptions,
 ): Promise<
-  Result<
-    EditProjectEnvResponseBody,
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
-    | RequestAbortedError
-    | RequestTimeoutError
-    | ConnectionError
-  >
+  [
+    Result<
+      EditProjectEnvResponseBody,
+      | VercelError
+      | ResponseValidationError
+      | ConnectionError
+      | RequestAbortedError
+      | RequestTimeoutError
+      | InvalidRequestError
+      | UnexpectedClientError
+      | SDKValidationError
+    >,
+    APICall,
+  ]
 > {
   const parsed = safeParse(
     request,
@@ -54,7 +88,7 @@ export async function projectsEditProjectEnv(
     "Input validation failed",
   );
   if (!parsed.ok) {
-    return parsed;
+    return [parsed, { status: "invalid" }];
   }
   const payload = parsed.value;
   const body = encodeJSON("body", payload.RequestBody, { explode: true });
@@ -69,7 +103,6 @@ export async function projectsEditProjectEnv(
       charEncoding: "percent",
     }),
   };
-
   const path = pathToFunc("/v9/projects/{idOrName}/env/{id}")(pathParams);
 
   const query = encodeFormQuery({
@@ -77,18 +110,20 @@ export async function projectsEditProjectEnv(
     "teamId": payload.teamId,
   });
 
-  const headers = new Headers({
+  const headers = new Headers(compactMap({
     "Content-Type": "application/json",
     Accept: "application/json",
-  });
+  }));
 
   const secConfig = await extractSecurity(client._options.bearerToken);
   const securityInput = secConfig == null ? {} : { bearerToken: secConfig };
-  const requestSecurity = resolveGlobalSecurity(securityInput);
+  const requestSecurity = resolveGlobalSecurity(securityInput, [0]);
 
   const context = {
+    options: client._options,
+    baseURL: options?.serverURL ?? client._baseURL ?? "",
     operationID: "editProjectEnv",
-    oAuth2Scopes: [],
+    oAuth2Scopes: null,
 
     resolvedSecurity: requestSecurity,
 
@@ -102,44 +137,49 @@ export async function projectsEditProjectEnv(
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
     method: "PATCH",
+    baseURL: options?.serverURL,
     path: path,
     headers: headers,
     query: query,
     body: body,
+    userAgent: client._options.userAgent,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
   }, options);
   if (!requestRes.ok) {
-    return requestRes;
+    return [requestRes, { status: "invalid" }];
   }
   const req = requestRes.value;
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: ["400", "401", "403", "409", "4XX", "5XX"],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
   if (!doResult.ok) {
-    return doResult;
+    return [doResult, { status: "request-error", request: req }];
   }
   const response = doResult.value;
 
   const [result] = await M.match<
     EditProjectEnvResponseBody,
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
+    | VercelError
+    | ResponseValidationError
+    | ConnectionError
     | RequestAbortedError
     | RequestTimeoutError
-    | ConnectionError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
   >(
     M.json(200, EditProjectEnvResponseBody$inboundSchema),
-    M.fail([400, 401, 403, 409, "4XX", "5XX"]),
-  )(response);
+    M.fail([400, 401, 403, 404, 409, 410, 429, "4XX"]),
+    M.fail([500, "5XX"]),
+  )(response, req);
   if (!result.ok) {
-    return result;
+    return [result, { status: "complete", request: req, response }];
   }
 
-  return result;
+  return [result, { status: "complete", request: req, response }];
 }

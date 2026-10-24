@@ -1,0 +1,22 @@
+# GetMicrofrontendsInGroupRulesets
+
+## Example Usage
+
+```typescript
+import { GetMicrofrontendsInGroupRulesets } from "@vercel/sdk/models/getmicrofrontendsingroupresponsebody.js";
+
+let value: GetMicrofrontendsInGroupRulesets = {
+  action: "bypass",
+};
+```
+
+## Fields
+
+| Field                                                                                                                            | Type                                                                                                                             | Required                                                                                                                         | Description                                                                                                                      |
+| -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `action`                                                                                                                         | [models.GetMicrofrontendsInGroupMicrofrontendsResponseAction](../models/getmicrofrontendsingroupmicrofrontendsresponseaction.md) | :heavy_check_mark:                                                                                                               | N/A                                                                                                                              |
+| `actionDuration`                                                                                                                 | *string*                                                                                                                         | :heavy_minus_sign:                                                                                                               | N/A                                                                                                                              |
+| `bypassSystem`                                                                                                                   | *boolean*                                                                                                                        | :heavy_minus_sign:                                                                                                               | N/A                                                                                                                              |
+| `logHeaders`                                                                                                                     | *models.GetMicrofrontendsInGroupMicrofrontendsLogHeaders*                                                                        | :heavy_minus_sign:                                                                                                               | N/A                                                                                                                              |
+| `rateLimit`                                                                                                                      | [models.GetMicrofrontendsInGroupRateLimit](../models/getmicrofrontendsingroupratelimit.md)                                       | :heavy_minus_sign:                                                                                                               | N/A                                                                                                                              |
+| `redirect`                                                                                                                       | [models.GetMicrofrontendsInGroupRedirect](../models/getmicrofrontendsingroupredirect.md)                                         | :heavy_minus_sign:                                                                                                               | N/A                                                                                                                              |

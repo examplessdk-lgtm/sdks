@@ -4,26 +4,30 @@
 
 import { VercelCore } from "../core.js";
 import { encodeFormQuery } from "../lib/encodings.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
+import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
 import { pathToFunc } from "../lib/url.js";
+import {
+  GetDeploymentsRequest,
+  GetDeploymentsRequest$outboundSchema,
+  GetDeploymentsResponseBody,
+  GetDeploymentsResponseBody$inboundSchema,
+} from "../models/getdeploymentsop.js";
 import {
   ConnectionError,
   InvalidRequestError,
   RequestAbortedError,
   RequestTimeoutError,
   UnexpectedClientError,
-} from "../models/errors/httpclienterrors.js";
-import { SDKError } from "../models/errors/sdkerror.js";
-import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
-import {
-  GetDeploymentsRequest,
-  GetDeploymentsRequest$outboundSchema,
-  GetDeploymentsResponseBody,
-  GetDeploymentsResponseBody$inboundSchema,
-} from "../models/operations/getdeployments.js";
+} from "../models/httpclienterrors.js";
+import { ResponseValidationError } from "../models/responsevalidationerror.js";
+import { SDKValidationError } from "../models/sdkvalidationerror.js";
+import { VercelError } from "../models/vercelerror.js";
+import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
@@ -31,22 +35,52 @@ import { Result } from "../types/fp.js";
  *
  * @remarks
  * List deployments under the authenticated user or team. If a deployment hasn't finished uploading (is incomplete), the `url` property will have a value of `null`.
+ *
+ * If set, this operation will use {@link Security.bearerToken} from the global security.
  */
-export async function deploymentsGetDeployments(
+export function deploymentsGetDeployments(
+  client: VercelCore,
+  request: GetDeploymentsRequest,
+  options?: RequestOptions,
+): APIPromise<
+  Result<
+    GetDeploymentsResponseBody,
+    | VercelError
+    | ResponseValidationError
+    | ConnectionError
+    | RequestAbortedError
+    | RequestTimeoutError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
+  >
+> {
+  return new APIPromise($do(
+    client,
+    request,
+    options,
+  ));
+}
+
+async function $do(
   client: VercelCore,
   request: GetDeploymentsRequest,
   options?: RequestOptions,
 ): Promise<
-  Result<
-    GetDeploymentsResponseBody,
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
-    | RequestAbortedError
-    | RequestTimeoutError
-    | ConnectionError
-  >
+  [
+    Result<
+      GetDeploymentsResponseBody,
+      | VercelError
+      | ResponseValidationError
+      | ConnectionError
+      | RequestAbortedError
+      | RequestTimeoutError
+      | InvalidRequestError
+      | UnexpectedClientError
+      | SDKValidationError
+    >,
+    APICall,
+  ]
 > {
   const parsed = safeParse(
     request,
@@ -54,19 +88,22 @@ export async function deploymentsGetDeployments(
     "Input validation failed",
   );
   if (!parsed.ok) {
-    return parsed;
+    return [parsed, { status: "invalid" }];
   }
   const payload = parsed.value;
   const body = null;
 
-  const path = pathToFunc("/v6/deployments")();
+  const path = pathToFunc("/v7/deployments")();
 
   const query = encodeFormQuery({
     "app": payload.app,
+    "branch": payload.branch,
     "from": payload.from,
     "limit": payload.limit,
     "projectId": payload.projectId,
+    "projectIds": payload.projectIds,
     "rollbackCandidate": payload.rollbackCandidate,
+    "sha": payload.sha,
     "since": payload.since,
     "slug": payload.slug,
     "state": payload.state,
@@ -77,17 +114,19 @@ export async function deploymentsGetDeployments(
     "users": payload.users,
   });
 
-  const headers = new Headers({
+  const headers = new Headers(compactMap({
     Accept: "application/json",
-  });
+  }));
 
   const secConfig = await extractSecurity(client._options.bearerToken);
   const securityInput = secConfig == null ? {} : { bearerToken: secConfig };
-  const requestSecurity = resolveGlobalSecurity(securityInput);
+  const requestSecurity = resolveGlobalSecurity(securityInput, [0]);
 
   const context = {
+    options: client._options,
+    baseURL: options?.serverURL ?? client._baseURL ?? "",
     operationID: "getDeployments",
-    oAuth2Scopes: [],
+    oAuth2Scopes: null,
 
     resolvedSecurity: requestSecurity,
 
@@ -101,44 +140,49 @@ export async function deploymentsGetDeployments(
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
     method: "GET",
+    baseURL: options?.serverURL,
     path: path,
     headers: headers,
     query: query,
     body: body,
+    userAgent: client._options.userAgent,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
   }, options);
   if (!requestRes.ok) {
-    return requestRes;
+    return [requestRes, { status: "invalid" }];
   }
   const req = requestRes.value;
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: ["400", "401", "403", "404", "422", "4XX", "5XX"],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
   if (!doResult.ok) {
-    return doResult;
+    return [doResult, { status: "request-error", request: req }];
   }
   const response = doResult.value;
 
   const [result] = await M.match<
     GetDeploymentsResponseBody,
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
+    | VercelError
+    | ResponseValidationError
+    | ConnectionError
     | RequestAbortedError
     | RequestTimeoutError
-    | ConnectionError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
   >(
     M.json(200, GetDeploymentsResponseBody$inboundSchema),
-    M.fail([400, 401, 403, 404, 422, "4XX", "5XX"]),
-  )(response);
+    M.fail([400, 401, 403, 404, 410, 422, "4XX"]),
+    M.fail("5XX"),
+  )(response, req);
   if (!result.ok) {
-    return result;
+    return [result, { status: "complete", request: req, response }];
   }
 
-  return result;
+  return [result, { status: "complete", request: req, response }];
 }

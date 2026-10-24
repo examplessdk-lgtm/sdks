@@ -5,7 +5,7 @@ sources:
         inputs:
             - location: https://openapi.vercel.sh/
         overlays:
-            - location: overlay.yaml
+            - location: overlay-title.yaml
         output: vercel-spec.json
         ruleset: vercelRestAPIRuleset
         registry:
@@ -21,3 +21,5 @@ targets:
             registry:
                 location: registry.speakeasyapi.dev/vercel/vercel-docs/vercel-oas-typescript-code-samples
             blocking: false
+        testing:
+            enabled: false

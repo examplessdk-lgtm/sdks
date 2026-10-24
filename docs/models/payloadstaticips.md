@@ -1,0 +1,20 @@
+# PayloadStaticIps
+
+## Example Usage
+
+```typescript
+import { PayloadStaticIps } from "@vercel/sdk/models/threehundredandfourteen.js";
+
+let value: PayloadStaticIps = {
+  enabled: false,
+};
+```
+
+## Fields
+
+| Field              | Type               | Required           | Description        |
+| ------------------ | ------------------ | ------------------ | ------------------ |
+| `buildRegion`      | *string*           | :heavy_minus_sign: | N/A                |
+| `builds`           | *boolean*          | :heavy_minus_sign: | N/A                |
+| `enabled`          | *boolean*          | :heavy_check_mark: | N/A                |
+| `regions`          | *string*[]         | :heavy_minus_sign: | N/A                |

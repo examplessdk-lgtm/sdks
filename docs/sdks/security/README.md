@@ -1,14 +1,26 @@
 # Security
-(*security*)
 
 ## Overview
 
 ### Available Operations
 
 * [updateAttackChallengeMode](#updateattackchallengemode) - Update Attack Challenge mode
+* [getSecurityFirewallConfig](#getsecurityfirewallconfig) - Returns activated WAF config
 * [putFirewallConfig](#putfirewallconfig) - Put Firewall Configuration
 * [updateFirewallConfig](#updatefirewallconfig) - Update Firewall Configuration
 * [getFirewallConfig](#getfirewallconfig) - Read Firewall Configuration
+* [deleteSecurityFirewallConfigByConfigVersion](#deletesecurityfirewallconfigbyconfigversion) - Returns activated WAF config
+* [createSecurityFirewallConfigByConfigVersionActivate](#createsecurityfirewallconfigbyconfigversionactivate) - Returns activated WAF config
+* [getActiveAttackStatus](#getactiveattackstatus) - Read active attack data
+* [getBypassIp](#getbypassip) - Read System Bypass
+* [addBypassIp](#addbypassip) - Create System Bypass Rule
+* [removeBypassIp](#removebypassip) - Remove System Bypass Rule
+* [getConditionalBypass](#getconditionalbypass) - Get conditional firewall bypasses
+* [createConditionalBypass](#createconditionalbypass) - Create conditional firewall bypass
+* [deleteConditionalBypass](#deleteconditionalbypass) - Delete conditional firewall bypass
+* [getSecurityFirewallEvents](#getsecurityfirewallevents) - Read Firewall Actions by Project
+* [getSecurityFirewallEventsSummary](#getsecurityfirewalleventssummary) - Read Firewall Actions Summary by Project
+* [generateFirewallRule](#generatefirewallrule) - Generate a firewall rule from natural language
 
 ## updateAttackChallengeMode
 
@@ -16,6 +28,7 @@ Update the setting for determining if the project has Attack Challenge mode enab
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="updateAttackChallengeMode" method="post" path="/v1/security/attack-mode" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -24,9 +37,15 @@ const vercel = new Vercel({
 });
 
 async function run() {
-  const result = await vercel.security.updateAttackChallengeMode({});
+  const result = await vercel.security.updateAttackChallengeMode({
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      projectId: "<id>",
+      attackModeEnabled: false,
+    },
+  });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -48,16 +67,20 @@ const vercel = new VercelCore({
 });
 
 async function run() {
-  const res = await securityUpdateAttackChallengeMode(vercel, {});
-
-  if (!res.ok) {
-    throw res.error;
+  const res = await securityUpdateAttackChallengeMode(vercel, {
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      projectId: "<id>",
+      attackModeEnabled: false,
+    },
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("securityUpdateAttackChallengeMode failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -67,20 +90,84 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.UpdateAttackChallengeModeRequest](../../models/operations/updateattackchallengemoderequest.md)                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.UpdateAttackChallengeModeRequest](../../models/updateattackchallengemoderequest.md)                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.UpdateAttackChallengeModeResponseBody](../../models/operations/updateattackchallengemoderesponsebody.md)\>**
+**Promise\<[models.UpdateAttackChallengeModeResponseBody](../../models/updateattackchallengemoderesponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## getSecurityFirewallConfig
+
+Lists WAF configs for a project
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="getSecurityFirewallConfig" method="get" path="/v1/security/firewall/config" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel();
+
+async function run() {
+  const result = await vercel.security.getSecurityFirewallConfig();
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { securityGetSecurityFirewallConfig } from "@vercel/sdk/funcs/securityGetSecurityFirewallConfig.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore();
+
+async function run() {
+  const res = await securityGetSecurityFirewallConfig(vercel);
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("securityGetSecurityFirewallConfig failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.GetSecurityFirewallConfigResponseBody](../../models/getsecurityfirewallconfigresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## putFirewallConfig
 
@@ -88,6 +175,7 @@ Set the firewall configuration to provided rules and settings. Creates or overwr
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="putFirewallConfig" method="put" path="/v1/security/firewall/config" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -98,9 +186,13 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.security.putFirewallConfig({
     projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      firewallEnabled: true,
+    },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -124,16 +216,18 @@ const vercel = new VercelCore({
 async function run() {
   const res = await securityPutFirewallConfig(vercel, {
     projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      firewallEnabled: true,
+    },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("securityPutFirewallConfig failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -143,20 +237,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.PutFirewallConfigRequest](../../models/operations/putfirewallconfigrequest.md)                                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.PutFirewallConfigRequest](../../models/putfirewallconfigrequest.md)                                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.PutFirewallConfigResponseBody](../../models/operations/putfirewallconfigresponsebody.md)\>**
+**Promise\<[models.PutFirewallConfigResponseBody](../../models/putfirewallconfigresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## updateFirewallConfig
 
@@ -164,6 +258,7 @@ Process updates to modify the existing firewall config for a project
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="updateFirewallConfig" method="patch" path="/v1/security/firewall/config" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -174,9 +269,14 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.security.updateFirewallConfig({
     projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      action: "ip.remove",
+      id: "<id>",
+    },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -200,16 +300,19 @@ const vercel = new VercelCore({
 async function run() {
   const res = await securityUpdateFirewallConfig(vercel, {
     projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      action: "ip.remove",
+      id: "<id>",
+    },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("securityUpdateFirewallConfig failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -219,20 +322,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.UpdateFirewallConfigRequest](../../models/operations/updatefirewallconfigrequest.md)                                                                               | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.UpdateFirewallConfigRequest](../../models/updatefirewallconfigrequest.md)                                                                                              | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.UpdateFirewallConfigResponseBody](../../models/operations/updatefirewallconfigresponsebody.md)\>**
+**Promise\<[models.UpdateFirewallConfigResponseBody](../../models/updatefirewallconfigresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getFirewallConfig
 
@@ -240,6 +343,7 @@ Retrieve the specified firewall configuration for a project. The deployed config
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getFirewallConfig" method="get" path="/v1/security/firewall/config/{configVersion}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -250,10 +354,11 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.security.getFirewallConfig({
     projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     configVersion: "<value>",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -277,17 +382,16 @@ const vercel = new VercelCore({
 async function run() {
   const res = await securityGetFirewallConfig(vercel, {
     projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     configVersion: "<value>",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("securityGetFirewallConfig failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -297,17 +401,929 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetFirewallConfigRequest](../../models/operations/getfirewallconfigrequest.md)                                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetFirewallConfigRequest](../../models/getfirewallconfigrequest.md)                                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetFirewallConfigResponseBody](../../models/operations/getfirewallconfigresponsebody.md)\>**
+**Promise\<[models.GetFirewallConfigResponseBody](../../models/getfirewallconfigresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## deleteSecurityFirewallConfigByConfigVersion
+
+Promotes a draft WAF config to an active config
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="deleteSecurityFirewallConfigByConfigVersion" method="delete" path="/v1/security/firewall/config/{configVersion}" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel();
+
+async function run() {
+  const result = await vercel.security.deleteSecurityFirewallConfigByConfigVersion({
+    configVersion: "<value>",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { securityDeleteSecurityFirewallConfigByConfigVersion } from "@vercel/sdk/funcs/securityDeleteSecurityFirewallConfigByConfigVersion.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore();
+
+async function run() {
+  const res = await securityDeleteSecurityFirewallConfigByConfigVersion(vercel, {
+    configVersion: "<value>",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("securityDeleteSecurityFirewallConfigByConfigVersion failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.DeleteSecurityFirewallConfigByConfigVersionRequest](../../models/deletesecurityfirewallconfigbyconfigversionrequest.md)                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.DeleteSecurityFirewallConfigByConfigVersionResponseBody](../../models/deletesecurityfirewallconfigbyconfigversionresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## createSecurityFirewallConfigByConfigVersionActivate
+
+Promotes a draft WAF config to an active config
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="createSecurityFirewallConfigByConfigVersionActivate" method="post" path="/v1/security/firewall/config/{configVersion}/activate" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel();
+
+async function run() {
+  const result = await vercel.security.createSecurityFirewallConfigByConfigVersionActivate({
+    configVersion: "<value>",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { securityCreateSecurityFirewallConfigByConfigVersionActivate } from "@vercel/sdk/funcs/securityCreateSecurityFirewallConfigByConfigVersionActivate.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore();
+
+async function run() {
+  const res = await securityCreateSecurityFirewallConfigByConfigVersionActivate(vercel, {
+    configVersion: "<value>",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("securityCreateSecurityFirewallConfigByConfigVersionActivate failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.CreateSecurityFirewallConfigByConfigVersionActivateRequest](../../models/createsecurityfirewallconfigbyconfigversionactivaterequest.md)                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.CreateSecurityFirewallConfigByConfigVersionActivateResponseBody](../../models/createsecurityfirewallconfigbyconfigversionactivateresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## getActiveAttackStatus
+
+Retrieve active attack data within the last N days (default: 1 day)
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="getActiveAttackStatus" method="get" path="/v1/security/firewall/attack-status" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.security.getActiveAttackStatus({
+    projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { securityGetActiveAttackStatus } from "@vercel/sdk/funcs/securityGetActiveAttackStatus.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await securityGetActiveAttackStatus(vercel, {
+    projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("securityGetActiveAttackStatus failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.GetActiveAttackStatusRequest](../../models/getactiveattackstatusrequest.md)                                                                                            | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.GetActiveAttackStatusResponseBody](../../models/getactiveattackstatusresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## getBypassIp
+
+Retrieve the system bypass rules configured for the specified project
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="getBypassIp" method="get" path="/v1/security/firewall/bypass" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.security.getBypassIp({
+    projectId: "<id>",
+    limit: 10,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { securityGetBypassIp } from "@vercel/sdk/funcs/securityGetBypassIp.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await securityGetBypassIp(vercel, {
+    projectId: "<id>",
+    limit: 10,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("securityGetBypassIp failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.GetBypassIpRequest](../../models/getbypassiprequest.md)                                                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.GetBypassIpResponseBody](../../models/getbypassipresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## addBypassIp
+
+Create new system bypass rules
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="addBypassIp" method="post" path="/v1/security/firewall/bypass" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.security.addBypassIp({
+    projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { securityAddBypassIp } from "@vercel/sdk/funcs/securityAddBypassIp.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await securityAddBypassIp(vercel, {
+    projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("securityAddBypassIp failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.AddBypassIpRequest](../../models/addbypassiprequest.md)                                                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.AddBypassIpResponseBody](../../models/addbypassipresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## removeBypassIp
+
+Remove system bypass rules
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="removeBypassIp" method="delete" path="/v1/security/firewall/bypass" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.security.removeBypassIp({
+    projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { securityRemoveBypassIp } from "@vercel/sdk/funcs/securityRemoveBypassIp.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await securityRemoveBypassIp(vercel, {
+    projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("securityRemoveBypassIp failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.RemoveBypassIpRequest](../../models/removebypassiprequest.md)                                                                                                          | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.RemoveBypassIpResponseBody](../../models/removebypassipresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## getConditionalBypass
+
+Retrieve conditional firewall bypass rules for a project.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="getConditionalBypass" method="get" path="/v1/security/firewall/bypass/rules" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.security.getConditionalBypass({
+    projectId: "<id>",
+    slug: "my-team-url-slug",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { securityGetConditionalBypass } from "@vercel/sdk/funcs/securityGetConditionalBypass.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await securityGetConditionalBypass(vercel, {
+    projectId: "<id>",
+    slug: "my-team-url-slug",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("securityGetConditionalBypass failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.GetConditionalBypassRequest](../../models/getconditionalbypassrequest.md)                                                                                              | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.GetConditionalBypassResponseBody](../../models/getconditionalbypassresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## createConditionalBypass
+
+Create a conditional firewall bypass rule for a project domain.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="createConditionalBypass" method="post" path="/v1/security/firewall/bypass/rules" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.security.createConditionalBypass({
+    projectId: "<id>",
+    slug: "my-team-url-slug",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { securityCreateConditionalBypass } from "@vercel/sdk/funcs/securityCreateConditionalBypass.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await securityCreateConditionalBypass(vercel, {
+    projectId: "<id>",
+    slug: "my-team-url-slug",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("securityCreateConditionalBypass failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.CreateConditionalBypassRequest](../../models/createconditionalbypassrequest.md)                                                                                        | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.CreateConditionalBypassResponseBody](../../models/createconditionalbypassresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## deleteConditionalBypass
+
+Delete a conditional firewall bypass rule from a project domain.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="deleteConditionalBypass" method="delete" path="/v1/security/firewall/bypass/rules" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.security.deleteConditionalBypass({
+    projectId: "<id>",
+    slug: "my-team-url-slug",
+    domain: "narrow-wheel.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { securityDeleteConditionalBypass } from "@vercel/sdk/funcs/securityDeleteConditionalBypass.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await securityDeleteConditionalBypass(vercel, {
+    projectId: "<id>",
+    slug: "my-team-url-slug",
+    domain: "narrow-wheel.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("securityDeleteConditionalBypass failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.DeleteConditionalBypassRequest](../../models/deleteconditionalbypassrequest.md)                                                                                        | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.DeleteConditionalBypassResponseBody](../../models/deleteconditionalbypassresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## getSecurityFirewallEvents
+
+Retrieve firewall actions for a project Rule names are resolved against the project's *current* active firewall configuration and the team's active rulesets, so a rule that has since been renamed reports its new name and one that has been deleted reports `null`. System rules such as `sys_dos_mitigation` and `ip_blocking` have no configured name and always report `null`. Filters (`ip`, `isActive`, `action`, `actionType`, `ruleKind`, `ruleId`, `hosts`) are ANDed across params and ORed within a repeated param. They are applied to the policies before `limit`/`cursor`, so pages only count matching policies. A policy with no matching requests yields no action row, so a page can hold fewer than `limit` actions; only `pagination.next` signals the end. A `cursor` is only valid with the filters it was issued for.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="getSecurityFirewallEvents" method="get" path="/v1/security/firewall/events" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.security.getSecurityFirewallEvents({
+    projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { securityGetSecurityFirewallEvents } from "@vercel/sdk/funcs/securityGetSecurityFirewallEvents.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await securityGetSecurityFirewallEvents(vercel, {
+    projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("securityGetSecurityFirewallEvents failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.GetSecurityFirewallEventsRequest](../../models/getsecurityfirewalleventsrequest.md)                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.GetSecurityFirewallEventsResponseBody](../../models/getsecurityfirewalleventsresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## getSecurityFirewallEventsSummary
+
+Aggregate counts over the firewall actions matched by the same filters as `GET /v1/security/firewall/events`, without fetching any rows. Counts are of policies (mitigations), including ones that matched no requests.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="getSecurityFirewallEventsSummary" method="get" path="/v1/security/firewall/events/summary" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.security.getSecurityFirewallEventsSummary({
+    projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { securityGetSecurityFirewallEventsSummary } from "@vercel/sdk/funcs/securityGetSecurityFirewallEventsSummary.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await securityGetSecurityFirewallEventsSummary(vercel, {
+    projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("securityGetSecurityFirewallEventsSummary failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.GetSecurityFirewallEventsSummaryRequest](../../models/getsecurityfirewalleventssummaryrequest.md)                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.GetSecurityFirewallEventsSummaryResponseBody](../../models/getsecurityfirewalleventssummaryresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## generateFirewallRule
+
+Generate a firewall rule from a natural language description.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="generateFirewallRule" method="post" path="/v1/security/firewall/config/generate-rule" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.security.generateFirewallRule({
+    projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { securityGenerateFirewallRule } from "@vercel/sdk/funcs/securityGenerateFirewallRule.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await securityGenerateFirewallRule(vercel, {
+    projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("securityGenerateFirewallRule failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.GenerateFirewallRuleRequest](../../models/generatefirewallrulerequest.md)                                                                                              | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.GenerateFirewallRuleResponseBody](../../models/generatefirewallruleresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |

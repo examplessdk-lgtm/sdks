@@ -1,249 +1,16 @@
 # LogDrains
-(*logDrains*)
 
 ## Overview
 
 ### Available Operations
 
-* [getIntegrationLogDrains](#getintegrationlogdrains) - Retrieves a list of Integration log drains
-* [createLogDrain](#createlogdrain) - Creates a new Integration Log Drain
-* [deleteIntegrationLogDrain](#deleteintegrationlogdrain) - Deletes the Integration log drain with the provided `id`
-* [getConfigurableLogDrain](#getconfigurablelogdrain) - Retrieves a Configurable Log Drain
-* [deleteConfigurableLogDrain](#deleteconfigurablelogdrain) - Deletes a Configurable Log Drain
-* [getAllLogDrains](#getalllogdrains) - Retrieves a list of all the Log Drains
-* [createConfigurableLogDrain](#createconfigurablelogdrain) - Creates a Configurable Log Drain
-
-## getIntegrationLogDrains
-
-Retrieves a list of all Integration log drains that are defined for the authenticated user or team. When using an OAuth2 token, the list is limited to log drains created by the authenticated integration.
-
-### Example Usage
-
-```typescript
-import { Vercel } from "@vercel/sdk";
-
-const vercel = new Vercel({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const result = await vercel.logDrains.getIntegrationLogDrains({});
-
-  // Handle the result
-  console.log(result);
-}
-
-run();
-```
-
-### Standalone function
-
-The standalone function version of this method:
-
-```typescript
-import { VercelCore } from "@vercel/sdk/core.js";
-import { logDrainsGetIntegrationLogDrains } from "@vercel/sdk/funcs/logDrainsGetIntegrationLogDrains.js";
-
-// Use `VercelCore` for best tree-shaking performance.
-// You can create one instance of it to use across an application.
-const vercel = new VercelCore({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const res = await logDrainsGetIntegrationLogDrains(vercel, {});
-
-  if (!res.ok) {
-    throw res.error;
-  }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
-}
-
-run();
-```
-
-### Parameters
-
-| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetIntegrationLogDrainsRequest](../../models/operations/getintegrationlogdrainsrequest.md)                                                                         | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
-| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
-| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
-| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
-
-### Response
-
-**Promise\<[operations.GetIntegrationLogDrainsResponseBody[]](../../models/.md)\>**
-
-### Errors
-
-| Error Type      | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
-
-## createLogDrain
-
-Creates an Integration log drain. This endpoint must be called with an OAuth2 client (integration), since log drains are tied to integrations. If it is called with a different token type it will produce a 400 error.
-
-### Example Usage
-
-```typescript
-import { Vercel } from "@vercel/sdk";
-
-const vercel = new Vercel({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const result = await vercel.logDrains.createLogDrain({
-    requestBody: {
-      name: "My first log drain",
-      secret: "a1Xsfd325fXcs",
-      deliveryFormat: "json",
-      url: "https://example.com/log-drain",
-    },
-  });
-
-  // Handle the result
-  console.log(result);
-}
-
-run();
-```
-
-### Standalone function
-
-The standalone function version of this method:
-
-```typescript
-import { VercelCore } from "@vercel/sdk/core.js";
-import { logDrainsCreateLogDrain } from "@vercel/sdk/funcs/logDrainsCreateLogDrain.js";
-
-// Use `VercelCore` for best tree-shaking performance.
-// You can create one instance of it to use across an application.
-const vercel = new VercelCore({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const res = await logDrainsCreateLogDrain(vercel, {
-    requestBody: {
-      name: "My first log drain",
-      secret: "a1Xsfd325fXcs",
-      deliveryFormat: "json",
-      url: "https://example.com/log-drain",
-    },
-  });
-
-  if (!res.ok) {
-    throw res.error;
-  }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
-}
-
-run();
-```
-
-### Parameters
-
-| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.CreateLogDrainRequest](../../models/operations/createlogdrainrequest.md)                                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
-| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
-| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
-| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
-
-### Response
-
-**Promise\<[operations.CreateLogDrainResponseBody](../../models/operations/createlogdrainresponsebody.md)\>**
-
-### Errors
-
-| Error Type      | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
-
-## deleteIntegrationLogDrain
-
-Deletes the Integration log drain with the provided `id`. When using an OAuth2 Token, the log drain can be deleted only if the integration owns it.
-
-### Example Usage
-
-```typescript
-import { Vercel } from "@vercel/sdk";
-
-const vercel = new Vercel({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  await vercel.logDrains.deleteIntegrationLogDrain({
-    id: "<id>",
-  });
-
-
-}
-
-run();
-```
-
-### Standalone function
-
-The standalone function version of this method:
-
-```typescript
-import { VercelCore } from "@vercel/sdk/core.js";
-import { logDrainsDeleteIntegrationLogDrain } from "@vercel/sdk/funcs/logDrainsDeleteIntegrationLogDrain.js";
-
-// Use `VercelCore` for best tree-shaking performance.
-// You can create one instance of it to use across an application.
-const vercel = new VercelCore({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const res = await logDrainsDeleteIntegrationLogDrain(vercel, {
-    id: "<id>",
-  });
-
-  if (!res.ok) {
-    throw res.error;
-  }
-
-  const { value: result } = res;
-
-  
-}
-
-run();
-```
-
-### Parameters
-
-| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.DeleteIntegrationLogDrainRequest](../../models/operations/deleteintegrationlogdrainrequest.md)                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
-| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
-| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
-| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
-
-### Response
-
-**Promise\<void\>**
-
-### Errors
-
-| Error Type      | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+* [getConfigurableLogDrain](#getconfigurablelogdrain) - Retrieves a Configurable Log Drain (deprecated)
+* [deleteConfigurableLogDrain](#deleteconfigurablelogdrain) - Deletes a Configurable Log Drain (deprecated)
+* [getAllLogDrains](#getalllogdrains) - Retrieves a list of all the Log Drains (deprecated)
+* [createConfigurableLogDrain](#createconfigurablelogdrain) - Creates a Configurable Log Drain (deprecated)
+* [getIntegrationLogDrains](#getintegrationlogdrains) - Retrieves a list of Integration log drains (deprecated)
+* [createLogDrain](#createlogdrain) - Creates a new Integration Log Drain (deprecated)
+* [deleteIntegrationLogDrain](#deleteintegrationlogdrain) - Deletes the Integration log drain with the provided `id` (deprecated)
 
 ## getConfigurableLogDrain
 
@@ -251,6 +18,7 @@ Retrieves a Configurable Log Drain. This endpoint must be called with a team Acc
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getConfigurableLogDrain" method="get" path="/v1/log-drains/{id}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -261,9 +29,10 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.logDrains.getConfigurableLogDrain({
     id: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -287,16 +56,15 @@ const vercel = new VercelCore({
 async function run() {
   const res = await logDrainsGetConfigurableLogDrain(vercel, {
     id: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("logDrainsGetConfigurableLogDrain failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -306,20 +74,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetConfigurableLogDrainRequest](../../models/operations/getconfigurablelogdrainrequest.md)                                                                         | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetConfigurableLogDrainRequest](../../models/getconfigurablelogdrainrequest.md)                                                                                        | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetConfigurableLogDrainResponseBody](../../models/operations/getconfigurablelogdrainresponsebody.md)\>**
+**Promise\<[models.GetConfigurableLogDrainResponseBody](../../models/getconfigurablelogdrainresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## deleteConfigurableLogDrain
 
@@ -327,6 +95,7 @@ Deletes a Configurable Log Drain. This endpoint must be called with a team Acces
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="deleteConfigurableLogDrain" method="delete" path="/v1/log-drains/{id}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -337,6 +106,8 @@ const vercel = new Vercel({
 async function run() {
   await vercel.logDrains.deleteConfigurableLogDrain({
     id: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
 
@@ -362,15 +133,15 @@ const vercel = new VercelCore({
 async function run() {
   const res = await logDrainsDeleteConfigurableLogDrain(vercel, {
     id: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("logDrainsDeleteConfigurableLogDrain failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  
 }
 
 run();
@@ -380,7 +151,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.DeleteConfigurableLogDrainRequest](../../models/operations/deleteconfigurablelogdrainrequest.md)                                                                   | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.DeleteConfigurableLogDrainRequest](../../models/deleteconfigurablelogdrainrequest.md)                                                                                  | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -393,7 +164,7 @@ run();
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getAllLogDrains
 
@@ -401,6 +172,7 @@ Retrieves a list of all the Log Drains owned by the account. This endpoint must 
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getAllLogDrains" method="get" path="/v1/log-drains" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -409,9 +181,11 @@ const vercel = new Vercel({
 });
 
 async function run() {
-  const result = await vercel.logDrains.getAllLogDrains({});
+  const result = await vercel.logDrains.getAllLogDrains({
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -433,16 +207,16 @@ const vercel = new VercelCore({
 });
 
 async function run() {
-  const res = await logDrainsGetAllLogDrains(vercel, {});
-
-  if (!res.ok) {
-    throw res.error;
+  const res = await logDrainsGetAllLogDrains(vercel, {
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("logDrainsGetAllLogDrains failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -452,20 +226,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetAllLogDrainsRequest](../../models/operations/getalllogdrainsrequest.md)                                                                                         | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetAllLogDrainsRequest](../../models/getalllogdrainsrequest.md)                                                                                                        | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetAllLogDrainsResponseBody[]](../../models/.md)\>**
+**Promise\<[models.GetAllLogDrainsResponseBody](../../models/getalllogdrainsresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## createConfigurableLogDrain
 
@@ -473,6 +247,7 @@ Creates a configurable log drain. This endpoint must be called with a team Acces
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="createConfigurableLogDrain" method="post" path="/v1/log-drains" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -482,16 +257,15 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.logDrains.createConfigurableLogDrain({
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       deliveryFormat: "json",
-      url: "https://equal-hedgehog.com",
-      sources: [
-        "firewall",
-      ],
+      url: "https://wavy-meander.net",
+      sources: [],
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -514,23 +288,20 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await logDrainsCreateConfigurableLogDrain(vercel, {
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       deliveryFormat: "json",
-      url: "https://equal-hedgehog.com",
-      sources: [
-        "firewall",
-      ],
+      url: "https://wavy-meander.net",
+      sources: [],
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("logDrainsCreateConfigurableLogDrain failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -540,17 +311,256 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.CreateConfigurableLogDrainRequest](../../models/operations/createconfigurablelogdrainrequest.md)                                                                   | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.CreateConfigurableLogDrainRequest](../../models/createconfigurablelogdrainrequest.md)                                                                                  | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.CreateConfigurableLogDrainResponseBody](../../models/operations/createconfigurablelogdrainresponsebody.md)\>**
+**Promise\<[models.CreateConfigurableLogDrainResponseBody](../../models/createconfigurablelogdrainresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## getIntegrationLogDrains
+
+Retrieves a list of all Integration log drains that are defined for the authenticated user or team. When using an OAuth2 token, the list is limited to log drains created by the authenticated integration.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="getIntegrationLogDrains" method="get" path="/v2/integrations/log-drains" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.logDrains.getIntegrationLogDrains({
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { logDrainsGetIntegrationLogDrains } from "@vercel/sdk/funcs/logDrainsGetIntegrationLogDrains.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await logDrainsGetIntegrationLogDrains(vercel, {
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("logDrainsGetIntegrationLogDrains failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.GetIntegrationLogDrainsRequest](../../models/getintegrationlogdrainsrequest.md)                                                                                        | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.GetIntegrationLogDrainsResponseBody[]](../../models/.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## createLogDrain
+
+Creates an Integration log drain. This endpoint must be called with an OAuth2 client (integration), since log drains are tied to integrations. If it is called with a different token type it will produce a 400 error.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="createLogDrain" method="post" path="/v2/integrations/log-drains" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.logDrains.createLogDrain({
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      name: "My first log drain",
+      secret: "a1Xsfd325fXcs",
+      deliveryFormat: "json",
+      url: "https://example.com/log-drain",
+    },
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { logDrainsCreateLogDrain } from "@vercel/sdk/funcs/logDrainsCreateLogDrain.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await logDrainsCreateLogDrain(vercel, {
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      name: "My first log drain",
+      secret: "a1Xsfd325fXcs",
+      deliveryFormat: "json",
+      url: "https://example.com/log-drain",
+    },
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("logDrainsCreateLogDrain failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.CreateLogDrainRequest](../../models/createlogdrainrequest.md)                                                                                                          | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.CreateLogDrainResponseBody](../../models/createlogdrainresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## deleteIntegrationLogDrain
+
+Deletes the Integration log drain with the provided `id`. When using an OAuth2 Token, the log drain can be deleted only if the integration owns it.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="deleteIntegrationLogDrain" method="delete" path="/v1/integrations/log-drains/{id}" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  await vercel.logDrains.deleteIntegrationLogDrain({
+    id: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { logDrainsDeleteIntegrationLogDrain } from "@vercel/sdk/funcs/logDrainsDeleteIntegrationLogDrain.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await logDrainsDeleteIntegrationLogDrain(vercel, {
+    id: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("logDrainsDeleteIntegrationLogDrain failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.DeleteIntegrationLogDrainRequest](../../models/deleteintegrationlogdrainrequest.md)                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<void\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |

@@ -1,0 +1,18 @@
+# UploadProjectAvatarTrafficSources
+
+## Example Usage
+
+```typescript
+import { UploadProjectAvatarTrafficSources } from "@vercel/sdk/models/uploadprojectavatarresponsebody.js";
+
+let value: UploadProjectAvatarTrafficSources = {
+  active: false,
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                  | Type                                                                                                                                                                   | Required                                                                                                                                                               | Description                                                                                                                                                            |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `action`                                                                                                                                                               | [models.UploadProjectAvatarProjectsResponse200ApplicationJSONResponseBodyAction](../models/uploadprojectavatarprojectsresponse200applicationjsonresponsebodyaction.md) | :heavy_minus_sign:                                                                                                                                                     | N/A                                                                                                                                                                    |
+| `active`                                                                                                                                                               | *boolean*                                                                                                                                                              | :heavy_check_mark:                                                                                                                                                     | N/A                                                                                                                                                                    |

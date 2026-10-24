@@ -1,0 +1,19 @@
+# GetConfigurationProductsUiReadOnlyIntegrationsResponse200ApplicationJSONResponseBodyProductsMetadataSchemaProperties113
+
+## Example Usage
+
+```typescript
+import {
+  GetConfigurationProductsUiReadOnlyIntegrationsResponse200ApplicationJSONResponseBodyProductsMetadataSchemaProperties113,
+} from "@vercel/sdk/models/properties7.js";
+
+let value:
+  GetConfigurationProductsUiReadOnlyIntegrationsResponse200ApplicationJSONResponseBodyProductsMetadataSchemaProperties113 =
+    "update";
+```
+
+## Values
+
+```typescript
+"create" | "update"
+```

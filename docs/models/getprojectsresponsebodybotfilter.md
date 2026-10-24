@@ -1,0 +1,18 @@
+# GetProjectsResponseBodyBotFilter
+
+## Example Usage
+
+```typescript
+import { GetProjectsResponseBodyBotFilter } from "@vercel/sdk/models/getprojectsresponsebodychecksstate.js";
+
+let value: GetProjectsResponseBodyBotFilter = {
+  active: true,
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                                                            | Type                                                                                                                                                                                                             | Required                                                                                                                                                                                                         | Description                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `action`                                                                                                                                                                                                         | [models.GetProjectsResponseBodyProjectsResponse200ApplicationJson2ProjectsSecurityManagedRulesAction](../models/getprojectsresponsebodyprojectsresponse200applicationjson2projectssecuritymanagedrulesaction.md) | :heavy_minus_sign:                                                                                                                                                                                               | N/A                                                                                                                                                                                                              |
+| `active`                                                                                                                                                                                                         | *boolean*                                                                                                                                                                                                        | :heavy_check_mark:                                                                                                                                                                                               | N/A                                                                                                                                                                                                              |

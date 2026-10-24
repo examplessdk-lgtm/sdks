@@ -1,354 +1,18 @@
 # Domains
-(*domains*)
 
 ## Overview
 
 ### Available Operations
 
-* [buyDomain](#buydomain) - Purchase a domain
-* [checkDomainPrice](#checkdomainprice) - Check the price for a domain
-* [checkDomainStatus](#checkdomainstatus) - Check a Domain Availability
-* [getDomainTransfer](#getdomaintransfer) - Get domain transfer info.
 * [getDomainConfig](#getdomainconfig) - Get a Domain's configuration
+* [getDomainVerificationRecord](#getdomainverificationrecord) - Get Domain Verification Record
+* [claimDomainOwnership](#claimdomainownership) - Claim Domain Ownership
+* [getDomainProjectDomains](#getdomainprojectdomains) - List Project Domains by Apex Domain
 * [getDomain](#getdomain) - Get Information for a Single Domain
 * [getDomains](#getdomains) - List all the domains
-* [createOrTransferDomain](#createortransferdomain) - Register or transfer-in a new Domain
+* [createOrTransferDomain](#createortransferdomain) - Add an existing domain to the Vercel platform
 * [patchDomain](#patchdomain) - Update or move apex domain
 * [deleteDomain](#deletedomain) - Remove a domain by name
-
-## buyDomain
-
-Allows to purchase the specified domain.
-
-### Example Usage
-
-```typescript
-import { Vercel } from "@vercel/sdk";
-
-const vercel = new Vercel({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const result = await vercel.domains.buyDomain({
-    requestBody: {
-      name: "example.com",
-      expectedPrice: 10,
-      renew: true,
-      country: "US",
-      orgName: "Acme Inc.",
-      firstName: "Jane",
-      lastName: "Doe",
-      address1: "340 S Lemon Ave Suite 4133",
-      city: "San Francisco",
-      state: "CA",
-      postalCode: "91789",
-      phone: "+1.4158551452",
-      email: "jane.doe@someplace.com",
-    },
-  });
-
-  // Handle the result
-  console.log(result);
-}
-
-run();
-```
-
-### Standalone function
-
-The standalone function version of this method:
-
-```typescript
-import { VercelCore } from "@vercel/sdk/core.js";
-import { domainsBuyDomain } from "@vercel/sdk/funcs/domainsBuyDomain.js";
-
-// Use `VercelCore` for best tree-shaking performance.
-// You can create one instance of it to use across an application.
-const vercel = new VercelCore({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const res = await domainsBuyDomain(vercel, {
-    requestBody: {
-      name: "example.com",
-      expectedPrice: 10,
-      renew: true,
-      country: "US",
-      orgName: "Acme Inc.",
-      firstName: "Jane",
-      lastName: "Doe",
-      address1: "340 S Lemon Ave Suite 4133",
-      city: "San Francisco",
-      state: "CA",
-      postalCode: "91789",
-      phone: "+1.4158551452",
-      email: "jane.doe@someplace.com",
-    },
-  });
-
-  if (!res.ok) {
-    throw res.error;
-  }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
-}
-
-run();
-```
-
-### Parameters
-
-| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.BuyDomainRequest](../../models/operations/buydomainrequest.md)                                                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
-| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
-| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
-| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
-
-### Response
-
-**Promise\<[operations.BuyDomainResponse](../../models/operations/buydomainresponse.md)\>**
-
-### Errors
-
-| Error Type      | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
-
-## checkDomainPrice
-
-Check the price to purchase a domain and how long a single purchase period is.
-
-### Example Usage
-
-```typescript
-import { Vercel } from "@vercel/sdk";
-
-const vercel = new Vercel({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const result = await vercel.domains.checkDomainPrice({
-    name: "example.com",
-    type: "new",
-  });
-
-  // Handle the result
-  console.log(result);
-}
-
-run();
-```
-
-### Standalone function
-
-The standalone function version of this method:
-
-```typescript
-import { VercelCore } from "@vercel/sdk/core.js";
-import { domainsCheckDomainPrice } from "@vercel/sdk/funcs/domainsCheckDomainPrice.js";
-
-// Use `VercelCore` for best tree-shaking performance.
-// You can create one instance of it to use across an application.
-const vercel = new VercelCore({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const res = await domainsCheckDomainPrice(vercel, {
-    name: "example.com",
-    type: "new",
-  });
-
-  if (!res.ok) {
-    throw res.error;
-  }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
-}
-
-run();
-```
-
-### Parameters
-
-| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.CheckDomainPriceRequest](../../models/operations/checkdomainpricerequest.md)                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
-| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
-| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
-| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
-
-### Response
-
-**Promise\<[operations.CheckDomainPriceResponseBody](../../models/operations/checkdomainpriceresponsebody.md)\>**
-
-### Errors
-
-| Error Type      | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
-
-## checkDomainStatus
-
-Check if a domain name is available for purchase.
-
-### Example Usage
-
-```typescript
-import { Vercel } from "@vercel/sdk";
-
-const vercel = new Vercel({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const result = await vercel.domains.checkDomainStatus({
-    name: "example.com",
-  });
-
-  // Handle the result
-  console.log(result);
-}
-
-run();
-```
-
-### Standalone function
-
-The standalone function version of this method:
-
-```typescript
-import { VercelCore } from "@vercel/sdk/core.js";
-import { domainsCheckDomainStatus } from "@vercel/sdk/funcs/domainsCheckDomainStatus.js";
-
-// Use `VercelCore` for best tree-shaking performance.
-// You can create one instance of it to use across an application.
-const vercel = new VercelCore({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const res = await domainsCheckDomainStatus(vercel, {
-    name: "example.com",
-  });
-
-  if (!res.ok) {
-    throw res.error;
-  }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
-}
-
-run();
-```
-
-### Parameters
-
-| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.CheckDomainStatusRequest](../../models/operations/checkdomainstatusrequest.md)                                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
-| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
-| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
-| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
-
-### Response
-
-**Promise\<[operations.CheckDomainStatusResponseBody](../../models/operations/checkdomainstatusresponsebody.md)\>**
-
-### Errors
-
-| Error Type      | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
-
-## getDomainTransfer
-
-Fetch domain transfer availability or transfer status if a transfer is in progress.
-
-### Example Usage
-
-```typescript
-import { Vercel } from "@vercel/sdk";
-
-const vercel = new Vercel({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const result = await vercel.domains.getDomainTransfer({
-    domain: "example.com",
-  });
-
-  // Handle the result
-  console.log(result);
-}
-
-run();
-```
-
-### Standalone function
-
-The standalone function version of this method:
-
-```typescript
-import { VercelCore } from "@vercel/sdk/core.js";
-import { domainsGetDomainTransfer } from "@vercel/sdk/funcs/domainsGetDomainTransfer.js";
-
-// Use `VercelCore` for best tree-shaking performance.
-// You can create one instance of it to use across an application.
-const vercel = new VercelCore({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const res = await domainsGetDomainTransfer(vercel, {
-    domain: "example.com",
-  });
-
-  if (!res.ok) {
-    throw res.error;
-  }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
-}
-
-run();
-```
-
-### Parameters
-
-| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetDomainTransferRequest](../../models/operations/getdomaintransferrequest.md)                                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
-| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
-| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
-| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
-
-### Response
-
-**Promise\<[operations.GetDomainTransferResponseBody](../../models/operations/getdomaintransferresponsebody.md)\>**
-
-### Errors
-
-| Error Type      | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getDomainConfig
 
@@ -356,6 +20,7 @@ Get a Domain's configuration.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getDomainConfig" method="get" path="/v6/domains/{domain}/config" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -366,9 +31,10 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.domains.getDomainConfig({
     domain: "example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -392,16 +58,15 @@ const vercel = new VercelCore({
 async function run() {
   const res = await domainsGetDomainConfig(vercel, {
     domain: "example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("domainsGetDomainConfig failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -411,20 +76,257 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetDomainConfigRequest](../../models/operations/getdomainconfigrequest.md)                                                                                         | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetDomainConfigRequest](../../models/getdomainconfigrequest.md)                                                                                                        | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetDomainConfigResponseBody](../../models/operations/getdomainconfigresponsebody.md)\>**
+**Promise\<[models.GetDomainConfigResponseBody](../../models/getdomainconfigresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## getDomainVerificationRecord
+
+Get the TXT verification record needed to claim ownership of a domain for the authenticated team. The caller must add this TXT record to `_vercel.{domain}` in their DNS configuration, then call POST /domains/:domain/claim to complete the ownership transfer.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="getDomainVerificationRecord" method="get" path="/v9/domains/{domain}/verification" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.domains.getDomainVerificationRecord({
+    domain: "example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { domainsGetDomainVerificationRecord } from "@vercel/sdk/funcs/domainsGetDomainVerificationRecord.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await domainsGetDomainVerificationRecord(vercel, {
+    domain: "example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("domainsGetDomainVerificationRecord failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.GetDomainVerificationRecordRequest](../../models/getdomainverificationrecordrequest.md)                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.GetDomainVerificationRecordResponseBody](../../models/getdomainverificationrecordresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## claimDomainOwnership
+
+Claim ownership of a domain for the authenticated team by verifying a TXT record. The caller must first add a TXT record to `_vercel.{domain}` (obtained from GET /domains/:domain/verification), then call this endpoint to complete the ownership transfer. If the TXT record is verified, the domain ownership will be transferred to the caller's team, even if the domain is currently owned by another user or team.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="claimDomainOwnership" method="post" path="/v9/domains/{domain}/claim" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.domains.claimDomainOwnership({
+    domain: "example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { domainsClaimDomainOwnership } from "@vercel/sdk/funcs/domainsClaimDomainOwnership.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await domainsClaimDomainOwnership(vercel, {
+    domain: "example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("domainsClaimDomainOwnership failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.ClaimDomainOwnershipRequest](../../models/claimdomainownershiprequest.md)                                                                                              | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.ClaimDomainOwnershipResponseBody](../../models/claimdomainownershipresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## getDomainProjectDomains
+
+List all project domains associated with an apex domain owned by the authenticated account.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="getDomainProjectDomains" method="get" path="/v1/domains/{domain}/project-domains" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.domains.getDomainProjectDomains({
+    domain: "example.com",
+    limit: 20,
+    since: 1609499532000,
+    until: 1612264332000,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { domainsGetDomainProjectDomains } from "@vercel/sdk/funcs/domainsGetDomainProjectDomains.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await domainsGetDomainProjectDomains(vercel, {
+    domain: "example.com",
+    limit: 20,
+    since: 1609499532000,
+    until: 1612264332000,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("domainsGetDomainProjectDomains failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.GetDomainProjectDomainsRequest](../../models/getdomainprojectdomainsrequest.md)                                                                                        | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.GetDomainProjectDomainsResponseBody](../../models/getdomainprojectdomainsresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getDomain
 
@@ -432,6 +334,7 @@ Get information for a single domain in an account or team.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getDomain" method="get" path="/v5/domains/{domain}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -442,9 +345,10 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.domains.getDomain({
     domain: "example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -468,16 +372,15 @@ const vercel = new VercelCore({
 async function run() {
   const res = await domainsGetDomain(vercel, {
     domain: "example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("domainsGetDomain failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -487,20 +390,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetDomainRequest](../../models/operations/getdomainrequest.md)                                                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetDomainRequest](../../models/getdomainrequest.md)                                                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetDomainResponseBody](../../models/operations/getdomainresponsebody.md)\>**
+**Promise\<[models.GetDomainResponseBody](../../models/getdomainresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getDomains
 
@@ -508,6 +411,7 @@ Retrieves a list of domains registered for the authenticated user or team. By de
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getDomains" method="get" path="/v5/domains" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -520,9 +424,10 @@ async function run() {
     limit: 20,
     since: 1609499532000,
     until: 1612264332000,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -548,16 +453,15 @@ async function run() {
     limit: 20,
     since: 1609499532000,
     until: 1612264332000,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("domainsGetDomains failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -567,27 +471,28 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetDomainsRequest](../../models/operations/getdomainsrequest.md)                                                                                                   | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetDomainsRequest](../../models/getdomainsrequest.md)                                                                                                                  | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetDomainsResponseBody](../../models/operations/getdomainsresponsebody.md)\>**
+**Promise\<[models.GetDomainsResponseBody](../../models/getdomainsresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## createOrTransferDomain
 
-This endpoint is used for adding a new apex domain name with Vercel for the authenticating user. Can also be used for initiating a domain transfer request from an external Registrar to Vercel.
+This endpoint is used for adding a new apex domain name with Vercel for the authenticating user. Note: This endpoint is no longer used for initiating domain transfers from external registrars to Vercel. For this, please use the endpoint [Transfer-in a domain](https://vercel.com/docs/rest-api/reference/endpoints/domains-registrar/transfer-in-a-domain).
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="createOrTransferDomain" method="post" path="/v7/domains" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -597,15 +502,15 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.domains.createOrTransferDomain({
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "example.com",
       method: "transfer-in",
-      authCode: "fdhfr820ad#@FAdlj$$",
-      expectedPrice: 8,
+      token: "fdhfr820ad#@FAdlj$$",
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -628,22 +533,20 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await domainsCreateOrTransferDomain(vercel, {
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "example.com",
       method: "transfer-in",
-      authCode: "fdhfr820ad#@FAdlj$$",
-      expectedPrice: 8,
+      token: "fdhfr820ad#@FAdlj$$",
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("domainsCreateOrTransferDomain failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -653,27 +556,28 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.CreateOrTransferDomainRequest](../../models/operations/createortransferdomainrequest.md)                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.CreateOrTransferDomainRequest](../../models/createortransferdomainrequest.md)                                                                                          | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.CreateOrTransferDomainResponseBody](../../models/operations/createortransferdomainresponsebody.md)\>**
+**Promise\<[models.CreateOrTransferDomainResponseBody](../../models/createortransferdomainresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## patchDomain
 
-Update or move apex domain.
+Update or move apex domain. Note: This endpoint is no longer used for updating auto-renew or nameservers. For this, please use the endpoints [Update auto-renew for a domain](https://vercel.com/docs/rest-api/reference/endpoints/domains-registrar/update-auto-renew-for-a-domain) and [Update nameservers for a domain](https://vercel.com/docs/rest-api/reference/endpoints/domains-registrar/update-nameservers-for-a-domain).
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="patchDomain" method="patch" path="/v3/domains/{domain}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -683,13 +587,14 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.domains.patchDomain({
-    domain: "alarming-nondisclosure.com",
+    domain: "flimsy-napkin.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       op: "update",
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -712,20 +617,19 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await domainsPatchDomain(vercel, {
-    domain: "alarming-nondisclosure.com",
+    domain: "flimsy-napkin.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       op: "update",
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("domainsPatchDomain failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -735,20 +639,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.PatchDomainRequest](../../models/operations/patchdomainrequest.md)                                                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.PatchDomainRequest](../../models/patchdomainrequest.md)                                                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.PatchDomainResponseBody](../../models/operations/patchdomainresponsebody.md)\>**
+**Promise\<[models.PatchDomainResponseBody](../../models/patchdomainresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## deleteDomain
 
@@ -756,6 +660,7 @@ Delete a previously registered domain name from Vercel. Deleting a domain will a
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="deleteDomain" method="delete" path="/v6/domains/{domain}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -766,9 +671,10 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.domains.deleteDomain({
     domain: "example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -792,16 +698,15 @@ const vercel = new VercelCore({
 async function run() {
   const res = await domainsDeleteDomain(vercel, {
     domain: "example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("domainsDeleteDomain failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -811,17 +716,17 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.DeleteDomainRequest](../../models/operations/deletedomainrequest.md)                                                                                               | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.DeleteDomainRequest](../../models/deletedomainrequest.md)                                                                                                              | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.DeleteDomainResponseBody](../../models/operations/deletedomainresponsebody.md)\>**
+**Promise\<[models.DeleteDomainResponseBody](../../models/deletedomainresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |

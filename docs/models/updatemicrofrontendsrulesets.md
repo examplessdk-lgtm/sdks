@@ -1,0 +1,22 @@
+# UpdateMicrofrontendsRulesets
+
+## Example Usage
+
+```typescript
+import { UpdateMicrofrontendsRulesets } from "@vercel/sdk/models/updatemicrofrontendsresponsebody.js";
+
+let value: UpdateMicrofrontendsRulesets = {
+  action: "redirect",
+};
+```
+
+## Fields
+
+| Field                                                                                                        | Type                                                                                                         | Required                                                                                                     | Description                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| `action`                                                                                                     | [models.UpdateMicrofrontendsProjectsResponseAction](../models/updatemicrofrontendsprojectsresponseaction.md) | :heavy_check_mark:                                                                                           | N/A                                                                                                          |
+| `actionDuration`                                                                                             | *string*                                                                                                     | :heavy_minus_sign:                                                                                           | N/A                                                                                                          |
+| `bypassSystem`                                                                                               | *boolean*                                                                                                    | :heavy_minus_sign:                                                                                           | N/A                                                                                                          |
+| `logHeaders`                                                                                                 | *models.UpdateMicrofrontendsProjectsLogHeaders*                                                              | :heavy_minus_sign:                                                                                           | N/A                                                                                                          |
+| `rateLimit`                                                                                                  | [models.UpdateMicrofrontendsRateLimit](../models/updatemicrofrontendsratelimit.md)                           | :heavy_minus_sign:                                                                                           | N/A                                                                                                          |
+| `redirect`                                                                                                   | [models.UpdateMicrofrontendsRedirect](../models/updatemicrofrontendsredirect.md)                             | :heavy_minus_sign:                                                                                           | N/A                                                                                                          |

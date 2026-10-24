@@ -3,18 +3,21 @@
  */
 
 import { userGetAuthUser } from "../funcs/userGetAuthUser.js";
+import { userListEventTypes } from "../funcs/userListEventTypes.js";
 import { userListUserEvents } from "../funcs/userListUserEvents.js";
 import { userRequestDelete } from "../funcs/userRequestDelete.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
-import { GetAuthUserResponseBody } from "../models/operations/getauthuser.js";
+import { GetAuthUserResponseBody } from "../models/getauthuserop.js";
+import { ListEventTypesRequest } from "../models/listeventtypesop.js";
+import { ListEventTypesResponse } from "../models/listeventtypesresponse.js";
 import {
   ListUserEventsRequest,
   ListUserEventsResponseBody,
-} from "../models/operations/listuserevents.js";
+} from "../models/listusereventsop.js";
 import {
   RequestDeleteRequestBody,
   RequestDeleteResponseBody,
-} from "../models/operations/requestdelete.js";
+} from "../models/requestdeleteop.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class User extends ClientSDK {
@@ -29,6 +32,23 @@ export class User extends ClientSDK {
     options?: RequestOptions,
   ): Promise<ListUserEventsResponseBody> {
     return unwrapAsync(userListUserEvents(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * List Event Types
+   *
+   * @remarks
+   * Returns the list of user-facing event types with descriptions.
+   */
+  async listEventTypes(
+    request: ListEventTypesRequest,
+    options?: RequestOptions,
+  ): Promise<ListEventTypesResponse> {
+    return unwrapAsync(userListEventTypes(
       this,
       request,
       options,
@@ -57,7 +77,7 @@ export class User extends ClientSDK {
    * Initiates the deletion process for the currently authenticated User, by sending a deletion confirmation email. The email contains a link that the user needs to visit in order to proceed with the deletion process.
    */
   async requestDelete(
-    request?: RequestDeleteRequestBody | undefined,
+    request: RequestDeleteRequestBody,
     options?: RequestOptions,
   ): Promise<RequestDeleteResponseBody> {
     return unwrapAsync(userRequestDelete(

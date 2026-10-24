@@ -1,0 +1,21 @@
+# GetDrainsDrainsSchemas
+
+## Example Usage
+
+```typescript
+import { GetDrainsDrainsSchemas } from "@vercel/sdk/models/getdrainsop.js";
+
+let value: GetDrainsDrainsSchemas = {};
+```
+
+## Fields
+
+| Field                                                                            | Type                                                                             | Required                                                                         | Description                                                                      |
+| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `aiGateway`                                                                      | [models.GetDrainsDrainsAiGateway](../models/getdrainsdrainsaigateway.md)         | :heavy_minus_sign:                                                               | N/A                                                                              |
+| `analytics`                                                                      | [models.GetDrainsDrainsAnalytics](../models/getdrainsdrainsanalytics.md)         | :heavy_minus_sign:                                                               | N/A                                                                              |
+| `auditLog`                                                                       | [models.GetDrainsDrainsAuditLog](../models/getdrainsdrainsauditlog.md)           | :heavy_minus_sign:                                                               | N/A                                                                              |
+| `connect`                                                                        | [models.GetDrainsDrainsConnect](../models/getdrainsdrainsconnect.md)             | :heavy_minus_sign:                                                               | N/A                                                                              |
+| `log`                                                                            | [models.GetDrainsDrainsLog](../models/getdrainsdrainslog.md)                     | :heavy_minus_sign:                                                               | N/A                                                                              |
+| `speedInsights`                                                                  | [models.GetDrainsDrainsSpeedInsights](../models/getdrainsdrainsspeedinsights.md) | :heavy_minus_sign:                                                               | N/A                                                                              |
+| `trace`                                                                          | [models.GetDrainsDrainsTrace](../models/getdrainsdrainstrace.md)                 | :heavy_minus_sign:                                                               | N/A                                                                              |

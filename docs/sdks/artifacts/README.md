@@ -1,5 +1,4 @@
 # Artifacts
-(*artifacts*)
 
 ## Overview
 
@@ -11,6 +10,7 @@
 * [downloadArtifact](#downloadartifact) - Download a cache artifact
 * [artifactExists](#artifactexists) - Check if a cache artifact exists
 * [artifactQuery](#artifactquery) - Query information about an artifact
+* [deleteAllArtifacts](#deleteallartifacts) - Delete all cache artifacts
 
 ## recordEvents
 
@@ -18,6 +18,7 @@ Records an artifacts cache usage event. The body of this request is an array of 
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="recordEvents" method="post" path="/v8/artifacts/events" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -29,11 +30,13 @@ async function run() {
   await vercel.artifacts.recordEvents({
     xArtifactClientCi: "VERCEL",
     xArtifactClientInteractive: 0,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: [
       {
         sessionId: "<id>",
-        source: "LOCAL",
-        event: "HIT",
+        source: "REMOTE",
+        event: "MISS",
         hash: "12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
         duration: 400,
       },
@@ -64,24 +67,24 @@ async function run() {
   const res = await artifactsRecordEvents(vercel, {
     xArtifactClientCi: "VERCEL",
     xArtifactClientInteractive: 0,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: [
       {
         sessionId: "<id>",
-        source: "LOCAL",
-        event: "HIT",
+        source: "REMOTE",
+        event: "MISS",
         hash: "12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
         duration: 400,
       },
     ],
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("artifactsRecordEvents failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  
 }
 
 run();
@@ -91,7 +94,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.RecordEventsRequest](../../models/operations/recordeventsrequest.md)                                                                                               | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.RecordEventsRequest](../../models/recordeventsrequest.md)                                                                                                              | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -104,7 +107,7 @@ run();
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## status
 
@@ -112,6 +115,7 @@ Check the status of Remote Caching for this principal. Returns a JSON-encoded st
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="status" method="get" path="/v8/artifacts/status" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -120,9 +124,11 @@ const vercel = new Vercel({
 });
 
 async function run() {
-  const result = await vercel.artifacts.status({});
+  const result = await vercel.artifacts.status({
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -144,16 +150,16 @@ const vercel = new VercelCore({
 });
 
 async function run() {
-  const res = await artifactsStatus(vercel, {});
-
-  if (!res.ok) {
-    throw res.error;
+  const res = await artifactsStatus(vercel, {
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("artifactsStatus failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -163,20 +169,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.StatusRequest](../../models/operations/statusrequest.md)                                                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.StatusRequest](../../models/statusrequest.md)                                                                                                                          | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.StatusResponseBody](../../models/operations/statusresponsebody.md)\>**
+**Promise\<[models.StatusResponseBody](../../models/statusresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## uploadArtifact
 
@@ -184,8 +190,10 @@ Uploads a cache artifact identified by the `hash` specified on the path. The cac
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="uploadArtifact" method="put" path="/v8/artifacts/{hash}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
+import { openAsBlob } from "node:fs";
 
 const vercel = new Vercel({
   bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
@@ -193,15 +201,17 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.artifacts.uploadArtifact({
-    contentLength: 4036.54,
+    contentLength: 3848.22,
     xArtifactDuration: 400,
     xArtifactClientCi: "VERCEL",
     xArtifactClientInteractive: 0,
     xArtifactTag: "Tc0BmHvJYMIYJ62/zx87YqO0Flxk+5Ovip25NY825CQ=",
     hash: "12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: await openAsBlob("example.file"),
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -215,6 +225,7 @@ The standalone function version of this method:
 ```typescript
 import { VercelCore } from "@vercel/sdk/core.js";
 import { artifactsUploadArtifact } from "@vercel/sdk/funcs/artifactsUploadArtifact.js";
+import { openAsBlob } from "node:fs";
 
 // Use `VercelCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -224,22 +235,22 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await artifactsUploadArtifact(vercel, {
-    contentLength: 4036.54,
+    contentLength: 3848.22,
     xArtifactDuration: 400,
     xArtifactClientCi: "VERCEL",
     xArtifactClientInteractive: 0,
     xArtifactTag: "Tc0BmHvJYMIYJ62/zx87YqO0Flxk+5Ovip25NY825CQ=",
     hash: "12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: await openAsBlob("example.file"),
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("artifactsUploadArtifact failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -249,20 +260,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.UploadArtifactRequest](../../models/operations/uploadartifactrequest.md)                                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.UploadArtifactRequest](../../models/uploadartifactrequest.md)                                                                                                          | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.UploadArtifactResponseBody](../../models/operations/uploadartifactresponsebody.md)\>**
+**Promise\<[models.UploadArtifactResponseBody](../../models/uploadartifactresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## downloadArtifact
 
@@ -270,6 +281,7 @@ Downloads a cache artifact indentified by its `hash` specified on the request pa
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="downloadArtifact" method="get" path="/v8/artifacts/{hash}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -282,9 +294,10 @@ async function run() {
     xArtifactClientCi: "VERCEL",
     xArtifactClientInteractive: 0,
     hash: "12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -310,16 +323,15 @@ async function run() {
     xArtifactClientCi: "VERCEL",
     xArtifactClientInteractive: 0,
     hash: "12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("artifactsDownloadArtifact failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -329,7 +341,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.DownloadArtifactRequest](../../models/operations/downloadartifactrequest.md)                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.DownloadArtifactRequest](../../models/downloadartifactrequest.md)                                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -342,7 +354,7 @@ run();
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## artifactExists
 
@@ -350,6 +362,7 @@ Check that a cache artifact with the given `hash` exists. This request returns r
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="artifactExists" method="head" path="/v8/artifacts/{hash}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -360,6 +373,8 @@ const vercel = new Vercel({
 async function run() {
   await vercel.artifacts.artifactExists({
     hash: "12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
 
@@ -385,15 +400,15 @@ const vercel = new VercelCore({
 async function run() {
   const res = await artifactsArtifactExists(vercel, {
     hash: "12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("artifactsArtifactExists failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  
 }
 
 run();
@@ -403,7 +418,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.ArtifactExistsRequest](../../models/operations/artifactexistsrequest.md)                                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.ArtifactExistsRequest](../../models/artifactexistsrequest.md)                                                                                                          | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -416,7 +431,7 @@ run();
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## artifactQuery
 
@@ -424,6 +439,7 @@ Query information about an array of artifacts.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="artifactQuery" method="post" path="/v8/artifacts" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -432,9 +448,17 @@ const vercel = new Vercel({
 });
 
 async function run() {
-  const result = await vercel.artifacts.artifactQuery({});
+  const result = await vercel.artifacts.artifactQuery({
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      hashes: [
+        "12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+        "34HKQaOmR5t5Uy6vasdasdasdasd",
+      ],
+    },
+  });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -456,16 +480,22 @@ const vercel = new VercelCore({
 });
 
 async function run() {
-  const res = await artifactsArtifactQuery(vercel, {});
-
-  if (!res.ok) {
-    throw res.error;
+  const res = await artifactsArtifactQuery(vercel, {
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      hashes: [
+        "12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+        "34HKQaOmR5t5Uy6vasdasdasdasd",
+      ],
+    },
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("artifactsArtifactQuery failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -475,17 +505,92 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.ArtifactQueryRequest](../../models/operations/artifactqueryrequest.md)                                                                                             | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.ArtifactQueryRequest](../../models/artifactqueryrequest.md)                                                                                                            | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[{ [k: string]: operations.ResponseBody }](../../models/.md)\>**
+**Promise\<[{ [k: string]: models.ArtifactQueryResponseBody }](../../models/.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## deleteAllArtifacts
+
+Deletes all cache artifacts stored for the authenticated team or user, clearing the Remote Cache. Subsequent builds will re-populate the cache.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="deleteAllArtifacts" method="delete" path="/v8/artifacts" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.artifacts.deleteAllArtifacts({
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { artifactsDeleteAllArtifacts } from "@vercel/sdk/funcs/artifactsDeleteAllArtifacts.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await artifactsDeleteAllArtifacts(vercel, {
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("artifactsDeleteAllArtifacts failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.DeleteAllArtifactsRequest](../../models/deleteallartifactsrequest.md)                                                                                                  | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.DeleteAllArtifactsResponseBody](../../models/deleteallartifactsresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |

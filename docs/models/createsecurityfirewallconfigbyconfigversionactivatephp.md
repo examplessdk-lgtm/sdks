@@ -1,0 +1,19 @@
+# CreateSecurityFirewallConfigByConfigVersionActivatePhp
+
+## Example Usage
+
+```typescript
+import { CreateSecurityFirewallConfigByConfigVersionActivatePhp } from "@vercel/sdk/models/createsecurityfirewallconfigbyconfigversionactivateop.js";
+
+let value: CreateSecurityFirewallConfigByConfigVersionActivatePhp = {
+  action: "log",
+  active: true,
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                                                          | Type                                                                                                                                                                                                           | Required                                                                                                                                                                                                       | Description                                                                                                                                                                                                    |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `action`                                                                                                                                                                                                       | [models.CreateSecurityFirewallConfigByConfigVersionActivateSecurityResponse200ApplicationJSONAction](../models/createsecurityfirewallconfigbyconfigversionactivatesecurityresponse200applicationjsonaction.md) | :heavy_check_mark:                                                                                                                                                                                             | N/A                                                                                                                                                                                                            |
+| `active`                                                                                                                                                                                                       | *boolean*                                                                                                                                                                                                      | :heavy_check_mark:                                                                                                                                                                                             | N/A                                                                                                                                                                                                            |

@@ -1,111 +1,42 @@
 # Projects
-(*projects*)
 
 ## Overview
 
 ### Available Operations
 
-* [updateProjectDataCache](#updateprojectdatacache) - Update the data cache feature
 * [getProjects](#getprojects) - Retrieve a list of projects
+* [getProjectTrace](#getprojecttrace) - Get a project trace by request ID
 * [createProject](#createproject) - Create a new project
+* [getProjectToken](#getprojecttoken) - Generate a project OIDC token
+* [createTraceSession](#createtracesession) - Create a trace session token for a deployment
+* [getProject](#getproject) - Find a project by id or name
 * [updateProject](#updateproject) - Update an existing project
 * [deleteProject](#deleteproject) - Delete a Project
+* [uploadProjectAvatar](#uploadprojectavatar) - Upload a project avatar
+* [deleteProjectAvatar](#deleteprojectavatar) - Delete a project avatar
 * [getProjectDomains](#getprojectdomains) - Retrieve project domains by project by id or name
 * [getProjectDomain](#getprojectdomain) - Get a project domain
 * [updateProjectDomain](#updateprojectdomain) - Update a project domain
 * [removeProjectDomain](#removeprojectdomain) - Remove a domain from a project
 * [addProjectDomain](#addprojectdomain) - Add a domain to a project
+* [moveProjectDomain](#moveprojectdomain) - Move a project domain
 * [verifyProjectDomain](#verifyprojectdomain) - Verify project domain
 * [filterProjectEnvs](#filterprojectenvs) - Retrieve the environment variables of a project by id or name
-* [getProjectEnv](#getprojectenv) - Retrieve the decrypted value of an environment variable of a project by id
 * [createProjectEnv](#createprojectenv) - Create one or more environment variables
+* [getProjectEnv](#getprojectenv) - Retrieve the decrypted value of an environment variable of a project by id
 * [removeProjectEnv](#removeprojectenv) - Remove an environment variable
 * [editProjectEnv](#editprojectenv) - Edit an environment variable
+* [batchRemoveProjectEnv](#batchremoveprojectenv) - Batch remove environment variables
+* [createProjectTransferRequest](#createprojecttransferrequest) - Create project transfer request
+* [acceptProjectTransferRequest](#acceptprojecttransferrequest) - Accept project transfer request
 * [updateProjectProtectionBypass](#updateprojectprotectionbypass) - Update Protection Bypass for Automation
-* [requestPromote](#requestpromote) - Points all production domains for a project to the given deploy
+* [requestRollback](#requestrollback) - Point production traffic to a previous production deployment by ID
+* [updateProjectsByProjectIdRollbackByDeploymentIdUpdateDescription](#updateprojectsbyprojectidrollbackbydeploymentidupdatedescription) - Updates the description for a rollback
+* [updateMicrofrontends](#updatemicrofrontends) - Update the microfrontends settings
+* [requestPromote](#requestpromote) - Point production traffic to a given deployment
 * [listPromoteAliases](#listpromotealiases) - Gets a list of aliases with status for the current promote
-
-## updateProjectDataCache
-
-Update the data cache feature on a project.
-
-### Example Usage
-
-```typescript
-import { Vercel } from "@vercel/sdk";
-
-const vercel = new Vercel({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const result = await vercel.projects.updateProjectDataCache({
-    projectId: "prj_12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
-    requestBody: {
-      disabled: true,
-    },
-  });
-
-  // Handle the result
-  console.log(result);
-}
-
-run();
-```
-
-### Standalone function
-
-The standalone function version of this method:
-
-```typescript
-import { VercelCore } from "@vercel/sdk/core.js";
-import { projectsUpdateProjectDataCache } from "@vercel/sdk/funcs/projectsUpdateProjectDataCache.js";
-
-// Use `VercelCore` for best tree-shaking performance.
-// You can create one instance of it to use across an application.
-const vercel = new VercelCore({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const res = await projectsUpdateProjectDataCache(vercel, {
-    projectId: "prj_12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
-    requestBody: {
-      disabled: true,
-    },
-  });
-
-  if (!res.ok) {
-    throw res.error;
-  }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
-}
-
-run();
-```
-
-### Parameters
-
-| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.UpdateProjectDataCacheRequest](../../models/operations/updateprojectdatacacherequest.md)                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
-| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
-| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
-| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
-
-### Response
-
-**Promise\<[operations.UpdateProjectDataCacheResponseBody](../../models/operations/updateprojectdatacacheresponsebody.md)\>**
-
-### Errors
-
-| Error Type      | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+* [pauseProject](#pauseproject) - Pause a project
+* [unpauseProject](#unpauseproject) - Unpause a project
 
 ## getProjects
 
@@ -113,6 +44,7 @@ Allows to retrieve the list of projects of the authenticated user or team. The l
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getProjects" method="get" path="/v10/projects" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -122,11 +54,18 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.projects.getProjects({
+    since: 1540095775941,
+    until: 1540095775951,
     gitForkProtection: "1",
     repoUrl: "https://github.com/vercel/next.js",
+    elasticConcurrencyEnabled: "1",
+    staticIpsEnabled: "1",
+    buildMachineTypes: "default,enhanced",
+    buildQueueConfiguration: "SKIP_NAMESPACE_QUEUE",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -149,18 +88,23 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await projectsGetProjects(vercel, {
+    since: 1540095775941,
+    until: 1540095775951,
     gitForkProtection: "1",
     repoUrl: "https://github.com/vercel/next.js",
+    elasticConcurrencyEnabled: "1",
+    staticIpsEnabled: "1",
+    buildMachineTypes: "default,enhanced",
+    buildQueueConfiguration: "SKIP_NAMESPACE_QUEUE",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsGetProjects failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -170,20 +114,99 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetProjectsRequest](../../models/operations/getprojectsrequest.md)                                                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetProjectsRequest](../../models/getprojectsrequest.md)                                                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetProjectsResponseBody](../../models/operations/getprojectsresponsebody.md)\>**
+**Promise\<[models.GetProjectsResponseBody](../../models/getprojectsresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## getProjectTrace
+
+Returns the OTEL trace for a given Vercel CLI request.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="getProjectTrace" method="get" path="/v1/projects/traces" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.projects.getProjectTrace({
+    projectId: "prj_123",
+    requestId: "cli-req-abc",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { projectsGetProjectTrace } from "@vercel/sdk/funcs/projectsGetProjectTrace.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await projectsGetProjectTrace(vercel, {
+    projectId: "prj_123",
+    requestId: "cli-req-abc",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsGetProjectTrace failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.GetProjectTraceRequest](../../models/getprojecttracerequest.md)                                                                                                        | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.GetProjectTraceResponseBody](../../models/getprojecttraceresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## createProject
 
@@ -191,6 +214,7 @@ Allows to create a new project with the provided configuration. It only requires
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="createProject" method="post" path="/v11/projects" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -200,12 +224,20 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.projects.createProject({
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "a-project-name",
+      sandbox: {
+        region: "iad1",
+        failoverRegions: [
+          "sfo1",
+          "cle1",
+        ],
+      },
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -228,19 +260,25 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await projectsCreateProject(vercel, {
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "a-project-name",
+      sandbox: {
+        region: "iad1",
+        failoverRegions: [
+          "sfo1",
+          "cle1",
+        ],
+      },
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsCreateProject failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -250,20 +288,255 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.CreateProjectRequest](../../models/operations/createprojectrequest.md)                                                                                             | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.CreateProjectRequest](../../models/createprojectrequest.md)                                                                                                            | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.CreateProjectResponseBody](../../models/operations/createprojectresponsebody.md)\>**
+**Promise\<[models.CreateProjectResponseBody](../../models/createprojectresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## getProjectToken
+
+Generates an OIDC token for the project and returns it.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="getProjectToken" method="post" path="/v1/projects/{idOrName}/token" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.projects.getProjectToken({
+    idOrName: "my-project, <prj_id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      source: "vercel-cli:pull",
+    },
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { projectsGetProjectToken } from "@vercel/sdk/funcs/projectsGetProjectToken.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await projectsGetProjectToken(vercel, {
+    idOrName: "my-project, <prj_id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      source: "vercel-cli:pull",
+    },
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsGetProjectToken failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.GetProjectTokenRequest](../../models/getprojecttokenrequest.md)                                                                                                        | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.GetProjectTokenResponseBody](../../models/getprojecttokenresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## createTraceSession
+
+Mints a short-lived HS256 JWT scoped to a deployment hostname. The Vercel CLI presents this JWT to the Vercel proxy on requests it wants traced.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="createTraceSession" method="post" path="/v1/projects/traces/session" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.projects.createTraceSession({
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { projectsCreateTraceSession } from "@vercel/sdk/funcs/projectsCreateTraceSession.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await projectsCreateTraceSession(vercel, {
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsCreateTraceSession failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.CreateTraceSessionRequest](../../models/createtracesessionrequest.md)                                                                                                  | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.CreateTraceSessionResponseBody](../../models/createtracesessionresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## getProject
+
+Get the information for a specific project by passing either the project `id` or `name` in the URL.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="getProject" method="get" path="/v9/projects/{idOrName}" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.projects.getProject({
+    idOrName: "prj_12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { projectsGetProject } from "@vercel/sdk/funcs/projectsGetProject.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await projectsGetProject(vercel, {
+    idOrName: "prj_12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsGetProject failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.GetProjectRequest](../../models/getprojectrequest.md)                                                                                                                  | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.GetProjectResponseBody](../../models/getprojectresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## updateProject
 
@@ -271,6 +544,7 @@ Update the fields of a project using either its `name` or `id`.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="updateProject" method="patch" path="/v9/projects/{idOrName}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -281,12 +555,20 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.projects.updateProject({
     idOrName: "prj_12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "a-project-name",
+      sandbox: {
+        region: "iad1",
+        failoverRegions: [
+          "sfo1",
+          "cle1",
+        ],
+      },
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -310,19 +592,25 @@ const vercel = new VercelCore({
 async function run() {
   const res = await projectsUpdateProject(vercel, {
     idOrName: "prj_12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "a-project-name",
+      sandbox: {
+        region: "iad1",
+        failoverRegions: [
+          "sfo1",
+          "cle1",
+        ],
+      },
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsUpdateProject failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -332,20 +620,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.UpdateProjectRequest](../../models/operations/updateprojectrequest.md)                                                                                             | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.UpdateProjectRequest](../../models/updateprojectrequest.md)                                                                                                            | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.UpdateProjectResponseBody](../../models/operations/updateprojectresponsebody.md)\>**
+**Promise\<[models.UpdateProjectResponseBody](../../models/updateprojectresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## deleteProject
 
@@ -353,6 +641,7 @@ Delete a specific project by passing either the project `id` or `name` in the UR
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="deleteProject" method="delete" path="/v9/projects/{idOrName}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -363,6 +652,8 @@ const vercel = new Vercel({
 async function run() {
   await vercel.projects.deleteProject({
     idOrName: "prj_12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
 
@@ -388,15 +679,15 @@ const vercel = new VercelCore({
 async function run() {
   const res = await projectsDeleteProject(vercel, {
     idOrName: "prj_12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("projectsDeleteProject failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  
 }
 
 run();
@@ -406,7 +697,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.DeleteProjectRequest](../../models/operations/deleteprojectrequest.md)                                                                                             | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.DeleteProjectRequest](../../models/deleteprojectrequest.md)                                                                                                            | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -419,7 +710,161 @@ run();
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## uploadProjectAvatar
+
+Upload an image as the avatar of the project identified by `idOrName`. The request body is the raw bytes of a JPG, PNG, or SVG image; the `Content-Type` header must declare which. SVG payloads are sanitized and optimized server-side before storage. The final SHA-1 of the stored bytes becomes the project's `avatar` value. The actual upload pipeline (validation, sanitization, S3 write, conditional `updateProject`, and event emission) lives in the shared `@api/project-avatar-upload` helper so it can be reused by background workers.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="uploadProjectAvatar" method="post" path="/v1/projects/{idOrName}/avatar" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.projects.uploadProjectAvatar({
+    idOrName: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { projectsUploadProjectAvatar } from "@vercel/sdk/funcs/projectsUploadProjectAvatar.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await projectsUploadProjectAvatar(vercel, {
+    idOrName: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsUploadProjectAvatar failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.UploadProjectAvatarRequest](../../models/uploadprojectavatarrequest.md)                                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.UploadProjectAvatarResponseBody](../../models/uploadprojectavatarresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## deleteProjectAvatar
+
+Remove the avatar of the project identified by `idOrName`. Deletes the chosen avatar field so the next production deploy can run auto-detection again. Does not delete the stored image.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="deleteProjectAvatar" method="delete" path="/v1/projects/{idOrName}/avatar" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.projects.deleteProjectAvatar({
+    idOrName: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { projectsDeleteProjectAvatar } from "@vercel/sdk/funcs/projectsDeleteProjectAvatar.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await projectsDeleteProjectAvatar(vercel, {
+    idOrName: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsDeleteProjectAvatar failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.DeleteProjectAvatarRequest](../../models/deleteprojectavatarrequest.md)                                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.DeleteProjectAvatarResponseBody](../../models/deleteprojectavatarresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getProjectDomains
 
@@ -427,6 +872,7 @@ Retrieve the domains associated with a given project by passing either the proje
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getProjectDomains" method="get" path="/v9/projects/{idOrName}/domains" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -437,13 +883,15 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.projects.getProjectDomains({
     idOrName: "<value>",
+    customEnvironmentId: "env_123abc4567",
     redirect: "example.com",
     limit: 20,
     since: 1609499532000,
     until: 1612264332000,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -467,20 +915,20 @@ const vercel = new VercelCore({
 async function run() {
   const res = await projectsGetProjectDomains(vercel, {
     idOrName: "<value>",
+    customEnvironmentId: "env_123abc4567",
     redirect: "example.com",
     limit: 20,
     since: 1609499532000,
     until: 1612264332000,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsGetProjectDomains failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -490,20 +938,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetProjectDomainsRequest](../../models/operations/getprojectdomainsrequest.md)                                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetProjectDomainsRequest](../../models/getprojectdomainsrequest.md)                                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetProjectDomainsResponseBody](../../models/operations/getprojectdomainsresponsebody.md)\>**
+**Promise\<[models.GetProjectDomainsResponseBody](../../models/getprojectdomainsresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getProjectDomain
 
@@ -511,6 +959,7 @@ Get project domain by project id/name and domain name.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getProjectDomain" method="get" path="/v9/projects/{idOrName}/domains/{domain}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -522,9 +971,10 @@ async function run() {
   const result = await vercel.projects.getProjectDomain({
     idOrName: "<value>",
     domain: "www.example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -549,16 +999,15 @@ async function run() {
   const res = await projectsGetProjectDomain(vercel, {
     idOrName: "<value>",
     domain: "www.example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsGetProjectDomain failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -568,20 +1017,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetProjectDomainRequest](../../models/operations/getprojectdomainrequest.md)                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetProjectDomainRequest](../../models/getprojectdomainrequest.md)                                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetProjectDomainResponseBody](../../models/operations/getprojectdomainresponsebody.md)\>**
+**Promise\<[models.GetProjectDomainResponseBody](../../models/getprojectdomainresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## updateProjectDomain
 
@@ -589,6 +1038,7 @@ Update a project domain's configuration, including the name, git branch and redi
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="updateProjectDomain" method="patch" path="/v9/projects/{idOrName}/domains/{domain}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -600,6 +1050,8 @@ async function run() {
   const result = await vercel.projects.updateProjectDomain({
     idOrName: "<value>",
     domain: "www.example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       gitBranch: null,
       redirect: "foobar.com",
@@ -607,7 +1059,6 @@ async function run() {
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -632,21 +1083,20 @@ async function run() {
   const res = await projectsUpdateProjectDomain(vercel, {
     idOrName: "<value>",
     domain: "www.example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       gitBranch: null,
       redirect: "foobar.com",
       redirectStatusCode: 307,
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsUpdateProjectDomain failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -656,20 +1106,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.UpdateProjectDomainRequest](../../models/operations/updateprojectdomainrequest.md)                                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.UpdateProjectDomainRequest](../../models/updateprojectdomainrequest.md)                                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.UpdateProjectDomainResponseBody](../../models/operations/updateprojectdomainresponsebody.md)\>**
+**Promise\<[models.UpdateProjectDomainResponseBody](../../models/updateprojectdomainresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## removeProjectDomain
 
@@ -677,6 +1127,7 @@ Remove a domain from a project by passing the domain name and by specifying the 
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="removeProjectDomain" method="delete" path="/v9/projects/{idOrName}/domains/{domain}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -688,9 +1139,10 @@ async function run() {
   const result = await vercel.projects.removeProjectDomain({
     idOrName: "<value>",
     domain: "www.example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -715,16 +1167,15 @@ async function run() {
   const res = await projectsRemoveProjectDomain(vercel, {
     idOrName: "<value>",
     domain: "www.example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsRemoveProjectDomain failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -734,20 +1185,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.RemoveProjectDomainRequest](../../models/operations/removeprojectdomainrequest.md)                                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.RemoveProjectDomainRequest](../../models/removeprojectdomainrequest.md)                                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.RemoveProjectDomainResponseBody](../../models/operations/removeprojectdomainresponsebody.md)\>**
+**Promise\<[models.RemoveProjectDomainResponseBody](../../models/removeprojectdomainresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## addProjectDomain
 
@@ -755,6 +1206,7 @@ Add a domain to the project by passing its domain name and by specifying the pro
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="addProjectDomain" method="post" path="/v10/projects/{idOrName}/domains" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -765,6 +1217,8 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.projects.addProjectDomain({
     idOrName: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "www.example.com",
       gitBranch: null,
@@ -773,7 +1227,6 @@ async function run() {
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -797,6 +1250,8 @@ const vercel = new VercelCore({
 async function run() {
   const res = await projectsAddProjectDomain(vercel, {
     idOrName: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "www.example.com",
       gitBranch: null,
@@ -804,15 +1259,12 @@ async function run() {
       redirectStatusCode: 307,
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsAddProjectDomain failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -822,20 +1274,111 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.AddProjectDomainRequest](../../models/operations/addprojectdomainrequest.md)                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.AddProjectDomainRequest](../../models/addprojectdomainrequest.md)                                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.AddProjectDomainResponseBody](../../models/operations/addprojectdomainresponsebody.md)\>**
+**Promise\<[models.AddProjectDomainResponseBody](../../models/addprojectdomainresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## moveProjectDomain
+
+Move one project's domain to another project. Also allows the move of all redirects pointed to that domain in the same project.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="moveProjectDomain" method="post" path="/v1/projects/{idOrName}/domains/{domain}/move" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.projects.moveProjectDomain({
+    idOrName: "<value>",
+    domain: "www.example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      projectId: "prj_XLKmu1DyR1eY7zq8UgeRKbA7yVLA",
+      gitBranch: null,
+      redirect: "foobar.com",
+      redirectStatusCode: 307,
+    },
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { projectsMoveProjectDomain } from "@vercel/sdk/funcs/projectsMoveProjectDomain.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await projectsMoveProjectDomain(vercel, {
+    idOrName: "<value>",
+    domain: "www.example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      projectId: "prj_XLKmu1DyR1eY7zq8UgeRKbA7yVLA",
+      gitBranch: null,
+      redirect: "foobar.com",
+      redirectStatusCode: 307,
+    },
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsMoveProjectDomain failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.MoveProjectDomainRequest](../../models/moveprojectdomainrequest.md)                                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.MoveProjectDomainResponseBody](../../models/moveprojectdomainresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## verifyProjectDomain
 
@@ -843,6 +1386,7 @@ Attempts to verify a project domain with `verified = false` by checking the corr
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="verifyProjectDomain" method="post" path="/v9/projects/{idOrName}/domains/{domain}/verify" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -854,9 +1398,10 @@ async function run() {
   const result = await vercel.projects.verifyProjectDomain({
     idOrName: "prj_12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
     domain: "example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -881,16 +1426,15 @@ async function run() {
   const res = await projectsVerifyProjectDomain(vercel, {
     idOrName: "prj_12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
     domain: "example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsVerifyProjectDomain failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -900,20 +1444,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.VerifyProjectDomainRequest](../../models/operations/verifyprojectdomainrequest.md)                                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.VerifyProjectDomainRequest](../../models/verifyprojectdomainrequest.md)                                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.VerifyProjectDomainResponseBody](../../models/operations/verifyprojectdomainresponsebody.md)\>**
+**Promise\<[models.VerifyProjectDomainResponseBody](../../models/verifyprojectdomainresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## filterProjectEnvs
 
@@ -921,6 +1465,7 @@ Retrieve the environment variables for a given project by passing either the pro
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="filterProjectEnvs" method="get" path="/v10/projects/{idOrName}/env" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -934,9 +1479,12 @@ async function run() {
     gitBranch: "feature-1",
     decrypt: "true",
     source: "vercel-cli:pull",
+    customEnvironmentId: "env_123abc4567",
+    customEnvironmentSlug: "my-custom-env",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -963,16 +1511,17 @@ async function run() {
     gitBranch: "feature-1",
     decrypt: "true",
     source: "vercel-cli:pull",
+    customEnvironmentId: "env_123abc4567",
+    customEnvironmentSlug: "my-custom-env",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsFilterProjectEnvs failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -982,105 +1531,28 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.FilterProjectEnvsRequest](../../models/operations/filterprojectenvsrequest.md)                                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.FilterProjectEnvsRequest](../../models/filterprojectenvsrequest.md)                                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.FilterProjectEnvsResponseBody](../../models/operations/filterprojectenvsresponsebody.md)\>**
+**Promise\<[models.FilterProjectEnvsResponseBody](../../models/filterprojectenvsresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
-
-## getProjectEnv
-
-Retrieve the environment variable for a given project.
-
-### Example Usage
-
-```typescript
-import { Vercel } from "@vercel/sdk";
-
-const vercel = new Vercel({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const result = await vercel.projects.getProjectEnv({
-    idOrName: "prj_XLKmu1DyR1eY7zq8UgeRKbA7yVLA",
-    id: "<id>",
-  });
-
-  // Handle the result
-  console.log(result);
-}
-
-run();
-```
-
-### Standalone function
-
-The standalone function version of this method:
-
-```typescript
-import { VercelCore } from "@vercel/sdk/core.js";
-import { projectsGetProjectEnv } from "@vercel/sdk/funcs/projectsGetProjectEnv.js";
-
-// Use `VercelCore` for best tree-shaking performance.
-// You can create one instance of it to use across an application.
-const vercel = new VercelCore({
-  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const res = await projectsGetProjectEnv(vercel, {
-    idOrName: "prj_XLKmu1DyR1eY7zq8UgeRKbA7yVLA",
-    id: "<id>",
-  });
-
-  if (!res.ok) {
-    throw res.error;
-  }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
-}
-
-run();
-```
-
-### Parameters
-
-| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetProjectEnvRequest](../../models/operations/getprojectenvrequest.md)                                                                                             | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
-| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
-| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
-| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
-
-### Response
-
-**Promise\<[operations.GetProjectEnvResponseBody](../../models/operations/getprojectenvresponsebody.md)\>**
-
-### Errors
-
-| Error Type      | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## createProjectEnv
 
-Create one ore more environment variables for a project by passing its `key`, `value`, `type` and `target` and by specifying the project by either passing the project `id` or `name` in the URL.
+Create one or more environment variables for a project by passing its `key`, `value`, `type` and `target` and by specifying the project by either passing the project `id` or `name` in the URL. If you include `upsert=true` as a query parameter, a new environment variable will not be created if it already exists but, the existing variable's value will be updated.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="createProjectEnv" method="post" path="/v10/projects/{idOrName}/env" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -1092,6 +1564,8 @@ async function run() {
   const result = await vercel.projects.createProjectEnv({
     idOrName: "prj_XLKmu1DyR1eY7zq8UgeRKbA7yVLA",
     upsert: "true",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       key: "API_URL",
       value: "https://api.vercel.com",
@@ -1101,10 +1575,12 @@ async function run() {
       ],
       gitBranch: "feature-1",
       comment: "database connection string for production",
+      customEnvironmentIds: [
+        "env_1234567890",
+      ],
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -1129,6 +1605,8 @@ async function run() {
   const res = await projectsCreateProjectEnv(vercel, {
     idOrName: "prj_XLKmu1DyR1eY7zq8UgeRKbA7yVLA",
     upsert: "true",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       key: "API_URL",
       value: "https://api.vercel.com",
@@ -1138,17 +1616,17 @@ async function run() {
       ],
       gitBranch: "feature-1",
       comment: "database connection string for production",
+      customEnvironmentIds: [
+        "env_1234567890",
+      ],
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsCreateProjectEnv failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -1158,20 +1636,99 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.CreateProjectEnvRequest](../../models/operations/createprojectenvrequest.md)                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.CreateProjectEnvRequest](../../models/createprojectenvrequest.md)                                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.CreateProjectEnvResponseBody](../../models/operations/createprojectenvresponsebody.md)\>**
+**Promise\<[models.CreateProjectEnvResponseBody](../../models/createprojectenvresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## getProjectEnv
+
+Retrieve the environment variable for a given project.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="getProjectEnv" method="get" path="/v1/projects/{idOrName}/env/{id}" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.projects.getProjectEnv({
+    idOrName: "prj_XLKmu1DyR1eY7zq8UgeRKbA7yVLA",
+    id: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { projectsGetProjectEnv } from "@vercel/sdk/funcs/projectsGetProjectEnv.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await projectsGetProjectEnv(vercel, {
+    idOrName: "prj_XLKmu1DyR1eY7zq8UgeRKbA7yVLA",
+    id: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsGetProjectEnv failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.GetProjectEnvRequest](../../models/getprojectenvrequest.md)                                                                                                            | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.GetProjectEnvResponseBody](../../models/getprojectenvresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## removeProjectEnv
 
@@ -1179,6 +1736,7 @@ Delete a specific environment variable for a given project by passing the enviro
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="removeProjectEnv" method="delete" path="/v9/projects/{idOrName}/env/{id}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -1190,9 +1748,11 @@ async function run() {
   const result = await vercel.projects.removeProjectEnv({
     idOrName: "prj_XLKmu1DyR1eY7zq8UgeRKbA7yVLA",
     id: "XMbOEya1gUUO1ir4",
+    customEnvironmentId: "env_123abc4567",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -1217,16 +1777,16 @@ async function run() {
   const res = await projectsRemoveProjectEnv(vercel, {
     idOrName: "prj_XLKmu1DyR1eY7zq8UgeRKbA7yVLA",
     id: "XMbOEya1gUUO1ir4",
+    customEnvironmentId: "env_123abc4567",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsRemoveProjectEnv failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -1236,20 +1796,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.RemoveProjectEnvRequest](../../models/operations/removeprojectenvrequest.md)                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.RemoveProjectEnvRequest](../../models/removeprojectenvrequest.md)                                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.RemoveProjectEnvResponseBody](../../models/operations/removeprojectenvresponsebody.md)\>**
+**Promise\<[models.RemoveProjectEnvResponseBody](../../models/removeprojectenvresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## editProjectEnv
 
@@ -1257,6 +1817,7 @@ Edit a specific environment variable for a given project by passing the environm
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="editProjectEnv" method="patch" path="/v9/projects/{idOrName}/env/{id}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -1268,6 +1829,8 @@ async function run() {
   const result = await vercel.projects.editProjectEnv({
     idOrName: "prj_XLKmu1DyR1eY7zq8UgeRKbA7yVLA",
     id: "XMbOEya1gUUO1ir4",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       key: "GITHUB_APP_ID",
       target: [
@@ -1283,7 +1846,6 @@ async function run() {
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -1308,6 +1870,8 @@ async function run() {
   const res = await projectsEditProjectEnv(vercel, {
     idOrName: "prj_XLKmu1DyR1eY7zq8UgeRKbA7yVLA",
     id: "XMbOEya1gUUO1ir4",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       key: "GITHUB_APP_ID",
       target: [
@@ -1322,15 +1886,12 @@ async function run() {
       comment: "database connection string for production",
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsEditProjectEnv failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -1340,20 +1901,257 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.EditProjectEnvRequest](../../models/operations/editprojectenvrequest.md)                                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.EditProjectEnvRequest](../../models/editprojectenvrequest.md)                                                                                                          | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.EditProjectEnvResponseBody](../../models/operations/editprojectenvresponsebody.md)\>**
+**Promise\<[models.EditProjectEnvResponseBody](../../models/editprojectenvresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## batchRemoveProjectEnv
+
+Delete multiple environment variables for a given project in a single batch operation.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="batchRemoveProjectEnv" method="delete" path="/v1/projects/{idOrName}/env" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.projects.batchRemoveProjectEnv({
+    idOrName: "prj_XLKmu1DyR1eY7zq8UgeRKbA7yVLA",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { projectsBatchRemoveProjectEnv } from "@vercel/sdk/funcs/projectsBatchRemoveProjectEnv.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await projectsBatchRemoveProjectEnv(vercel, {
+    idOrName: "prj_XLKmu1DyR1eY7zq8UgeRKbA7yVLA",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsBatchRemoveProjectEnv failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.BatchRemoveProjectEnvRequest](../../models/batchremoveprojectenvrequest.md)                                                                                            | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.BatchRemoveProjectEnvResponseBody](../../models/batchremoveprojectenvresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## createProjectTransferRequest
+
+Initiates a project transfer request from one team to another. <br/> Returns a `code` that remains valid for 24 hours and can be used to accept the transfer request by another team using the `PUT /projects/transfer-request/:code` endpoint. <br/> Users can also accept the project transfer request using the claim URL: `https://vercel.com/claim-deployment?code=<code>&returnUrl=<returnUrl>`. <br/> The `code` parameter specifies the project transfer request code generated using this endpoint. <br/> The `returnUrl` parameter redirects users to a specific page of the application if the claim URL is invalid or expired.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="createProjectTransferRequest" method="post" path="/projects/{idOrName}/transfer-request" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.projects.createProjectTransferRequest({
+    idOrName: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { projectsCreateProjectTransferRequest } from "@vercel/sdk/funcs/projectsCreateProjectTransferRequest.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await projectsCreateProjectTransferRequest(vercel, {
+    idOrName: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsCreateProjectTransferRequest failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.CreateProjectTransferRequestRequest](../../models/createprojecttransferrequestrequest.md)                                                                              | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.CreateProjectTransferRequestResponseBody](../../models/createprojecttransferrequestresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## acceptProjectTransferRequest
+
+Accept a project transfer request initated by another team. <br/> The `code` is generated using the `POST /projects/:idOrName/transfer-request` endpoint.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="acceptProjectTransferRequest" method="put" path="/projects/transfer-request/{code}" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.projects.acceptProjectTransferRequest({
+    code: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      newProjectName: "a-project-name",
+    },
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { projectsAcceptProjectTransferRequest } from "@vercel/sdk/funcs/projectsAcceptProjectTransferRequest.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await projectsAcceptProjectTransferRequest(vercel, {
+    code: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      newProjectName: "a-project-name",
+    },
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsAcceptProjectTransferRequest failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.AcceptProjectTransferRequestRequest](../../models/acceptprojecttransferrequestrequest.md)                                                                              | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.AcceptProjectTransferRequestResponseBody](../../models/acceptprojecttransferrequestresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## updateProjectProtectionBypass
 
@@ -1361,6 +2159,7 @@ Update the deployment protection automation bypass for a project
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="updateProjectProtectionBypass" method="patch" path="/v1/projects/{idOrName}/protection-bypass" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -1371,9 +2170,11 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.projects.updateProjectProtectionBypass({
     idOrName: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {},
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -1397,16 +2198,16 @@ const vercel = new VercelCore({
 async function run() {
   const res = await projectsUpdateProjectProtectionBypass(vercel, {
     idOrName: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {},
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsUpdateProjectProtectionBypass failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -1416,20 +2217,259 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.UpdateProjectProtectionBypassRequest](../../models/operations/updateprojectprotectionbypassrequest.md)                                                             | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.UpdateProjectProtectionBypassRequest](../../models/updateprojectprotectionbypassrequest.md)                                                                            | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.UpdateProjectProtectionBypassResponseBody](../../models/operations/updateprojectprotectionbypassresponsebody.md)\>**
+**Promise\<[models.UpdateProjectProtectionBypassResponseBody](../../models/updateprojectprotectionbypassresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## requestRollback
+
+Allows users to rollback to a deployment.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="requestRollback" method="post" path="/v1/projects/{projectId}/rollback/{deploymentId}" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  await vercel.projects.requestRollback({
+    projectId: "<id>",
+    deploymentId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { projectsRequestRollback } from "@vercel/sdk/funcs/projectsRequestRollback.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await projectsRequestRollback(vercel, {
+    projectId: "<id>",
+    deploymentId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("projectsRequestRollback failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.RequestRollbackRequest](../../models/requestrollbackrequest.md)                                                                                                        | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<void\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## updateProjectsByProjectIdRollbackByDeploymentIdUpdateDescription
+
+Updates the reason for a rollback, without changing the rollback status itself.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="updateProjectsByProjectIdRollbackByDeploymentIdUpdateDescription" method="patch" path="/v1/projects/{projectId}/rollback/{deploymentId}/update-description" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel();
+
+async function run() {
+  await vercel.projects.updateProjectsByProjectIdRollbackByDeploymentIdUpdateDescription({
+    projectId: "<id>",
+    deploymentId: "<id>",
+  });
+
+
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { projectsUpdateProjectsByProjectIdRollbackByDeploymentIdUpdateDescription } from "@vercel/sdk/funcs/projectsUpdateProjectsByProjectIdRollbackByDeploymentIdUpdateDescription.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore();
+
+async function run() {
+  const res = await projectsUpdateProjectsByProjectIdRollbackByDeploymentIdUpdateDescription(vercel, {
+    projectId: "<id>",
+    deploymentId: "<id>",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("projectsUpdateProjectsByProjectIdRollbackByDeploymentIdUpdateDescription failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.UpdateProjectsByProjectIdRollbackByDeploymentIdUpdateDescriptionRequest](../../models/updateprojectsbyprojectidrollbackbydeploymentidupdatedescriptionrequest.md)      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<void\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## updateMicrofrontends
+
+Update the microfrontends settings for a project.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="updateMicrofrontends" method="patch" path="/v1/projects/{projectId}/microfrontends" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.projects.updateMicrofrontends({
+    projectId: "prj_12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      microfrontendsGroupId: "mfe_12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+      enabled: true,
+      isDefaultApp: true,
+      defaultRoute: "/home",
+    },
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { projectsUpdateMicrofrontends } from "@vercel/sdk/funcs/projectsUpdateMicrofrontends.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await projectsUpdateMicrofrontends(vercel, {
+    projectId: "prj_12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      microfrontendsGroupId: "mfe_12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+      enabled: true,
+      isDefaultApp: true,
+      defaultRoute: "/home",
+    },
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsUpdateMicrofrontends failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.UpdateMicrofrontendsRequest](../../models/updatemicrofrontendsrequest.md)                                                                                              | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.UpdateMicrofrontendsResponseBody](../../models/updatemicrofrontendsresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## requestPromote
 
@@ -1437,6 +2477,7 @@ Allows users to promote a deployment to production. Note: This does NOT rebuild 
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="requestPromote" method="post" path="/v10/projects/{projectId}/promote/{deploymentId}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -1446,8 +2487,10 @@ const vercel = new Vercel({
 
 async function run() {
   await vercel.projects.requestPromote({
-    projectId: "<value>",
-    deploymentId: "<value>",
+    projectId: "<id>",
+    deploymentId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
 
@@ -1472,17 +2515,17 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await projectsRequestPromote(vercel, {
-    projectId: "<value>",
-    deploymentId: "<value>",
+    projectId: "<id>",
+    deploymentId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("projectsRequestPromote failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  
 }
 
 run();
@@ -1492,7 +2535,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.RequestPromoteRequest](../../models/operations/requestpromoterequest.md)                                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.RequestPromoteRequest](../../models/requestpromoterequest.md)                                                                                                          | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -1505,7 +2548,7 @@ run();
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## listPromoteAliases
 
@@ -1513,6 +2556,7 @@ Get a list of aliases related to the last promote request with their mapping sta
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="listPromoteAliases" method="get" path="/v1/projects/{projectId}/promote/aliases" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -1522,13 +2566,14 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.projects.listPromoteAliases({
-    projectId: "<value>",
+    projectId: "<id>",
     limit: 20,
     since: 1609499532000,
     until: 1612264332000,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -1551,20 +2596,19 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await projectsListPromoteAliases(vercel, {
-    projectId: "<value>",
+    projectId: "<id>",
     limit: 20,
     since: 1609499532000,
     until: 1612264332000,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsListPromoteAliases failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -1574,17 +2618,171 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.ListPromoteAliasesRequest](../../models/operations/listpromotealiasesrequest.md)                                                                                   | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.ListPromoteAliasesRequest](../../models/listpromotealiasesrequest.md)                                                                                                  | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.ListPromoteAliasesResponseBody](../../models/operations/listpromotealiasesresponsebody.md)\>**
+**Promise\<[models.ListPromoteAliasesResponseBody](../../models/listpromotealiasesresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## pauseProject
+
+Pause a project by passing its project `id` in the URL. If the project does not exist given the id then the request will fail with 400 status code. If the project disables auto assigning custom production domains and blocks the active Production Deployment then the request will return with 200 status code.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="pauseProject" method="post" path="/v1/projects/{projectId}/pause" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  await vercel.projects.pauseProject({
+    projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { projectsPauseProject } from "@vercel/sdk/funcs/projectsPauseProject.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await projectsPauseProject(vercel, {
+    projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("projectsPauseProject failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.PauseProjectRequest](../../models/pauseprojectrequest.md)                                                                                                              | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<void\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## unpauseProject
+
+Unpause a project by passing its project `id` in the URL. If the project does not exist given the id then the request will fail with 400 status code. If the project enables auto assigning custom production domains and unblocks the active Production Deployment then the request will return with 200 status code.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="unpauseProject" method="post" path="/v1/projects/{projectId}/unpause" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  await vercel.projects.unpauseProject({
+    projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { projectsUnpauseProject } from "@vercel/sdk/funcs/projectsUnpauseProject.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await projectsUnpauseProject(vercel, {
+    projectId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("projectsUnpauseProject failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.UnpauseProjectRequest](../../models/unpauseprojectrequest.md)                                                                                                          | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<void\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |

@@ -1,15 +1,406 @@
 # Integrations
-(*integrations*)
 
 ## Overview
 
 ### Available Operations
 
+* [updateIntegrationDeploymentAction](#updateintegrationdeploymentaction) - Update deployment integration action
+* [gitNamespaces](#gitnamespaces) - List git namespaces by provider
+* [searchRepo](#searchrepo) - List git repositories linked to namespace by provider
+* [getBillingPlans](#getbillingplans) - List integration billing plans
+* [connectIntegrationResourceToProject](#connectintegrationresourcetoproject) - Connect integration resource to project
 * [getConfigurations](#getconfigurations) - Get configurations for the authenticated user or team
 * [getConfiguration](#getconfiguration) - Retrieve an integration configuration
 * [deleteConfiguration](#deleteconfiguration) - Delete an integration configuration
-* [gitNamespaces](#gitnamespaces) - List git namespaces by provider
-* [searchRepo](#searchrepo) - List git repositories linked to namespace by provider
+* [getConfigurationProducts](#getconfigurationproducts) - List products for integration configuration
+* [createIntegrationStoreDirect](#createintegrationstoredirect) - Create integration store (free and paid plans)
+
+## updateIntegrationDeploymentAction
+
+Updates the deployment integration action for the specified integration installation
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="update-integration-deployment-action" method="patch" path="/v1/deployments/{deploymentId}/integrations/{integrationConfigurationId}/resources/{resourceId}/actions/{action}" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  await vercel.integrations.updateIntegrationDeploymentAction({
+    deploymentId: "<id>",
+    integrationConfigurationId: "<id>",
+    resourceId: "<id>",
+    action: "<value>",
+  });
+
+
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { deploymentsUpdateIntegrationDeploymentAction } from "@vercel/sdk/funcs/deploymentsUpdateIntegrationDeploymentAction.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await deploymentsUpdateIntegrationDeploymentAction(vercel, {
+    deploymentId: "<id>",
+    integrationConfigurationId: "<id>",
+    resourceId: "<id>",
+    action: "<value>",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("deploymentsUpdateIntegrationDeploymentAction failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.UpdateIntegrationDeploymentActionRequest](../../models/updateintegrationdeploymentactionrequest.md)                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<void\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## gitNamespaces
+
+Lists git namespaces for a supported provider. Supported providers are `github`, `gitlab` and `bitbucket`. If the provider is not provided, it will try to obtain it from the user that authenticated the request.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="gitNamespaces" method="get" path="/v1/integrations/git-namespaces" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.integrations.gitNamespaces({
+    host: "ghes-test.now.systems",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { integrationsGitNamespaces } from "@vercel/sdk/funcs/integrationsGitNamespaces.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await integrationsGitNamespaces(vercel, {
+    host: "ghes-test.now.systems",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("integrationsGitNamespaces failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.GitNamespacesRequest](../../models/gitnamespacesrequest.md)                                                                                                            | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.GitNamespacesResponseBody[]](../../models/.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## searchRepo
+
+Lists git repositories linked to a namespace `id` for a supported provider. A specific namespace `id` can be obtained via the `git-namespaces`  endpoint. Supported providers are `github`, `gitlab` and `bitbucket`. If the provider or namespace is not provided, it will try to obtain it from the user that authenticated the request.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="searchRepo" method="get" path="/v1/integrations/search-repo" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.integrations.searchRepo({
+    host: "ghes-test.now.systems",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { integrationsSearchRepo } from "@vercel/sdk/funcs/integrationsSearchRepo.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await integrationsSearchRepo(vercel, {
+    host: "ghes-test.now.systems",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("integrationsSearchRepo failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.SearchRepoRequest](../../models/searchreporequest.md)                                                                                                                  | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.SearchRepoResponseBody](../../models/searchreporesponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## getBillingPlans
+
+Get a list of billing plans for an integration and product.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="getBillingPlans" method="get" path="/v1/integrations/integration/{integrationIdOrSlug}/products/{productIdOrSlug}/plans" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.integrations.getBillingPlans({
+    integrationIdOrSlug: "<value>",
+    productIdOrSlug: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { integrationsGetBillingPlans } from "@vercel/sdk/funcs/integrationsGetBillingPlans.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await integrationsGetBillingPlans(vercel, {
+    integrationIdOrSlug: "<value>",
+    productIdOrSlug: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("integrationsGetBillingPlans failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.GetBillingPlansRequest](../../models/getbillingplansrequest.md)                                                                                                        | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.GetBillingPlansResponseBody](../../models/getbillingplansresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## connectIntegrationResourceToProject
+
+Connects an integration resource to a Vercel project. This endpoint establishes a connection between a provisioned integration resource (from storage APIs like `POST /v1/storage/stores/integration/direct`) and a specific Vercel project.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="connectIntegrationResourceToProject" method="post" path="/v1/integrations/installations/{integrationConfigurationId}/resources/{resourceId}/connections" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  await vercel.integrations.connectIntegrationResourceToProject({
+    integrationConfigurationId: "<id>",
+    resourceId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { integrationsConnectIntegrationResourceToProject } from "@vercel/sdk/funcs/integrationsConnectIntegrationResourceToProject.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await integrationsConnectIntegrationResourceToProject(vercel, {
+    integrationConfigurationId: "<id>",
+    resourceId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("integrationsConnectIntegrationResourceToProject failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.ConnectIntegrationResourceToProjectRequest](../../models/connectintegrationresourcetoprojectrequest.md)                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<void\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getConfigurations
 
@@ -17,6 +408,7 @@ Allows to retrieve all configurations for an authenticated integration. When the
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getConfigurations" method="get" path="/v1/integrations/configurations" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -27,9 +419,10 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.integrations.getConfigurations({
     view: "account",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -53,16 +446,15 @@ const vercel = new VercelCore({
 async function run() {
   const res = await integrationsGetConfigurations(vercel, {
     view: "account",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("integrationsGetConfigurations failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -72,20 +464,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetConfigurationsRequest](../../models/operations/getconfigurationsrequest.md)                                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetConfigurationsRequest](../../models/getconfigurationsrequest.md)                                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetConfigurationsResponseBody](../../models/operations/getconfigurationsresponsebody.md)\>**
+**Promise\<[models.GetConfigurationsResponseBody](../../models/getconfigurationsresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getConfiguration
 
@@ -93,6 +485,7 @@ Allows to retrieve a the configuration with the provided id in case it exists. T
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getConfiguration" method="get" path="/v1/integrations/configuration/{id}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -103,9 +496,10 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.integrations.getConfiguration({
     id: "icfg_cuwj0AdCdH3BwWT4LPijCC7t",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -129,16 +523,15 @@ const vercel = new VercelCore({
 async function run() {
   const res = await integrationsGetConfiguration(vercel, {
     id: "icfg_cuwj0AdCdH3BwWT4LPijCC7t",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("integrationsGetConfiguration failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -148,20 +541,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetConfigurationRequest](../../models/operations/getconfigurationrequest.md)                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetConfigurationRequest](../../models/getconfigurationrequest.md)                                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetConfigurationResponseBody](../../models/operations/getconfigurationresponsebody.md)\>**
+**Promise\<[models.GetConfigurationResponseBody](../../models/getconfigurationresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## deleteConfiguration
 
@@ -169,6 +562,7 @@ Allows to remove the configuration with the `id` provided in the parameters. The
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="deleteConfiguration" method="delete" path="/v1/integrations/configuration/{id}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -179,6 +573,8 @@ const vercel = new Vercel({
 async function run() {
   await vercel.integrations.deleteConfiguration({
     id: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
 
@@ -204,15 +600,15 @@ const vercel = new VercelCore({
 async function run() {
   const res = await integrationsDeleteConfiguration(vercel, {
     id: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("integrationsDeleteConfiguration failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  
 }
 
 run();
@@ -222,7 +618,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.DeleteConfigurationRequest](../../models/operations/deleteconfigurationrequest.md)                                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.DeleteConfigurationRequest](../../models/deleteconfigurationrequest.md)                                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -235,14 +631,15 @@ run();
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
-## gitNamespaces
+## getConfigurationProducts
 
-Lists git namespaces for a supported provider. Supported providers are `github`, `gitlab` and `bitbucket`. If the provider is not provided, it will try to obtain it from the user that authenticated the request.
+Returns products available for an integration configuration. Each product includes a `metadataSchema` field with the JSON Schema for required and optional metadata fields.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getConfigurationProducts" method="get" path="/v1/integrations/configuration/{id}/products" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -251,11 +648,12 @@ const vercel = new Vercel({
 });
 
 async function run() {
-  const result = await vercel.integrations.gitNamespaces({
-    host: "ghes-test.now.systems",
+  const result = await vercel.integrations.getConfigurationProducts({
+    id: "icfg_cuwj0AdCdH3BwWT4LPijCC7t",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -268,7 +666,7 @@ The standalone function version of this method:
 
 ```typescript
 import { VercelCore } from "@vercel/sdk/core.js";
-import { integrationsGitNamespaces } from "@vercel/sdk/funcs/integrationsGitNamespaces.js";
+import { integrationsGetConfigurationProducts } from "@vercel/sdk/funcs/integrationsGetConfigurationProducts.js";
 
 // Use `VercelCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -277,18 +675,17 @@ const vercel = new VercelCore({
 });
 
 async function run() {
-  const res = await integrationsGitNamespaces(vercel, {
-    host: "ghes-test.now.systems",
+  const res = await integrationsGetConfigurationProducts(vercel, {
+    id: "icfg_cuwj0AdCdH3BwWT4LPijCC7t",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("integrationsGetConfigurationProducts failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -298,27 +695,28 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GitNamespacesRequest](../../models/operations/gitnamespacesrequest.md)                                                                                             | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetConfigurationProductsRequest](../../models/getconfigurationproductsrequest.md)                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GitNamespacesResponseBody[]](../../models/.md)\>**
+**Promise\<[models.GetConfigurationProductsResponseBody](../../models/getconfigurationproductsresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
-## searchRepo
+## createIntegrationStoreDirect
 
-Lists git repositories linked to a namespace `id` for a supported provider. A specific namespace `id` can be obtained via the `git-namespaces`  endpoint. Supported providers are `github`, `gitlab` and `bitbucket`. If the provider or namespace is not provided, it will try to obtain it from the user that authenticated the request.
+Creates an integration store with automatic billing plan handling. For free resources, omit `billingPlanId` to auto-discover free plans. For paid resources, provide a `billingPlanId` from the billing plans endpoint.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="createIntegrationStoreDirect" method="post" path="/v1/storage/stores/integration/direct" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -327,11 +725,33 @@ const vercel = new Vercel({
 });
 
 async function run() {
-  const result = await vercel.integrations.searchRepo({
-    host: "ghes-test.now.systems",
+  const result = await vercel.integrations.createIntegrationStoreDirect({
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      name: "my-dev-database",
+      integrationConfigurationId: "icfg_cuwj0AdCdH3BwWT4LPijCC7t",
+      integrationProductIdOrSlug: "iap_postgres_db",
+      metadata: {
+        "environment": "development",
+        "project": "my-app",
+        "tags": [
+          "database",
+          "postgres",
+        ],
+      },
+      externalId: "dev-db-001",
+      protocolSettings: {
+        "experimentation": {
+          "edgeConfigSyncingEnabled": true,
+        },
+      },
+      billingPlanId: "bp_abc123def456",
+      paymentMethodId: "pm_1AbcDefGhiJklMno",
+      prepaymentAmountCents: 5000,
+    },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -344,7 +764,7 @@ The standalone function version of this method:
 
 ```typescript
 import { VercelCore } from "@vercel/sdk/core.js";
-import { integrationsSearchRepo } from "@vercel/sdk/funcs/integrationsSearchRepo.js";
+import { integrationsCreateIntegrationStoreDirect } from "@vercel/sdk/funcs/integrationsCreateIntegrationStoreDirect.js";
 
 // Use `VercelCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -353,18 +773,38 @@ const vercel = new VercelCore({
 });
 
 async function run() {
-  const res = await integrationsSearchRepo(vercel, {
-    host: "ghes-test.now.systems",
+  const res = await integrationsCreateIntegrationStoreDirect(vercel, {
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      name: "my-dev-database",
+      integrationConfigurationId: "icfg_cuwj0AdCdH3BwWT4LPijCC7t",
+      integrationProductIdOrSlug: "iap_postgres_db",
+      metadata: {
+        "environment": "development",
+        "project": "my-app",
+        "tags": [
+          "database",
+          "postgres",
+        ],
+      },
+      externalId: "dev-db-001",
+      protocolSettings: {
+        "experimentation": {
+          "edgeConfigSyncingEnabled": true,
+        },
+      },
+      billingPlanId: "bp_abc123def456",
+      paymentMethodId: "pm_1AbcDefGhiJklMno",
+      prepaymentAmountCents: 5000,
+    },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("integrationsCreateIntegrationStoreDirect failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -374,17 +814,17 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.SearchRepoRequest](../../models/operations/searchreporequest.md)                                                                                                   | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.CreateIntegrationStoreDirectRequest](../../models/createintegrationstoredirectrequest.md)                                                                              | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.SearchRepoResponseBody](../../models/operations/searchreporesponsebody.md)\>**
+**Promise\<[models.CreateIntegrationStoreDirectResponseBody](../../models/createintegrationstoredirectresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |

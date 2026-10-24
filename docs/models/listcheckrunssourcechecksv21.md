@@ -1,0 +1,26 @@
+# ListCheckRunsSourceChecksV21
+
+Config-driven CI task — check run `source` only (no parent check).
+
+## Example Usage
+
+```typescript
+import { ListCheckRunsSourceChecksV21 } from "@vercel/sdk/models/listcheckrunsop.js";
+
+let value: ListCheckRunsSourceChecksV21 = {
+  invocationId: "<id>",
+  jobDefinitionId: "<id>",
+  origin: "config",
+  subKind: "vercel-ci",
+};
+```
+
+## Fields
+
+| Field                                                                        | Type                                                                         | Required                                                                     | Description                                                                  |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `invocationAttempt`                                                          | *number*                                                                     | :heavy_minus_sign:                                                           | N/A                                                                          |
+| `invocationId`                                                               | *string*                                                                     | :heavy_check_mark:                                                           | N/A                                                                          |
+| `jobDefinitionId`                                                            | *string*                                                                     | :heavy_check_mark:                                                           | N/A                                                                          |
+| `origin`                                                                     | *"config"*                                                                   | :heavy_check_mark:                                                           | N/A                                                                          |
+| `subKind`                                                                    | [models.ListCheckRunsSourceSubKind](../models/listcheckrunssourcesubkind.md) | :heavy_check_mark:                                                           | N/A                                                                          |

@@ -1,0 +1,21 @@
+# GetProjectsResponseBodyProjectsResponse200ApplicationJson3ProjectsAliasBuilds
+
+## Example Usage
+
+```typescript
+import { GetProjectsResponseBodyProjectsResponse200ApplicationJson3ProjectsAliasBuilds } from "@vercel/sdk/models/getprojectsresponsebodyprojectsresponse200applicationjson3checksconclusion.js";
+
+let value:
+  GetProjectsResponseBodyProjectsResponse200ApplicationJson3ProjectsAliasBuilds =
+    {
+      use: "<value>",
+    };
+```
+
+## Fields
+
+| Field              | Type               | Required           | Description        |
+| ------------------ | ------------------ | ------------------ | ------------------ |
+| `dest`             | *string*           | :heavy_minus_sign: | N/A                |
+| `src`              | *string*           | :heavy_minus_sign: | N/A                |
+| `use`              | *string*           | :heavy_check_mark: | N/A                |

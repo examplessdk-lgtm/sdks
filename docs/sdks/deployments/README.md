@@ -1,11 +1,11 @@
 # Deployments
-(*deployments*)
 
 ## Overview
 
 ### Available Operations
 
 * [getDeploymentEvents](#getdeploymentevents) - Get deployment events
+* [updateIntegrationDeploymentAction](#updateintegrationdeploymentaction) - Update deployment integration action
 * [getDeployment](#getdeployment) - Get a deployment by ID or URL
 * [createDeployment](#createdeployment) - Create a new deployment
 * [cancelDeployment](#canceldeployment) - Cancel a deployment
@@ -21,6 +21,7 @@ Get the build logs of a deployment by deployment ID and build ID. It can work as
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getDeploymentEvents" method="get" path="/v3/deployments/{idOrUrl}/events" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -29,7 +30,7 @@ const vercel = new Vercel({
 });
 
 async function run() {
-  await vercel.deployments.getDeploymentEvents({
+  const result = await vercel.deployments.getDeploymentEvents({
     idOrUrl: "dpl_5WJWYSyB7BpgTj3EuwF37WMRBXBtPQ2iTMJHJBJyRfd",
     direction: "backward",
     follow: 1,
@@ -40,9 +41,11 @@ async function run() {
     statusCode: "5xx",
     delimiter: 1,
     builds: 1,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-
+  console.log(result);
 }
 
 run();
@@ -74,15 +77,15 @@ async function run() {
     statusCode: "5xx",
     delimiter: 1,
     builds: 1,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("deploymentsGetDeploymentEvents failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  
 }
 
 run();
@@ -92,7 +95,86 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetDeploymentEventsRequest](../../models/operations/getdeploymenteventsrequest.md)                                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetDeploymentEventsRequest](../../models/getdeploymenteventsrequest.md)                                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.GetDeploymentEventsResponse](../../models/getdeploymenteventsresponse.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## updateIntegrationDeploymentAction
+
+Updates the deployment integration action for the specified integration installation
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="update-integration-deployment-action" method="patch" path="/v1/deployments/{deploymentId}/integrations/{integrationConfigurationId}/resources/{resourceId}/actions/{action}" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  await vercel.deployments.updateIntegrationDeploymentAction({
+    deploymentId: "<id>",
+    integrationConfigurationId: "<id>",
+    resourceId: "<id>",
+    action: "<value>",
+  });
+
+
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { deploymentsUpdateIntegrationDeploymentAction } from "@vercel/sdk/funcs/deploymentsUpdateIntegrationDeploymentAction.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await deploymentsUpdateIntegrationDeploymentAction(vercel, {
+    deploymentId: "<id>",
+    integrationConfigurationId: "<id>",
+    resourceId: "<id>",
+    action: "<value>",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("deploymentsUpdateIntegrationDeploymentAction failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.UpdateIntegrationDeploymentActionRequest](../../models/updateintegrationdeploymentactionrequest.md)                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -105,7 +187,7 @@ run();
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getDeployment
 
@@ -113,6 +195,7 @@ Retrieves information for a deployment either by supplying its ID (`id` property
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getDeployment" method="get" path="/v13/deployments/{idOrUrl}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -124,9 +207,10 @@ async function run() {
   const result = await vercel.deployments.getDeployment({
     idOrUrl: "dpl_89qyp1cskzkLrVicDaZoDbjyHuDJ",
     withGitRepoInfo: "true",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -151,16 +235,15 @@ async function run() {
   const res = await deploymentsGetDeployment(vercel, {
     idOrUrl: "dpl_89qyp1cskzkLrVicDaZoDbjyHuDJ",
     withGitRepoInfo: "true",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("deploymentsGetDeployment failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -170,27 +253,28 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetDeploymentRequest](../../models/operations/getdeploymentrequest.md)                                                                                             | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetDeploymentRequest](../../models/getdeploymentrequest.md)                                                                                                            | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetDeploymentResponseBody](../../models/operations/getdeploymentresponsebody.md)\>**
+**Promise\<[models.GetDeploymentResponseBody](../../models/getdeploymentresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## createDeployment
 
-Create a new deployment with all the required and intended data. If the deployment is not a git deployment, all files must be provided with the request, either referenced or inlined. Additionally, a deployment id can be specified to redeploy a previous deployment.
+Creates a new deployment for the authenticated team or user. For non-git deployments, upload files first via the file upload API, then reference them here by SHA — or inline small files directly in the request body. To redeploy an existing deployment, provide its `deploymentId`; all settings are inherited unless explicitly overridden. The deployment begins building immediately and transitions through `QUEUED` → `INITIALIZING` → `BUILDING` before reaching `READY` or `ERROR`.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="createDeployment" method="post" path="/v13/deployments" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -200,7 +284,13 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.deployments.createDeployment({
+    forceNew: "1",
+    skipAutoDetectionConfirmation: "1",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
+      customEnvironmentSlugOrId: "staging",
+      deploymentId: "dpl_2qn7PZrx89yxY34vEZPD31Y9XVj6",
       files: [
         {
           file: "folder/file.js",
@@ -209,20 +299,37 @@ async function run() {
       gitMetadata: {
         remoteUrl: "https://github.com/vercel/next.js",
         commitAuthorName: "kyliau",
+        commitAuthorEmail: "kyliau@example.com",
         commitMessage: "add method to measure Interaction to Next Paint (INP) (#36490)",
         commitRef: "main",
         commitSha: "dc36199b2234c6586ebe05ec94078a895c707e29",
         dirty: true,
+        ci: true,
+        ciType: "github-actions",
+        ciGitProviderUsername: "rauchg",
+        ciGitRepoVisibility: "private",
+        rootDirectory: "apps/web",
+      },
+      gitSource: {
+        org: "vercel",
+        ref: "main",
+        repo: "next.js",
+        sha: "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0",
+        type: "github",
       },
       meta: {
         "foo": "bar",
       },
       name: "my-instant-deployment",
       project: "my-deployment-project",
+      projectSettings: {
+        buildCommand: "next build",
+        installCommand: "pnpm install",
+      },
+      target: "production",
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -245,7 +352,13 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await deploymentsCreateDeployment(vercel, {
+    forceNew: "1",
+    skipAutoDetectionConfirmation: "1",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
+      customEnvironmentSlugOrId: "staging",
+      deploymentId: "dpl_2qn7PZrx89yxY34vEZPD31Y9XVj6",
       files: [
         {
           file: "folder/file.js",
@@ -254,27 +367,42 @@ async function run() {
       gitMetadata: {
         remoteUrl: "https://github.com/vercel/next.js",
         commitAuthorName: "kyliau",
+        commitAuthorEmail: "kyliau@example.com",
         commitMessage: "add method to measure Interaction to Next Paint (INP) (#36490)",
         commitRef: "main",
         commitSha: "dc36199b2234c6586ebe05ec94078a895c707e29",
         dirty: true,
+        ci: true,
+        ciType: "github-actions",
+        ciGitProviderUsername: "rauchg",
+        ciGitRepoVisibility: "private",
+        rootDirectory: "apps/web",
+      },
+      gitSource: {
+        org: "vercel",
+        ref: "main",
+        repo: "next.js",
+        sha: "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0",
+        type: "github",
       },
       meta: {
         "foo": "bar",
       },
       name: "my-instant-deployment",
       project: "my-deployment-project",
+      projectSettings: {
+        buildCommand: "next build",
+        installCommand: "pnpm install",
+      },
+      target: "production",
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("deploymentsCreateDeployment failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -284,27 +412,28 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.CreateDeploymentRequest](../../models/operations/createdeploymentrequest.md)                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.CreateDeploymentRequest](../../models/createdeploymentrequest.md)                                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.CreateDeploymentResponseBody](../../models/operations/createdeploymentresponsebody.md)\>**
+**Promise\<[models.CreateDeploymentResponseBody](../../models/createdeploymentresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## cancelDeployment
 
-This endpoint allows you to cancel a deployment which is currently building, by supplying its `id` in the URL.
+Cancels a deployment that is currently in progress, stopping the build before it completes. Use this to recover quickly from accidental deploys, wrong-branch pushes, or builds with known errors — without waiting for them to finish. Returns 400 if the deployment is no longer cancelable (already `READY`, `ERROR`, or `CANCELED`). Returns the updated deployment object with `readyState: 'CANCELED'` on success.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="cancelDeployment" method="patch" path="/v12/deployments/{id}/cancel" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -315,9 +444,10 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.deployments.cancelDeployment({
     id: "dpl_5WJWYSyB7BpgTj3EuwF37WMRBXBtPQ2iTMJHJBJyRfd",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -341,16 +471,15 @@ const vercel = new VercelCore({
 async function run() {
   const res = await deploymentsCancelDeployment(vercel, {
     id: "dpl_5WJWYSyB7BpgTj3EuwF37WMRBXBtPQ2iTMJHJBJyRfd",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("deploymentsCancelDeployment failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -360,20 +489,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.CancelDeploymentRequest](../../models/operations/canceldeploymentrequest.md)                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.CancelDeploymentRequest](../../models/canceldeploymentrequest.md)                                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.CancelDeploymentResponseBody](../../models/operations/canceldeploymentresponsebody.md)\>**
+**Promise\<[models.CancelDeploymentResponseBody](../../models/canceldeploymentresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## uploadFile
 
@@ -381,6 +510,7 @@ Before you create a deployment you need to upload the required files for that de
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="uploadFile" method="post" path="/v2/files" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -389,9 +519,11 @@ const vercel = new Vercel({
 });
 
 async function run() {
-  const result = await vercel.deployments.uploadFile({});
+  const result = await vercel.deployments.uploadFile({
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -413,16 +545,16 @@ const vercel = new VercelCore({
 });
 
 async function run() {
-  const res = await deploymentsUploadFile(vercel, {});
-
-  if (!res.ok) {
-    throw res.error;
+  const res = await deploymentsUploadFile(vercel, {
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("deploymentsUploadFile failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -432,27 +564,28 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.UploadFileRequest](../../models/operations/uploadfilerequest.md)                                                                                                   | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.UploadFileRequest](../../models/uploadfilerequest.md)                                                                                                                  | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.UploadFileResponseBody](../../models/operations/uploadfileresponsebody.md)\>**
+**Promise\<[models.UploadFileResponseBody](../../models/uploadfileresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## listDeploymentFiles
 
-Allows to retrieve the file structure of a deployment by supplying the deployment unique identifier.
+Allows to retrieve the file structure of the source code of a deployment by supplying the deployment unique identifier. If the deployment was created with the Vercel CLI or the API directly with the `files` key, it will have a file tree that can be retrievable.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="listDeploymentFiles" method="get" path="/v6/deployments/{id}/files" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -463,9 +596,10 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.deployments.listDeploymentFiles({
     id: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -489,16 +623,15 @@ const vercel = new VercelCore({
 async function run() {
   const res = await deploymentsListDeploymentFiles(vercel, {
     id: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("deploymentsListDeploymentFiles failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -508,20 +641,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.ListDeploymentFilesRequest](../../models/operations/listdeploymentfilesrequest.md)                                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.ListDeploymentFilesRequest](../../models/listdeploymentfilesrequest.md)                                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[components.FileTree[]](../../models/.md)\>**
+**Promise\<[models.FileTree[]](../../models/.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getDeploymentFileContents
 
@@ -529,6 +662,7 @@ Allows to retrieve the content of a file by supplying the file identifier and th
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getDeploymentFileContents" method="get" path="/v8/deployments/{id}/files/{fileId}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -539,7 +673,9 @@ const vercel = new Vercel({
 async function run() {
   await vercel.deployments.getDeploymentFileContents({
     id: "<id>",
-    fileId: "<value>",
+    fileId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
 
@@ -565,16 +701,16 @@ const vercel = new VercelCore({
 async function run() {
   const res = await deploymentsGetDeploymentFileContents(vercel, {
     id: "<id>",
-    fileId: "<value>",
+    fileId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("deploymentsGetDeploymentFileContents failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  
 }
 
 run();
@@ -584,7 +720,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetDeploymentFileContentsRequest](../../models/operations/getdeploymentfilecontentsrequest.md)                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetDeploymentFileContentsRequest](../../models/getdeploymentfilecontentsrequest.md)                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -597,7 +733,7 @@ run();
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getDeployments
 
@@ -605,6 +741,7 @@ List deployments under the authenticated user or team. If a deployment hasn't fi
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getDeployments" method="get" path="/v7/deployments" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -618,15 +755,20 @@ async function run() {
     from: 1612948664566,
     limit: 10,
     projectId: "QmXGTs7mvAMMC7WW5ebrM33qKG32QK3h4vmQMjmY",
+    projectIds: [
+      "prj_123",
+      "prj_456",
+    ],
     target: "production",
     to: 1612948664566,
     users: "kr1PsOIzqEL5Xg6M4VZcZosf,K4amb7K9dAt5R2vBJWF32bmY",
     since: 1540095775941,
     until: 1540095775951,
     state: "BUILDING,READY",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -653,22 +795,25 @@ async function run() {
     from: 1612948664566,
     limit: 10,
     projectId: "QmXGTs7mvAMMC7WW5ebrM33qKG32QK3h4vmQMjmY",
+    projectIds: [
+      "prj_123",
+      "prj_456",
+    ],
     target: "production",
     to: 1612948664566,
     users: "kr1PsOIzqEL5Xg6M4VZcZosf,K4amb7K9dAt5R2vBJWF32bmY",
     since: 1540095775941,
     until: 1540095775951,
     state: "BUILDING,READY",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("deploymentsGetDeployments failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -678,20 +823,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetDeploymentsRequest](../../models/operations/getdeploymentsrequest.md)                                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetDeploymentsRequest](../../models/getdeploymentsrequest.md)                                                                                                          | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetDeploymentsResponseBody](../../models/operations/getdeploymentsresponsebody.md)\>**
+**Promise\<[models.GetDeploymentsResponseBody](../../models/getdeploymentsresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## deleteDeployment
 
@@ -699,6 +844,7 @@ This API allows you to delete a deployment, either by supplying its `id` in the 
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="deleteDeployment" method="delete" path="/v13/deployments/{id}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -710,9 +856,10 @@ async function run() {
   const result = await vercel.deployments.deleteDeployment({
     id: "dpl_5WJWYSyB7BpgTj3EuwF37WMRBXBtPQ2iTMJHJBJyRfd",
     url: "https://files-orcin-xi.vercel.app/",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -737,16 +884,15 @@ async function run() {
   const res = await deploymentsDeleteDeployment(vercel, {
     id: "dpl_5WJWYSyB7BpgTj3EuwF37WMRBXBtPQ2iTMJHJBJyRfd",
     url: "https://files-orcin-xi.vercel.app/",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("deploymentsDeleteDeployment failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -756,17 +902,17 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.DeleteDeploymentRequest](../../models/operations/deletedeploymentrequest.md)                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.DeleteDeploymentRequest](../../models/deletedeploymentrequest.md)                                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.DeleteDeploymentResponseBody](../../models/operations/deletedeploymentresponsebody.md)\>**
+**Promise\<[models.DeleteDeploymentResponseBody](../../models/deletedeploymentresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |

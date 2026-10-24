@@ -1,0 +1,20 @@
+# GetDeploymentHasDeploymentsResponse200ApplicationJson2
+
+## Example Usage
+
+```typescript
+import { GetDeploymentHasDeploymentsResponse200ApplicationJson2 } from "@vercel/sdk/models/getdeploymentservicesmiddlewareruntime.js";
+
+let value: GetDeploymentHasDeploymentsResponse200ApplicationJson2 = {
+  key: "<key>",
+  type: "cookie",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                                  | Type                                                                                                                                                                                   | Required                                                                                                                                                                               | Description                                                                                                                                                                            |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `key`                                                                                                                                                                                  | *string*                                                                                                                                                                               | :heavy_check_mark:                                                                                                                                                                     | N/A                                                                                                                                                                                    |
+| `type`                                                                                                                                                                                 | [models.GetDeploymentHasDeploymentsResponse200ApplicationJSONResponseBody2Services2Type](../models/getdeploymenthasdeploymentsresponse200applicationjsonresponsebody2services2type.md) | :heavy_check_mark:                                                                                                                                                                     | N/A                                                                                                                                                                                    |
+| `value`                                                                                                                                                                                | *models.GetDeploymentHasDeploymentsResponse200ApplicationJSONResponseBody2Services2RoutesValue*                                                                                        | :heavy_minus_sign:                                                                                                                                                                     | N/A                                                                                                                                                                                    |

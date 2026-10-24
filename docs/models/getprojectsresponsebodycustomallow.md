@@ -1,0 +1,30 @@
+# GetProjectsResponseBodyCustomAllow
+
+Optional overrides for the default same-env-by-slug matching. Provide explicit rules to allow cross-env access or presets. An empty array denies all access and is only allowed for the current project.
+
+## Example Usage
+
+```typescript
+import { GetProjectsResponseBodyCustomAllow } from "@vercel/sdk/models/getprojectsresponsebodychecksstate.js";
+
+let value: GetProjectsResponseBodyCustomAllow = {
+  from: {
+    slugs: [
+      "<value 1>",
+      "<value 2>",
+    ],
+  },
+  to: {
+    slugs: [
+      "<value 1>",
+    ],
+  },
+};
+```
+
+## Fields
+
+| Field                                                 | Type                                                  | Required                                              | Description                                           |
+| ----------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- |
+| `from`                                                | *models.GetProjectsResponseBodyFrom*                  | :heavy_check_mark:                                    | N/A                                                   |
+| `to`                                                  | *models.GetProjectsResponseBodyProjectsResponse200To* | :heavy_check_mark:                                    | N/A                                                   |

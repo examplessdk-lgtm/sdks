@@ -1,0 +1,19 @@
+# GetProjectsResponseBodyProjectsSsoProtection
+
+## Example Usage
+
+```typescript
+import { GetProjectsResponseBodyProjectsSsoProtection } from "@vercel/sdk/models/getprojectsresponsebodyprojectsresponse200applicationjson2aliaserror.js";
+
+let value: GetProjectsResponseBodyProjectsSsoProtection = {
+  deploymentType: "prod_deployment_urls_and_all_previews",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                            | Type                                                                                                                                                                             | Required                                                                                                                                                                         | Description                                                                                                                                                                      |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `april2026SecurityIncidentMigrationAppliedFrom`                                                                                                                                  | [models.GetProjectsResponseBodyProjectsApril2026SecurityIncidentMigrationAppliedFrom](../models/getprojectsresponsebodyprojectsapril2026securityincidentmigrationappliedfrom.md) | :heavy_minus_sign:                                                                                                                                                               | N/A                                                                                                                                                                              |
+| `cve55182MigrationAppliedFrom`                                                                                                                                                   | [models.GetProjectsResponseBodyProjectsCve55182MigrationAppliedFrom](../models/getprojectsresponsebodyprojectscve55182migrationappliedfrom.md)                                   | :heavy_minus_sign:                                                                                                                                                               | N/A                                                                                                                                                                              |
+| `deploymentType`                                                                                                                                                                 | [models.GetProjectsResponseBodyProjectsResponse200ApplicationJson3DeploymentType](../models/getprojectsresponsebodyprojectsresponse200applicationjson3deploymenttype.md)         | :heavy_check_mark:                                                                                                                                                               | N/A                                                                                                                                                                              |

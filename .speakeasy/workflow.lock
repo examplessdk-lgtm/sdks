@@ -1,21 +1,20 @@
-speakeasyVersion: 1.445.2
+speakeasyVersion: 1.802.0
 sources:
     vercel-OAS:
         sourceNamespace: vercel-oas
-        sourceRevisionDigest: sha256:0dc41dacccf85300753597cc90d024a0806849f6443750c55c8bc09bd8673b49
-        sourceBlobDigest: sha256:1b68cf40f5d005b45e13153e3c957347577e1d763a10575c3945879e06b3315d
+        sourceRevisionDigest: sha256:a37001c595d7d641befbb43c51448802448657ed108db9792d62615c1b808fb8
+        sourceBlobDigest: sha256:50988c8a26c3583a007683cc5a4c0174026a5ba52f6011820d334b5a40676feb
         tags:
             - latest
-            - speakeasy-sdk-regen-1733258664
             - 0.0.1
 targets:
     vercel:
         source: vercel-OAS
         sourceNamespace: vercel-oas
-        sourceRevisionDigest: sha256:0dc41dacccf85300753597cc90d024a0806849f6443750c55c8bc09bd8673b49
-        sourceBlobDigest: sha256:1b68cf40f5d005b45e13153e3c957347577e1d763a10575c3945879e06b3315d
+        sourceRevisionDigest: sha256:a37001c595d7d641befbb43c51448802448657ed108db9792d62615c1b808fb8
+        sourceBlobDigest: sha256:50988c8a26c3583a007683cc5a4c0174026a5ba52f6011820d334b5a40676feb
         codeSamplesNamespace: vercel-oas-typescript-code-samples
-        codeSamplesRevisionDigest: sha256:765c7b0b705cba34e2e3c64627f4eb5ea5b24ede0b7c6b884b41e26a1931feae
+        codeSamplesRevisionDigest: sha256:be09e836bbf85f86d80556032a60fd04a335f82c95ebf79540f7ff3462d61c43
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
@@ -24,7 +23,7 @@ workflow:
             inputs:
                 - location: https://openapi.vercel.sh/
             overlays:
-                - location: overlay.yaml
+                - location: overlay-title.yaml
             output: vercel-spec.json
             ruleset: vercelRestAPIRuleset
             registry:
@@ -40,3 +39,5 @@ workflow:
                 registry:
                     location: registry.speakeasyapi.dev/vercel/vercel-docs/vercel-oas-typescript-code-samples
                 blocking: false
+            testing:
+                enabled: false

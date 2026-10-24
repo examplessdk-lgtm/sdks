@@ -1,0 +1,23 @@
+# GetDeploymentsSeatBlock
+
+NSNB Blocked metadata
+
+## Example Usage
+
+```typescript
+import { GetDeploymentsSeatBlock } from "@vercel/sdk/models/getdeploymentsop.js";
+
+let value: GetDeploymentsSeatBlock = {
+  blockCode: "COMMIT_AUTHOR_REQUIRED",
+};
+```
+
+## Fields
+
+| Field                                                                                                                | Type                                                                                                                 | Required                                                                                                             | Description                                                                                                          |
+| -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `blockCode`                                                                                                          | [models.GetDeploymentsBlockCode](../models/getdeploymentsblockcode.md)                                               | :heavy_check_mark:                                                                                                   | The NSNB decision code for the seat block. TODO: We should consolidate block types.                                  |
+| `gitProvider`                                                                                                        | [models.GetDeploymentsGitProvider](../models/getdeploymentsgitprovider.md)                                           | :heavy_minus_sign:                                                                                                   | The git provider type associated with gitUserId.                                                                     |
+| `gitUserId`                                                                                                          | *models.GetDeploymentsGitUserId*                                                                                     | :heavy_minus_sign:                                                                                                   | N/A                                                                                                                  |
+| `isVerified`                                                                                                         | *boolean*                                                                                                            | :heavy_minus_sign:                                                                                                   | Determines if the user was verified during the block. In the git integration case, the commit sender was the author. |
+| `userId`                                                                                                             | *string*                                                                                                             | :heavy_minus_sign:                                                                                                   | The blocked vercel user ID.                                                                                          |

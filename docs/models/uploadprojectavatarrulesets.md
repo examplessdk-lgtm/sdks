@@ -1,0 +1,22 @@
+# UploadProjectAvatarRulesets
+
+## Example Usage
+
+```typescript
+import { UploadProjectAvatarRulesets } from "@vercel/sdk/models/uploadprojectavatarresponsebody.js";
+
+let value: UploadProjectAvatarRulesets = {
+  action: "challenge",
+};
+```
+
+## Fields
+
+| Field                                                                                                      | Type                                                                                                       | Required                                                                                                   | Description                                                                                                |
+| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `action`                                                                                                   | [models.UploadProjectAvatarProjectsResponseAction](../models/uploadprojectavatarprojectsresponseaction.md) | :heavy_check_mark:                                                                                         | N/A                                                                                                        |
+| `actionDuration`                                                                                           | *string*                                                                                                   | :heavy_minus_sign:                                                                                         | N/A                                                                                                        |
+| `bypassSystem`                                                                                             | *boolean*                                                                                                  | :heavy_minus_sign:                                                                                         | N/A                                                                                                        |
+| `logHeaders`                                                                                               | *models.UploadProjectAvatarProjectsLogHeaders*                                                             | :heavy_minus_sign:                                                                                         | N/A                                                                                                        |
+| `rateLimit`                                                                                                | [models.UploadProjectAvatarRateLimit](../models/uploadprojectavatarratelimit.md)                           | :heavy_minus_sign:                                                                                         | N/A                                                                                                        |
+| `redirect`                                                                                                 | [models.UploadProjectAvatarRedirect](../models/uploadprojectavatarredirect.md)                             | :heavy_minus_sign:                                                                                         | N/A                                                                                                        |

@@ -1,0 +1,31 @@
+# BuyCreditsConfiguration1
+
+Configuration for the Orb subscription intent.
+
+## Example Usage
+
+```typescript
+import { BuyCreditsConfiguration1 } from "@vercel/sdk/models/buycreditsop.js";
+
+let value: BuyCreditsConfiguration1 = {
+  options: {
+    productAlias: "<value>",
+    quantity: 333.08,
+  },
+  output: {
+    effectiveBehavior: "end_of_term",
+    orbPriceId: "<id>",
+    pricingSource: "copper",
+    productId: "<id>",
+  },
+  type: "set_plan_item_quantity",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                          | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `options`                                                                                                                                                                      | [models.BuyCreditsConfigurationBillingResponse200ApplicationJSONResponseBodyOptions](../models/buycreditsconfigurationbillingresponse200applicationjsonresponsebodyoptions.md) | :heavy_check_mark:                                                                                                                                                             | Configuration input options for setting plan item quantity.                                                                                                                    |
+| `output`                                                                                                                                                                       | [models.BuyCreditsConfigurationBillingResponse200Output](../models/buycreditsconfigurationbillingresponse200output.md)                                                         | :heavy_check_mark:                                                                                                                                                             | Output returned after configuring an OrbSubscriptionIntent.                                                                                                                    |
+| `type`                                                                                                                                                                         | *"set_plan_item_quantity"*                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                             | N/A                                                                                                                                                                            |

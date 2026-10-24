@@ -11,23 +11,20 @@ import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import {
   CreateCheckRequest,
   CreateCheckResponseBody,
-} from "../models/operations/createcheck.js";
+} from "../models/createcheckop.js";
 import {
   GetAllChecksRequest,
   GetAllChecksResponseBody,
-} from "../models/operations/getallchecks.js";
-import {
-  GetCheckRequest,
-  GetCheckResponseBody,
-} from "../models/operations/getcheck.js";
+} from "../models/getallchecksop.js";
+import { GetCheckRequest, GetCheckResponseBody } from "../models/getcheckop.js";
 import {
   RerequestCheckRequest,
   RerequestCheckResponseBody,
-} from "../models/operations/rerequestcheck.js";
+} from "../models/rerequestcheckop.js";
 import {
   UpdateCheckRequest,
   UpdateCheckResponseBody,
-} from "../models/operations/updatecheck.js";
+} from "../models/updatecheckop.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Checks extends ClientSDK {
@@ -36,6 +33,8 @@ export class Checks extends ClientSDK {
    *
    * @remarks
    * Creates a new check. This endpoint must be called with an OAuth2 or it will produce a 400 error.
+   *
+   * @deprecated method: This will be removed in a future release, please migrate away from it as soon as possible.
    */
   async createCheck(
     request: CreateCheckRequest,
@@ -53,6 +52,8 @@ export class Checks extends ClientSDK {
    *
    * @remarks
    * List all of the checks created for a deployment.
+   *
+   * @deprecated method: This will be removed in a future release, please migrate away from it as soon as possible.
    */
   async getAllChecks(
     request: GetAllChecksRequest,
@@ -70,6 +71,8 @@ export class Checks extends ClientSDK {
    *
    * @remarks
    * Return a detailed response for a single check.
+   *
+   * @deprecated method: This will be removed in a future release, please migrate away from it as soon as possible.
    */
   async getCheck(
     request: GetCheckRequest,
@@ -87,6 +90,8 @@ export class Checks extends ClientSDK {
    *
    * @remarks
    * Update an existing check. This endpoint must be called with an OAuth2 or it will produce a 400 error.
+   *
+   * @deprecated method: This will be removed in a future release, please migrate away from it as soon as possible.
    */
   async updateCheck(
     request: UpdateCheckRequest,
@@ -104,6 +109,8 @@ export class Checks extends ClientSDK {
    *
    * @remarks
    * Rerequest a selected check that has failed.
+   *
+   * @deprecated method: This will be removed in a future release, please migrate away from it as soon as possible.
    */
   async rerequestCheck(
     request: RerequestCheckRequest,

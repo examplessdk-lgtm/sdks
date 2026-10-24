@@ -1,0 +1,21 @@
+# CreateDeploymentResponseBodyDeploymentsAliasWarning
+
+## Example Usage
+
+```typescript
+import { CreateDeploymentResponseBodyDeploymentsAliasWarning } from "@vercel/sdk/models/createdeploymentgitsource1.js";
+
+let value: CreateDeploymentResponseBodyDeploymentsAliasWarning = {
+  code: "<value>",
+  message: "<value>",
+};
+```
+
+## Fields
+
+| Field              | Type               | Required           | Description        |
+| ------------------ | ------------------ | ------------------ | ------------------ |
+| `action`           | *string*           | :heavy_minus_sign: | N/A                |
+| `code`             | *string*           | :heavy_check_mark: | N/A                |
+| `link`             | *string*           | :heavy_minus_sign: | N/A                |
+| `message`          | *string*           | :heavy_check_mark: | N/A                |

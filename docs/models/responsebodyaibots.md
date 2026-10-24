@@ -1,0 +1,18 @@
+# ResponseBodyAiBots
+
+## Example Usage
+
+```typescript
+import { ResponseBodyAiBots } from "@vercel/sdk/models/getprojectsresponsebody.js";
+
+let value: ResponseBodyAiBots = {
+  active: false,
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                                            | Type                                                                                                                                                                                             | Required                                                                                                                                                                                         | Description                                                                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `action`                                                                                                                                                                                         | [models.GetProjectsResponseBodyProjectsResponse200ApplicationJson1SecurityManagedRulesAction](../models/getprojectsresponsebodyprojectsresponse200applicationjson1securitymanagedrulesaction.md) | :heavy_minus_sign:                                                                                                                                                                               | N/A                                                                                                                                                                                              |
+| `active`                                                                                                                                                                                         | *boolean*                                                                                                                                                                                        | :heavy_check_mark:                                                                                                                                                                               | N/A                                                                                                                                                                                              |

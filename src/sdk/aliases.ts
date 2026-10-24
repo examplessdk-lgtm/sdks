@@ -7,30 +7,63 @@ import { aliasesDeleteAlias } from "../funcs/aliasesDeleteAlias.js";
 import { aliasesGetAlias } from "../funcs/aliasesGetAlias.js";
 import { aliasesListAliases } from "../funcs/aliasesListAliases.js";
 import { aliasesListDeploymentAliases } from "../funcs/aliasesListDeploymentAliases.js";
+import { aliasesPatchUrlProtectionBypass } from "../funcs/aliasesPatchUrlProtectionBypass.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import {
   AssignAliasRequest,
   AssignAliasResponseBody,
-} from "../models/operations/assignalias.js";
+} from "../models/assignaliasop.js";
 import {
   DeleteAliasRequest,
   DeleteAliasResponseBody,
-} from "../models/operations/deletealias.js";
-import {
-  GetAliasRequest,
-  GetAliasResponseBody,
-} from "../models/operations/getalias.js";
+} from "../models/deletealiasop.js";
+import { GetAliasRequest, GetAliasResponseBody } from "../models/getaliasop.js";
 import {
   ListAliasesRequest,
   ListAliasesResponseBody,
-} from "../models/operations/listaliases.js";
+} from "../models/listaliasesop.js";
 import {
   ListDeploymentAliasesRequest,
   ListDeploymentAliasesResponseBody,
-} from "../models/operations/listdeploymentaliases.js";
+} from "../models/listdeploymentaliasesop.js";
+import { PatchUrlProtectionBypassRequest } from "../models/patchurlprotectionbypassop.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Aliases extends ClientSDK {
+  /**
+   * List Deployment Aliases
+   *
+   * @remarks
+   * Retrieves all Aliases for the Deployment with the given ID. The authenticated user or team must own the deployment.
+   */
+  async listDeploymentAliases(
+    request: ListDeploymentAliasesRequest,
+    options?: RequestOptions,
+  ): Promise<ListDeploymentAliasesResponseBody> {
+    return unwrapAsync(aliasesListDeploymentAliases(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Assign an Alias
+   *
+   * @remarks
+   * Creates a new alias for the deployment resolved from the given deployment or alias ID or URL. The authenticated user or team must own this deployment. If the desired alias is already assigned to another deployment, then it will be removed from the old deployment and assigned to the new one.
+   */
+  async assignAlias(
+    request: AssignAliasRequest,
+    options?: RequestOptions,
+  ): Promise<AssignAliasResponseBody> {
+    return unwrapAsync(aliasesAssignAlias(
+      this,
+      request,
+      options,
+    ));
+  }
+
   /**
    * List aliases
    *
@@ -83,33 +116,16 @@ export class Aliases extends ClientSDK {
   }
 
   /**
-   * List Deployment Aliases
+   * Update the protection bypass for a URL
    *
    * @remarks
-   * Retrieves all Aliases for the Deployment with the given ID. The authenticated user or team must own the deployment.
+   * Update the protection bypass for the alias or deployment URL (used for user access & comment access for deployments). Used as shareable links and user scoped access for Vercel Authentication and also to allow external (logged in) people to comment on previews for Preview Comments (next-live-mode).
    */
-  async listDeploymentAliases(
-    request: ListDeploymentAliasesRequest,
+  async patchUrlProtectionBypass(
+    request: PatchUrlProtectionBypassRequest,
     options?: RequestOptions,
-  ): Promise<ListDeploymentAliasesResponseBody> {
-    return unwrapAsync(aliasesListDeploymentAliases(
-      this,
-      request,
-      options,
-    ));
-  }
-
-  /**
-   * Assign an Alias
-   *
-   * @remarks
-   * Creates a new alias for the deployment with the given deployment ID. The authenticated user or team must own this deployment. If the desired alias is already assigned to another deployment, then it will be removed from the old deployment and assigned to the new one.
-   */
-  async assignAlias(
-    request: AssignAliasRequest,
-    options?: RequestOptions,
-  ): Promise<AssignAliasResponseBody> {
-    return unwrapAsync(aliasesAssignAlias(
+  ): Promise<{ [k: string]: any }> {
+    return unwrapAsync(aliasesPatchUrlProtectionBypass(
       this,
       request,
       options,

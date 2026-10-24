@@ -1,7 +1,8 @@
 {
   "name": "@vercel/sdk",
-  "version": "14.0.0-canary.9",
+  "version": "1.28.46",
   "author": "Speakeasy",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "./esm/index.js",
   "exports": {
@@ -28,23 +29,21 @@
     "url": "https://github.com/vercel/sdk.git"
   },
   "scripts": {
-    "lint": "eslint --max-warnings=0 src",
-    "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "lint": "oxlint --max-warnings=0 --deny-warnings --no-error-on-unmatched-pattern src",
+    "build": "tsgo",
+    "prepublishOnly": "npm run build",
+    "test": "npm run test:connect-environments",
+    "test:connect-environments": "npm run build && node --test tests/connect-integration-resource-to-project.test.mjs"
   },
   "peerDependencies": {
-    "zod": ">= 3"
+    
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^7.7.1",
-    "@typescript-eslint/parser": "^7.7.1",
-    "eslint": "^8.57.0",
-    "eslint-import-resolver-typescript": "^3.6.1",
-    "eslint-plugin-import": "^2.29.1",
-    "typescript": "^5.4.5",
-    "zod": "^3.23.4"
+    "@typescript/native-preview": "7.0.0-dev.20260302.1",
+    "oxlint": "^1.60.0",
+    "typescript": "~5.8.3"
   },
   "dependencies": {
-    
+    "zod": "^3.25.0 || ^4.0.0"
   }
 }

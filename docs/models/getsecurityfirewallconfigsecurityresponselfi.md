@@ -1,0 +1,19 @@
+# GetSecurityFirewallConfigSecurityResponseLfi
+
+## Example Usage
+
+```typescript
+import { GetSecurityFirewallConfigSecurityResponseLfi } from "@vercel/sdk/models/getsecurityfirewallconfigrulessecurityresponse200applicationjsonresponsebodydraft2actionaction.js";
+
+let value: GetSecurityFirewallConfigSecurityResponseLfi = {
+  action: "log",
+  active: true,
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                                                      | Type                                                                                                                                                                                                       | Required                                                                                                                                                                                                   | Description                                                                                                                                                                                                |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `action`                                                                                                                                                                                                   | [models.GetSecurityFirewallConfigSecurityResponse200ApplicationJSONResponseBodyActiveCrsLfiAction](../models/getsecurityfirewallconfigsecurityresponse200applicationjsonresponsebodyactivecrslfiaction.md) | :heavy_check_mark:                                                                                                                                                                                         | N/A                                                                                                                                                                                                        |
+| `active`                                                                                                                                                                                                   | *boolean*                                                                                                                                                                                                  | :heavy_check_mark:                                                                                                                                                                                         | N/A                                                                                                                                                                                                        |

@@ -1,3 +1,17 @@
+/examples/node_modules
+.env
+.env.local
+.env.*.local
+**/.speakeasy/temp/
+**/.speakeasy/logs/
+.speakeasy/temp/
+.DS_Store
+.claude/
+/mcp-server
+/bin
+/.eslintcache
+/.speakeasy/reports
+/react-query
 /models
 /models/errors
 /types

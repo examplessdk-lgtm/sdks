@@ -1,0 +1,20 @@
+# CreateDrainFilter1
+
+## Example Usage
+
+```typescript
+import { CreateDrainFilter1 } from "@vercel/sdk/models/createdrainop.js";
+
+let value: CreateDrainFilter1 = {
+  type: "basic",
+};
+```
+
+## Fields
+
+| Field                                                                                      | Type                                                                                       | Required                                                                                   | Description                                                                                |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| `deployment`                                                                               | [models.CreateDrainFilterDrainsDeployment](../models/createdrainfilterdrainsdeployment.md) | :heavy_minus_sign:                                                                         | N/A                                                                                        |
+| `log`                                                                                      | [models.CreateDrainFilterDrainsLog](../models/createdrainfilterdrainslog.md)               | :heavy_minus_sign:                                                                         | N/A                                                                                        |
+| `project`                                                                                  | [models.CreateDrainFilterProject](../models/createdrainfilterproject.md)                   | :heavy_minus_sign:                                                                         | N/A                                                                                        |
+| `type`                                                                                     | *"basic"*                                                                                  | :heavy_check_mark:                                                                         | N/A                                                                                        |

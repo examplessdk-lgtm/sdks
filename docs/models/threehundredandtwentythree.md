@@ -1,0 +1,23 @@
+# ThreeHundredAndTwentyThree
+
+The payload of the event, if requested.
+
+## Example Usage
+
+```typescript
+import { ThreeHundredAndTwentyThree } from "@vercel/sdk/models/threehundredandfourteen.js";
+
+let value: ThreeHundredAndTwentyThree = {
+  projectId: "<id>",
+  projectName: "<value>",
+  source: "<value>",
+};
+```
+
+## Fields
+
+| Field              | Type               | Required           | Description        |
+| ------------------ | ------------------ | ------------------ | ------------------ |
+| `projectId`        | *string*           | :heavy_check_mark: | N/A                |
+| `projectName`      | *string*           | :heavy_check_mark: | N/A                |
+| `source`           | *string*           | :heavy_check_mark: | N/A                |

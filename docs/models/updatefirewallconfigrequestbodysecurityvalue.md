@@ -1,0 +1,28 @@
+# UpdateFirewallConfigRequestBodySecurityValue
+
+## Example Usage
+
+```typescript
+import { UpdateFirewallConfigRequestBodySecurityValue } from "@vercel/sdk/models/updatefirewallconfigop.js";
+
+let value: UpdateFirewallConfigRequestBodySecurityValue = {
+  name: "<value>",
+  active: false,
+  conditionGroup: [
+    {
+      conditions: [],
+    },
+  ],
+};
+```
+
+## Fields
+
+| Field                                                                                                                                | Type                                                                                                                                 | Required                                                                                                                             | Description                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `name`                                                                                                                               | *string*                                                                                                                             | :heavy_check_mark:                                                                                                                   | N/A                                                                                                                                  |
+| `description`                                                                                                                        | *string*                                                                                                                             | :heavy_minus_sign:                                                                                                                   | N/A                                                                                                                                  |
+| `active`                                                                                                                             | *boolean*                                                                                                                            | :heavy_check_mark:                                                                                                                   | N/A                                                                                                                                  |
+| `conditionGroup`                                                                                                                     | [models.UpdateFirewallConfigRequestBodySecurityConditionGroup](../models/updatefirewallconfigrequestbodysecurityconditiongroup.md)[] | :heavy_check_mark:                                                                                                                   | N/A                                                                                                                                  |
+| `valid`                                                                                                                              | *boolean*                                                                                                                            | :heavy_minus_sign:                                                                                                                   | N/A                                                                                                                                  |
+| `validationErrors`                                                                                                                   | *models.UpdateFirewallConfigRequestBodySecurityValidationErrors*                                                                     | :heavy_minus_sign:                                                                                                                   | N/A                                                                                                                                  |

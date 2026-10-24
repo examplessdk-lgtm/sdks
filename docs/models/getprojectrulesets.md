@@ -1,0 +1,22 @@
+# GetProjectRulesets
+
+## Example Usage
+
+```typescript
+import { GetProjectRulesets } from "@vercel/sdk/models/getprojectresponsebody.js";
+
+let value: GetProjectRulesets = {
+  action: "log",
+};
+```
+
+## Fields
+
+| Field                                                                                    | Type                                                                                     | Required                                                                                 | Description                                                                              |
+| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `action`                                                                                 | [models.GetProjectProjectsResponseAction](../models/getprojectprojectsresponseaction.md) | :heavy_check_mark:                                                                       | N/A                                                                                      |
+| `actionDuration`                                                                         | *string*                                                                                 | :heavy_minus_sign:                                                                       | N/A                                                                                      |
+| `bypassSystem`                                                                           | *boolean*                                                                                | :heavy_minus_sign:                                                                       | N/A                                                                                      |
+| `logHeaders`                                                                             | *models.GetProjectProjectsLogHeaders*                                                    | :heavy_minus_sign:                                                                       | N/A                                                                                      |
+| `rateLimit`                                                                              | [models.GetProjectRateLimit](../models/getprojectratelimit.md)                           | :heavy_minus_sign:                                                                       | N/A                                                                                      |
+| `redirect`                                                                               | [models.GetProjectRedirect](../models/getprojectredirect.md)                             | :heavy_minus_sign:                                                                       | N/A                                                                                      |

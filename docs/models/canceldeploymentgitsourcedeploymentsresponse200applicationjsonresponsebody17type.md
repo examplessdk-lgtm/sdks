@@ -1,0 +1,17 @@
+# CancelDeploymentGitSourceDeploymentsResponse200ApplicationJSONResponseBody17Type
+
+## Example Usage
+
+```typescript
+import { CancelDeploymentGitSourceDeploymentsResponse200ApplicationJSONResponseBody17Type } from "@vercel/sdk/models/readystate.js";
+
+let value:
+  CancelDeploymentGitSourceDeploymentsResponse200ApplicationJSONResponseBody17Type =
+    "bitbucket";
+```
+
+## Values
+
+```typescript
+"bitbucket"
+```

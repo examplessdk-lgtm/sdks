@@ -1,0 +1,15 @@
+# ResponseBodyRegion
+
+## Example Usage
+
+```typescript
+import { ResponseBodyRegion } from "@vercel/sdk/models/getprojectsresponsebodyprojectsresponse200applicationjson2aliaserror.js";
+
+let value: ResponseBodyRegion = "hnd1";
+```
+
+## Values
+
+```typescript
+"arn1" | "bom1" | "cdg1" | "cle1" | "cpt1" | "dub1" | "fra1" | "gru1" | "hkg1" | "hnd1" | "iad1" | "icn1" | "kix1" | "lhr1" | "pdx1" | "sfo1" | "sin1" | "syd1" | "yul1"
+```

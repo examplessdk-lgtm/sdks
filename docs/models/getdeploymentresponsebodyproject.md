@@ -1,0 +1,22 @@
+# GetDeploymentResponseBodyProject
+
+The public project information associated with the deployment.
+
+## Example Usage
+
+```typescript
+import { GetDeploymentResponseBodyProject } from "@vercel/sdk/models/getdeploymentgitsourcedeploymentsresponse200applicationjsonresponsebody219type.js";
+
+let value: GetDeploymentResponseBodyProject = {
+  id: "<id>",
+  name: "<value>",
+};
+```
+
+## Fields
+
+| Field              | Type               | Required           | Description        |
+| ------------------ | ------------------ | ------------------ | ------------------ |
+| `framework`        | *string*           | :heavy_minus_sign: | N/A                |
+| `id`               | *string*           | :heavy_check_mark: | N/A                |
+| `name`             | *string*           | :heavy_check_mark: | N/A                |

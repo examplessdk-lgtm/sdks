@@ -1,0 +1,20 @@
+# CreateDrainFilterDrains1
+
+## Example Usage
+
+```typescript
+import { CreateDrainFilterDrains1 } from "@vercel/sdk/models/createdrainop.js";
+
+let value: CreateDrainFilterDrains1 = {
+  type: "basic",
+};
+```
+
+## Fields
+
+| Field                                                                                                      | Type                                                                                                       | Required                                                                                                   | Description                                                                                                |
+| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `deployment`                                                                                               | [models.CreateDrainFilterDrainsResponseDeployment](../models/createdrainfilterdrainsresponsedeployment.md) | :heavy_minus_sign:                                                                                         | N/A                                                                                                        |
+| `log`                                                                                                      | [models.CreateDrainFilterLog](../models/createdrainfilterlog.md)                                           | :heavy_minus_sign:                                                                                         | N/A                                                                                                        |
+| `project`                                                                                                  | [models.CreateDrainFilterDrainsProject](../models/createdrainfilterdrainsproject.md)                       | :heavy_minus_sign:                                                                                         | N/A                                                                                                        |
+| `type`                                                                                                     | *"basic"*                                                                                                  | :heavy_check_mark:                                                                                         | N/A                                                                                                        |

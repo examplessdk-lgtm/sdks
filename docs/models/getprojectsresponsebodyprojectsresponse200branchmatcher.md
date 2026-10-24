@@ -1,0 +1,19 @@
+# GetProjectsResponseBodyProjectsResponse200BranchMatcher
+
+## Example Usage
+
+```typescript
+import { GetProjectsResponseBodyProjectsResponse200BranchMatcher } from "@vercel/sdk/models/getprojectsresponsebodychecksstate.js";
+
+let value: GetProjectsResponseBodyProjectsResponse200BranchMatcher = {
+  pattern: "<value>",
+  type: "startsWith",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                                                        | Type                                                                                                                                                                                                         | Required                                                                                                                                                                                                     | Description                                                                                                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `pattern`                                                                                                                                                                                                    | *string*                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                           | The pattern to match against branch names                                                                                                                                                                    |
+| `type`                                                                                                                                                                                                       | [models.GetProjectsResponseBodyProjectsResponse200ApplicationJson2ProjectsTargetsBranchMatcherType](../models/getprojectsresponsebodyprojectsresponse200applicationjson2projectstargetsbranchmatchertype.md) | :heavy_check_mark:                                                                                                                                                                                           | The type of matching to perform                                                                                                                                                                              |

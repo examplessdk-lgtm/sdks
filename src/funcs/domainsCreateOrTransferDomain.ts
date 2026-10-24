@@ -4,49 +4,83 @@
 
 import { VercelCore } from "../core.js";
 import { encodeFormQuery, encodeJSON } from "../lib/encodings.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
+import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
 import { pathToFunc } from "../lib/url.js";
+import {
+  CreateOrTransferDomainRequest,
+  CreateOrTransferDomainRequest$outboundSchema,
+  CreateOrTransferDomainResponseBody,
+  CreateOrTransferDomainResponseBody$inboundSchema,
+} from "../models/createortransferdomainop.js";
 import {
   ConnectionError,
   InvalidRequestError,
   RequestAbortedError,
   RequestTimeoutError,
   UnexpectedClientError,
-} from "../models/errors/httpclienterrors.js";
-import { SDKError } from "../models/errors/sdkerror.js";
-import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
-import {
-  CreateOrTransferDomainRequest,
-  CreateOrTransferDomainRequest$outboundSchema,
-  CreateOrTransferDomainResponseBody,
-  CreateOrTransferDomainResponseBody$inboundSchema,
-} from "../models/operations/createortransferdomain.js";
+} from "../models/httpclienterrors.js";
+import { ResponseValidationError } from "../models/responsevalidationerror.js";
+import { SDKValidationError } from "../models/sdkvalidationerror.js";
+import { VercelError } from "../models/vercelerror.js";
+import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Register or transfer-in a new Domain
+ * Add an existing domain to the Vercel platform
  *
  * @remarks
- * This endpoint is used for adding a new apex domain name with Vercel for the authenticating user. Can also be used for initiating a domain transfer request from an external Registrar to Vercel.
+ * This endpoint is used for adding a new apex domain name with Vercel for the authenticating user. Note: This endpoint is no longer used for initiating domain transfers from external registrars to Vercel. For this, please use the endpoint [Transfer-in a domain](https://vercel.com/docs/rest-api/reference/endpoints/domains-registrar/transfer-in-a-domain).
+ *
+ * If set, this operation will use {@link Security.bearerToken} from the global security.
  */
-export async function domainsCreateOrTransferDomain(
+export function domainsCreateOrTransferDomain(
+  client: VercelCore,
+  request: CreateOrTransferDomainRequest,
+  options?: RequestOptions,
+): APIPromise<
+  Result<
+    CreateOrTransferDomainResponseBody,
+    | VercelError
+    | ResponseValidationError
+    | ConnectionError
+    | RequestAbortedError
+    | RequestTimeoutError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
+  >
+> {
+  return new APIPromise($do(
+    client,
+    request,
+    options,
+  ));
+}
+
+async function $do(
   client: VercelCore,
   request: CreateOrTransferDomainRequest,
   options?: RequestOptions,
 ): Promise<
-  Result<
-    CreateOrTransferDomainResponseBody,
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
-    | RequestAbortedError
-    | RequestTimeoutError
-    | ConnectionError
-  >
+  [
+    Result<
+      CreateOrTransferDomainResponseBody,
+      | VercelError
+      | ResponseValidationError
+      | ConnectionError
+      | RequestAbortedError
+      | RequestTimeoutError
+      | InvalidRequestError
+      | UnexpectedClientError
+      | SDKValidationError
+    >,
+    APICall,
+  ]
 > {
   const parsed = safeParse(
     request,
@@ -54,30 +88,32 @@ export async function domainsCreateOrTransferDomain(
     "Input validation failed",
   );
   if (!parsed.ok) {
-    return parsed;
+    return [parsed, { status: "invalid" }];
   }
   const payload = parsed.value;
   const body = encodeJSON("body", payload.RequestBody, { explode: true });
 
-  const path = pathToFunc("/v5/domains")();
+  const path = pathToFunc("/v7/domains")();
 
   const query = encodeFormQuery({
     "slug": payload.slug,
     "teamId": payload.teamId,
   });
 
-  const headers = new Headers({
+  const headers = new Headers(compactMap({
     "Content-Type": "application/json",
     Accept: "application/json",
-  });
+  }));
 
   const secConfig = await extractSecurity(client._options.bearerToken);
   const securityInput = secConfig == null ? {} : { bearerToken: secConfig };
-  const requestSecurity = resolveGlobalSecurity(securityInput);
+  const requestSecurity = resolveGlobalSecurity(securityInput, [0]);
 
   const context = {
+    options: client._options,
+    baseURL: options?.serverURL ?? client._baseURL ?? "",
     operationID: "createOrTransferDomain",
-    oAuth2Scopes: [],
+    oAuth2Scopes: null,
 
     resolvedSecurity: requestSecurity,
 
@@ -91,44 +127,49 @@ export async function domainsCreateOrTransferDomain(
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
     method: "POST",
+    baseURL: options?.serverURL,
     path: path,
     headers: headers,
     query: query,
     body: body,
+    userAgent: client._options.userAgent,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
   }, options);
   if (!requestRes.ok) {
-    return requestRes;
+    return [requestRes, { status: "invalid" }];
   }
   const req = requestRes.value;
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: ["400", "401", "402", "403", "404", "409", "4XX", "500", "5XX"],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
   if (!doResult.ok) {
-    return doResult;
+    return [doResult, { status: "request-error", request: req }];
   }
   const response = doResult.value;
 
   const [result] = await M.match<
     CreateOrTransferDomainResponseBody,
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
+    | VercelError
+    | ResponseValidationError
+    | ConnectionError
     | RequestAbortedError
     | RequestTimeoutError
-    | ConnectionError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
   >(
     M.json(200, CreateOrTransferDomainResponseBody$inboundSchema),
-    M.fail([400, 401, 402, 403, 404, 409, "4XX", 500, "5XX"]),
-  )(response);
+    M.fail([400, 401, 402, 403, 404, 409, 410, "4XX"]),
+    M.fail("5XX"),
+  )(response, req);
   if (!result.ok) {
-    return result;
+    return [result, { status: "complete", request: req, response }];
   }
 
-  return result;
+  return [result, { status: "complete", request: req, response }];
 }

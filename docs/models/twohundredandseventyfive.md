@@ -1,0 +1,23 @@
+# TwoHundredAndSeventyFive
+
+The payload of the event, if requested.
+
+## Example Usage
+
+```typescript
+import { TwoHundredAndSeventyFive } from "@vercel/sdk/models/approvalscope.js";
+
+let value: TwoHundredAndSeventyFive = {
+  projectId: "<id>",
+  projectName: "<value>",
+  widget: "observability-alert",
+};
+```
+
+## Fields
+
+| Field                                | Type                                 | Required                             | Description                          |
+| ------------------------------------ | ------------------------------------ | ------------------------------------ | ------------------------------------ |
+| `projectId`                          | *string*                             | :heavy_check_mark:                   | N/A                                  |
+| `projectName`                        | *string*                             | :heavy_check_mark:                   | N/A                                  |
+| `widget`                             | [models.Widget](../models/widget.md) | :heavy_check_mark:                   | N/A                                  |

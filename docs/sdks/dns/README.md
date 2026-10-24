@@ -1,5 +1,4 @@
 # Dns
-(*dns*)
 
 ## Overview
 
@@ -16,6 +15,7 @@ Retrieves a list of DNS records created for a domain name. By default it returns
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getRecords" method="get" path="/v5/domains/{domain}/records" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -29,9 +29,10 @@ async function run() {
     limit: "20",
     since: "1609499532000",
     until: "1612264332000",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -58,16 +59,15 @@ async function run() {
     limit: "20",
     since: "1609499532000",
     until: "1612264332000",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("dnsGetRecords failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -77,20 +77,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetRecordsRequest](../../models/operations/getrecordsrequest.md)                                                                                                   | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetRecordsRequest](../../models/getrecordsrequest.md)                                                                                                                  | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetRecordsResponseBody](../../models/operations/getrecordsresponsebody.md)\>**
+**Promise\<[models.GetRecordsResponseBody](../../models/getrecordsresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## createRecord
 
@@ -98,6 +98,7 @@ Creates a DNS record for a domain.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="createRecord" method="post" path="/v2/domains/{domain}/records" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -108,19 +109,21 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.dns.createRecord({
     domain: "example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
-      type: "CNAME",
+      type: "NS",
       ttl: 60,
-      https: {
+      srv: {
         priority: 10,
+        weight: 10,
+        port: 5000,
         target: "host.example.com",
-        params: "alpn=h2,h3",
       },
       comment: "used to verify ownership of domain",
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -144,26 +147,26 @@ const vercel = new VercelCore({
 async function run() {
   const res = await dnsCreateRecord(vercel, {
     domain: "example.com",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
-      type: "CNAME",
+      type: "NS",
       ttl: 60,
-      https: {
+      srv: {
         priority: 10,
+        weight: 10,
+        port: 5000,
         target: "host.example.com",
-        params: "alpn=h2,h3",
       },
       comment: "used to verify ownership of domain",
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("dnsCreateRecord failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -173,20 +176,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.CreateRecordRequest](../../models/operations/createrecordrequest.md)                                                                                               | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.CreateRecordRequest](../../models/createrecordrequest.md)                                                                                                              | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.CreateRecordResponseBody](../../models/operations/createrecordresponsebody.md)\>**
+**Promise\<[models.CreateRecordResponseBody](../../models/createrecordresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## updateRecord
 
@@ -194,6 +197,7 @@ Updates an existing DNS record for a domain name.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="updateRecord" method="patch" path="/v1/domains/records/{recordId}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -204,26 +208,19 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.dns.updateRecord({
     recordId: "rec_2qn7pzrx89yxy34vezpd31y9",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "example-1",
       value: "google.com",
       type: "A",
       ttl: 60,
-      srv: {
-        target: "example2.com.",
-        weight: 97604,
-        port: 845230,
-        priority: 570172,
-      },
-      https: {
-        priority: 994903,
-        target: "example2.com.",
-      },
+      srv: null,
+      https: null,
       comment: "used to verify ownership of domain",
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -247,33 +244,24 @@ const vercel = new VercelCore({
 async function run() {
   const res = await dnsUpdateRecord(vercel, {
     recordId: "rec_2qn7pzrx89yxy34vezpd31y9",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "example-1",
       value: "google.com",
       type: "A",
       ttl: 60,
-      srv: {
-        target: "example2.com.",
-        weight: 97604,
-        port: 845230,
-        priority: 570172,
-      },
-      https: {
-        priority: 994903,
-        target: "example2.com.",
-      },
+      srv: null,
+      https: null,
       comment: "used to verify ownership of domain",
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("dnsUpdateRecord failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -283,20 +271,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.UpdateRecordRequest](../../models/operations/updaterecordrequest.md)                                                                                               | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.UpdateRecordRequest](../../models/updaterecordrequest.md)                                                                                                              | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.UpdateRecordResponseBody](../../models/operations/updaterecordresponsebody.md)\>**
+**Promise\<[models.UpdateRecordResponseBody](../../models/updaterecordresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## removeRecord
 
@@ -304,6 +292,7 @@ Removes an existing DNS record from a domain name.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="removeRecord" method="delete" path="/v2/domains/{domain}/records/{recordId}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -315,9 +304,10 @@ async function run() {
   const result = await vercel.dns.removeRecord({
     domain: "example.com",
     recordId: "rec_V0fra8eEgQwEpFhYG2vTzC3K",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -342,16 +332,15 @@ async function run() {
   const res = await dnsRemoveRecord(vercel, {
     domain: "example.com",
     recordId: "rec_V0fra8eEgQwEpFhYG2vTzC3K",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("dnsRemoveRecord failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -361,17 +350,17 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.RemoveRecordRequest](../../models/operations/removerecordrequest.md)                                                                                               | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.RemoveRecordRequest](../../models/removerecordrequest.md)                                                                                                              | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.RemoveRecordResponseBody](../../models/operations/removerecordresponsebody.md)\>**
+**Promise\<[models.RemoveRecordResponseBody](../../models/removerecordresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |

@@ -1,5 +1,4 @@
 # AccessGroups
-(*accessGroups*)
 
 ## Overview
 
@@ -21,8 +20,9 @@
 
 Allows to read an access group
 
-### Example Usage
+### Example Usage: id
 
+<!-- UsageSnippet language="typescript" operationID="readAccessGroup" method="get" path="/v1/access-groups/{idOrName}" example="id" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -32,10 +32,11 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.accessGroups.readAccessGroup({
-    idOrName: "<value>",
+    idOrName: "ag_1a2b3c4d5e6f7g8h9i0j",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -58,17 +59,69 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await accessGroupsReadAccessGroup(vercel, {
-    idOrName: "<value>",
+    idOrName: "ag_1a2b3c4d5e6f7g8h9i0j",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("accessGroupsReadAccessGroup failed:", res.error);
+  }
+}
+
+run();
+```
+### Example Usage: name
+
+<!-- UsageSnippet language="typescript" operationID="readAccessGroup" method="get" path="/v1/access-groups/{idOrName}" example="name" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.accessGroups.readAccessGroup({
+    idOrName: "My Access Group",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  if (!res.ok) {
-    throw res.error;
-  }
-
-  const { value: result } = res;
-
-  // Handle the result
   console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { accessGroupsReadAccessGroup } from "@vercel/sdk/funcs/accessGroupsReadAccessGroup.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await accessGroupsReadAccessGroup(vercel, {
+    idOrName: "My Access Group",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("accessGroupsReadAccessGroup failed:", res.error);
+  }
 }
 
 run();
@@ -78,20 +131,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.ReadAccessGroupRequest](../../models/operations/readaccessgrouprequest.md)                                                                                         | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.ReadAccessGroupRequest](../../models/readaccessgrouprequest.md)                                                                                                        | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.ReadAccessGroupResponseBody](../../models/operations/readaccessgroupresponsebody.md)\>**
+**Promise\<[models.ReadAccessGroupResponseBody](../../models/readaccessgroupresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## updateAccessGroup
 
@@ -99,6 +152,7 @@ Allows to update an access group metadata
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="updateAccessGroup" method="post" path="/v1/access-groups/{idOrName}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -109,6 +163,8 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.accessGroups.updateAccessGroup({
     idOrName: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "My access group",
       projects: [
@@ -117,10 +173,17 @@ async function run() {
           role: "ADMIN",
         },
       ],
+      membersToAdd: [
+        "usr_1a2b3c4d5e6f7g8h9i0j",
+        "usr_2b3c4d5e6f7g8h9i0j1k",
+      ],
+      membersToRemove: [
+        "usr_1a2b3c4d5e6f7g8h9i0j",
+        "usr_2b3c4d5e6f7g8h9i0j1k",
+      ],
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -144,6 +207,8 @@ const vercel = new VercelCore({
 async function run() {
   const res = await accessGroupsUpdateAccessGroup(vercel, {
     idOrName: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "My access group",
       projects: [
@@ -152,17 +217,22 @@ async function run() {
           role: "ADMIN",
         },
       ],
+      membersToAdd: [
+        "usr_1a2b3c4d5e6f7g8h9i0j",
+        "usr_2b3c4d5e6f7g8h9i0j1k",
+      ],
+      membersToRemove: [
+        "usr_1a2b3c4d5e6f7g8h9i0j",
+        "usr_2b3c4d5e6f7g8h9i0j1k",
+      ],
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("accessGroupsUpdateAccessGroup failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -172,20 +242,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.UpdateAccessGroupRequest](../../models/operations/updateaccessgrouprequest.md)                                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.UpdateAccessGroupRequest](../../models/updateaccessgrouprequest.md)                                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.UpdateAccessGroupResponseBody](../../models/operations/updateaccessgroupresponsebody.md)\>**
+**Promise\<[models.UpdateAccessGroupResponseBody](../../models/updateaccessgroupresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## deleteAccessGroup
 
@@ -193,6 +263,7 @@ Allows to delete an access group
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="deleteAccessGroup" method="delete" path="/v1/access-groups/{idOrName}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -203,6 +274,8 @@ const vercel = new Vercel({
 async function run() {
   await vercel.accessGroups.deleteAccessGroup({
     idOrName: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
 
@@ -228,15 +301,15 @@ const vercel = new VercelCore({
 async function run() {
   const res = await accessGroupsDeleteAccessGroup(vercel, {
     idOrName: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("accessGroupsDeleteAccessGroup failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  
 }
 
 run();
@@ -246,7 +319,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.DeleteAccessGroupRequest](../../models/operations/deleteaccessgrouprequest.md)                                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.DeleteAccessGroupRequest](../../models/deleteaccessgrouprequest.md)                                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -259,7 +332,7 @@ run();
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## listAccessGroupMembers
 
@@ -267,6 +340,7 @@ List members of an access group
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="listAccessGroupMembers" method="get" path="/v1/access-groups/{idOrName}/members" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -278,9 +352,10 @@ async function run() {
   const result = await vercel.accessGroups.listAccessGroupMembers({
     idOrName: "ag_pavWOn1iLObbXLRiwVvzmPrTWyTf",
     limit: 20,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -305,16 +380,15 @@ async function run() {
   const res = await accessGroupsListAccessGroupMembers(vercel, {
     idOrName: "ag_pavWOn1iLObbXLRiwVvzmPrTWyTf",
     limit: 20,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("accessGroupsListAccessGroupMembers failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -324,20 +398,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.ListAccessGroupMembersRequest](../../models/operations/listaccessgroupmembersrequest.md)                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.ListAccessGroupMembersRequest](../../models/listaccessgroupmembersrequest.md)                                                                                          | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.ListAccessGroupMembersResponseBody](../../models/operations/listaccessgroupmembersresponsebody.md)\>**
+**Promise\<[models.ListAccessGroupMembersResponseBody](../../models/listaccessgroupmembersresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## listAccessGroups
 
@@ -345,6 +419,7 @@ List access groups
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="listAccessGroups" method="get" path="/v1/access-groups" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -359,9 +434,10 @@ async function run() {
     membersLimit: 20,
     projectsLimit: 20,
     limit: 20,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -389,16 +465,15 @@ async function run() {
     membersLimit: 20,
     projectsLimit: 20,
     limit: 20,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("accessGroupsListAccessGroups failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -408,20 +483,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.ListAccessGroupsRequest](../../models/operations/listaccessgroupsrequest.md)                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.ListAccessGroupsRequest](../../models/listaccessgroupsrequest.md)                                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.ListAccessGroupsResponseBody](../../models/operations/listaccessgroupsresponsebody.md)\>**
+**Promise\<[models.ListAccessGroupsResponseBody](../../models/listaccessgroupsresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## createAccessGroup
 
@@ -429,6 +504,7 @@ Allows to create an access group
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="createAccessGroup" method="post" path="/v1/access-groups" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -438,6 +514,8 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.accessGroups.createAccessGroup({
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "My access group",
       projects: [
@@ -445,11 +523,22 @@ async function run() {
           projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
           role: "ADMIN",
         },
+        {
+          projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+          role: "ADMIN",
+        },
+        {
+          projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+          role: "ADMIN",
+        },
+      ],
+      membersToAdd: [
+        "usr_1a2b3c4d5e6f7g8h9i0j",
+        "usr_2b3c4d5e6f7g8h9i0j1k",
       ],
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -472,6 +561,8 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await accessGroupsCreateAccessGroup(vercel, {
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "My access group",
       projects: [
@@ -479,18 +570,27 @@ async function run() {
           projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
           role: "ADMIN",
         },
+        {
+          projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+          role: "ADMIN",
+        },
+        {
+          projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+          role: "ADMIN",
+        },
+      ],
+      membersToAdd: [
+        "usr_1a2b3c4d5e6f7g8h9i0j",
+        "usr_2b3c4d5e6f7g8h9i0j1k",
       ],
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("accessGroupsCreateAccessGroup failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -500,20 +600,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.CreateAccessGroupRequest](../../models/operations/createaccessgrouprequest.md)                                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.CreateAccessGroupRequest](../../models/createaccessgrouprequest.md)                                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.CreateAccessGroupResponseBody](../../models/operations/createaccessgroupresponsebody.md)\>**
+**Promise\<[models.CreateAccessGroupResponseBody](../../models/createaccessgroupresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## listAccessGroupProjects
 
@@ -521,6 +621,7 @@ List projects of an access group
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="listAccessGroupProjects" method="get" path="/v1/access-groups/{idOrName}/projects" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -532,9 +633,10 @@ async function run() {
   const result = await vercel.accessGroups.listAccessGroupProjects({
     idOrName: "ag_pavWOn1iLObbXLRiwVvzmPrTWyTf",
     limit: 20,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -559,16 +661,15 @@ async function run() {
   const res = await accessGroupsListAccessGroupProjects(vercel, {
     idOrName: "ag_pavWOn1iLObbXLRiwVvzmPrTWyTf",
     limit: 20,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("accessGroupsListAccessGroupProjects failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -578,20 +679,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.ListAccessGroupProjectsRequest](../../models/operations/listaccessgroupprojectsrequest.md)                                                                         | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.ListAccessGroupProjectsRequest](../../models/listaccessgroupprojectsrequest.md)                                                                                        | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.ListAccessGroupProjectsResponseBody](../../models/operations/listaccessgroupprojectsresponsebody.md)\>**
+**Promise\<[models.ListAccessGroupProjectsResponseBody](../../models/listaccessgroupprojectsresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## createAccessGroupProject
 
@@ -599,6 +700,7 @@ Allows creation of an access group project
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="createAccessGroupProject" method="post" path="/v1/access-groups/{accessGroupIdOrName}/projects" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -609,13 +711,14 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.accessGroups.createAccessGroupProject({
     accessGroupIdOrName: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
       role: "ADMIN",
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -639,20 +742,19 @@ const vercel = new VercelCore({
 async function run() {
   const res = await accessGroupsCreateAccessGroupProject(vercel, {
     accessGroupIdOrName: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
       role: "ADMIN",
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("accessGroupsCreateAccessGroupProject failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -662,27 +764,28 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.CreateAccessGroupProjectRequest](../../models/operations/createaccessgroupprojectrequest.md)                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.CreateAccessGroupProjectRequest](../../models/createaccessgroupprojectrequest.md)                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.CreateAccessGroupProjectResponseBody](../../models/operations/createaccessgroupprojectresponsebody.md)\>**
+**Promise\<[models.CreateAccessGroupProjectResponseBody](../../models/createaccessgroupprojectresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## readAccessGroupProject
 
 Allows reading an access group project
 
-### Example Usage
+### Example Usage: id
 
+<!-- UsageSnippet language="typescript" operationID="readAccessGroupProject" method="get" path="/v1/access-groups/{accessGroupIdOrName}/projects/{projectId}" example="id" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -692,11 +795,12 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.accessGroups.readAccessGroupProject({
-    accessGroupIdOrName: "<value>",
-    projectId: "<id>",
+    accessGroupIdOrName: "ag_1a2b3c4d5e6f7g8h9i0j",
+    projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -719,18 +823,72 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await accessGroupsReadAccessGroupProject(vercel, {
-    accessGroupIdOrName: "<value>",
-    projectId: "<id>",
+    accessGroupIdOrName: "ag_1a2b3c4d5e6f7g8h9i0j",
+    projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("accessGroupsReadAccessGroupProject failed:", res.error);
+  }
+}
+
+run();
+```
+### Example Usage: name
+
+<!-- UsageSnippet language="typescript" operationID="readAccessGroupProject" method="get" path="/v1/access-groups/{accessGroupIdOrName}/projects/{projectId}" example="name" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.accessGroups.readAccessGroupProject({
+    accessGroupIdOrName: "My Access Group",
+    projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  if (!res.ok) {
-    throw res.error;
-  }
-
-  const { value: result } = res;
-
-  // Handle the result
   console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { accessGroupsReadAccessGroupProject } from "@vercel/sdk/funcs/accessGroupsReadAccessGroupProject.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await accessGroupsReadAccessGroupProject(vercel, {
+    accessGroupIdOrName: "My Access Group",
+    projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("accessGroupsReadAccessGroupProject failed:", res.error);
+  }
 }
 
 run();
@@ -740,27 +898,28 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.ReadAccessGroupProjectRequest](../../models/operations/readaccessgroupprojectrequest.md)                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.ReadAccessGroupProjectRequest](../../models/readaccessgroupprojectrequest.md)                                                                                          | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.ReadAccessGroupProjectResponseBody](../../models/operations/readaccessgroupprojectresponsebody.md)\>**
+**Promise\<[models.ReadAccessGroupProjectResponseBody](../../models/readaccessgroupprojectresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## updateAccessGroupProject
 
 Allows update of an access group project
 
-### Example Usage
+### Example Usage: id
 
+<!-- UsageSnippet language="typescript" operationID="updateAccessGroupProject" method="patch" path="/v1/access-groups/{accessGroupIdOrName}/projects/{projectId}" example="id" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -770,14 +929,15 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.accessGroups.updateAccessGroupProject({
-    accessGroupIdOrName: "<value>",
-    projectId: "<id>",
+    accessGroupIdOrName: "ag_1a2b3c4d5e6f7g8h9i0j",
+    projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       role: "ADMIN",
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -800,21 +960,81 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await accessGroupsUpdateAccessGroupProject(vercel, {
-    accessGroupIdOrName: "<value>",
-    projectId: "<id>",
+    accessGroupIdOrName: "ag_1a2b3c4d5e6f7g8h9i0j",
+    projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      role: "ADMIN",
+    },
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("accessGroupsUpdateAccessGroupProject failed:", res.error);
+  }
+}
+
+run();
+```
+### Example Usage: name
+
+<!-- UsageSnippet language="typescript" operationID="updateAccessGroupProject" method="patch" path="/v1/access-groups/{accessGroupIdOrName}/projects/{projectId}" example="name" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.accessGroups.updateAccessGroupProject({
+    accessGroupIdOrName: "My Access Group",
+    projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       role: "ADMIN",
     },
   });
 
-  if (!res.ok) {
-    throw res.error;
-  }
-
-  const { value: result } = res;
-
-  // Handle the result
   console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { accessGroupsUpdateAccessGroupProject } from "@vercel/sdk/funcs/accessGroupsUpdateAccessGroupProject.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await accessGroupsUpdateAccessGroupProject(vercel, {
+    accessGroupIdOrName: "My Access Group",
+    projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      role: "ADMIN",
+    },
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("accessGroupsUpdateAccessGroupProject failed:", res.error);
+  }
 }
 
 run();
@@ -824,20 +1044,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.UpdateAccessGroupProjectRequest](../../models/operations/updateaccessgroupprojectrequest.md)                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.UpdateAccessGroupProjectRequest](../../models/updateaccessgroupprojectrequest.md)                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.UpdateAccessGroupProjectResponseBody](../../models/operations/updateaccessgroupprojectresponsebody.md)\>**
+**Promise\<[models.UpdateAccessGroupProjectResponseBody](../../models/updateaccessgroupprojectresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## deleteAccessGroupProject
 
@@ -845,6 +1065,7 @@ Allows deletion of an access group project
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="deleteAccessGroupProject" method="delete" path="/v1/access-groups/{accessGroupIdOrName}/projects/{projectId}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -854,8 +1075,10 @@ const vercel = new Vercel({
 
 async function run() {
   await vercel.accessGroups.deleteAccessGroupProject({
-    accessGroupIdOrName: "<value>",
-    projectId: "<id>",
+    accessGroupIdOrName: "ag_1a2b3c4d5e6f7g8h9i0j",
+    projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
 
@@ -880,17 +1103,17 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await accessGroupsDeleteAccessGroupProject(vercel, {
-    accessGroupIdOrName: "<value>",
-    projectId: "<id>",
+    accessGroupIdOrName: "ag_1a2b3c4d5e6f7g8h9i0j",
+    projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    
+  } else {
+    console.log("accessGroupsDeleteAccessGroupProject failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  
 }
 
 run();
@@ -900,7 +1123,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.DeleteAccessGroupProjectRequest](../../models/operations/deleteaccessgroupprojectrequest.md)                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.DeleteAccessGroupProjectRequest](../../models/deleteaccessgroupprojectrequest.md)                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -913,4 +1136,4 @@ run();
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |

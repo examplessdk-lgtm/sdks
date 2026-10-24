@@ -1,0 +1,19 @@
+# GetMicrofrontendsInGroupMicrofrontendsResponse200BranchMatcher
+
+## Example Usage
+
+```typescript
+import { GetMicrofrontendsInGroupMicrofrontendsResponse200BranchMatcher } from "@vercel/sdk/models/getmicrofrontendsingroupreadysubstate.js";
+
+let value: GetMicrofrontendsInGroupMicrofrontendsResponse200BranchMatcher = {
+  pattern: "<value>",
+  type: "endsWith",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                                                              | Type                                                                                                                                                                                                               | Required                                                                                                                                                                                                           | Description                                                                                                                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `pattern`                                                                                                                                                                                                          | *string*                                                                                                                                                                                                           | :heavy_check_mark:                                                                                                                                                                                                 | The pattern to match against branch names                                                                                                                                                                          |
+| `type`                                                                                                                                                                                                             | [models.GetMicrofrontendsInGroupMicrofrontendsResponse200ApplicationJSONResponseBodyProjectsAliasType](../models/getmicrofrontendsingroupmicrofrontendsresponse200applicationjsonresponsebodyprojectsaliastype.md) | :heavy_check_mark:                                                                                                                                                                                                 | The type of matching to perform                                                                                                                                                                                    |

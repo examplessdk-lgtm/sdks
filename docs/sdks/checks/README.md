@@ -1,22 +1,27 @@
-# Checks
-(*checks*)
+# ~~Checks~~
+
+> [!WARNING]
+> This SDK is **DEPRECATED**
 
 ## Overview
 
 ### Available Operations
 
-* [createCheck](#createcheck) - Creates a new Check
-* [getAllChecks](#getallchecks) - Retrieve a list of all checks
-* [getCheck](#getcheck) - Get a single check
-* [updateCheck](#updatecheck) - Update a check
-* [rerequestCheck](#rerequestcheck) - Rerequest a check
+* [~~createCheck~~](#createcheck) - Creates a new Check :warning: **Deprecated**
+* [~~getAllChecks~~](#getallchecks) - Retrieve a list of all checks :warning: **Deprecated**
+* [~~getCheck~~](#getcheck) - Get a single check :warning: **Deprecated**
+* [~~updateCheck~~](#updatecheck) - Update a check :warning: **Deprecated**
+* [~~rerequestCheck~~](#rerequestcheck) - Rerequest a check :warning: **Deprecated**
 
-## createCheck
+## ~~createCheck~~
 
 Creates a new check. This endpoint must be called with an OAuth2 or it will produce a 400 error.
 
+> :warning: **DEPRECATED**: This will be removed in a future release, please migrate away from it as soon as possible.
+
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="createCheck" method="post" path="/v1/deployments/{deploymentId}/checks" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -27,6 +32,8 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.checks.createCheck({
     deploymentId: "dpl_2qn7PZrx89yxY34vEZPD31Y9XVj6",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "Performance Check",
       path: "/",
@@ -37,7 +44,6 @@ async function run() {
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -61,6 +67,8 @@ const vercel = new VercelCore({
 async function run() {
   const res = await checksCreateCheck(vercel, {
     deploymentId: "dpl_2qn7PZrx89yxY34vEZPD31Y9XVj6",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "Performance Check",
       path: "/",
@@ -70,15 +78,12 @@ async function run() {
       rerequestable: true,
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("checksCreateCheck failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -88,27 +93,30 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.CreateCheckRequest](../../models/operations/createcheckrequest.md)                                                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.CreateCheckRequest](../../models/createcheckrequest.md)                                                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.CreateCheckResponseBody](../../models/operations/createcheckresponsebody.md)\>**
+**Promise\<[models.CreateCheckResponseBody](../../models/createcheckresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
-## getAllChecks
+## ~~getAllChecks~~
 
 List all of the checks created for a deployment.
 
+> :warning: **DEPRECATED**: This will be removed in a future release, please migrate away from it as soon as possible.
+
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getAllChecks" method="get" path="/v1/deployments/{deploymentId}/checks" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -119,9 +127,10 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.checks.getAllChecks({
     deploymentId: "dpl_2qn7PZrx89yxY34vEZPD31Y9XVj6",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -145,16 +154,15 @@ const vercel = new VercelCore({
 async function run() {
   const res = await checksGetAllChecks(vercel, {
     deploymentId: "dpl_2qn7PZrx89yxY34vEZPD31Y9XVj6",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("checksGetAllChecks failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -164,27 +172,30 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetAllChecksRequest](../../models/operations/getallchecksrequest.md)                                                                                               | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetAllChecksRequest](../../models/getallchecksrequest.md)                                                                                                              | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetAllChecksResponseBody](../../models/operations/getallchecksresponsebody.md)\>**
+**Promise\<[models.GetAllChecksResponseBody](../../models/getallchecksresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
-## getCheck
+## ~~getCheck~~
 
 Return a detailed response for a single check.
 
+> :warning: **DEPRECATED**: This will be removed in a future release, please migrate away from it as soon as possible.
+
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getCheck" method="get" path="/v1/deployments/{deploymentId}/checks/{checkId}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -196,9 +207,10 @@ async function run() {
   const result = await vercel.checks.getCheck({
     deploymentId: "dpl_2qn7PZrx89yxY34vEZPD31Y9XVj6",
     checkId: "check_2qn7PZrx89yxY34vEZPD31Y9XVj6",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -223,16 +235,15 @@ async function run() {
   const res = await checksGetCheck(vercel, {
     deploymentId: "dpl_2qn7PZrx89yxY34vEZPD31Y9XVj6",
     checkId: "check_2qn7PZrx89yxY34vEZPD31Y9XVj6",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("checksGetCheck failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -242,27 +253,30 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetCheckRequest](../../models/operations/getcheckrequest.md)                                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetCheckRequest](../../models/getcheckrequest.md)                                                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetCheckResponseBody](../../models/operations/getcheckresponsebody.md)\>**
+**Promise\<[models.GetCheckResponseBody](../../models/getcheckresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
-## updateCheck
+## ~~updateCheck~~
 
 Update an existing check. This endpoint must be called with an OAuth2 or it will produce a 400 error.
 
+> :warning: **DEPRECATED**: This will be removed in a future release, please migrate away from it as soon as possible.
+
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="updateCheck" method="patch" path="/v1/deployments/{deploymentId}/checks/{checkId}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -274,6 +288,8 @@ async function run() {
   const result = await vercel.checks.updateCheck({
     deploymentId: "dpl_2qn7PZrx89yxY34vEZPD31Y9XVj6",
     checkId: "check_2qn7PZrx89yxY34vEZPD31Y9XVj6",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "Performance Check",
       path: "/",
@@ -311,7 +327,6 @@ async function run() {
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -336,6 +351,8 @@ async function run() {
   const res = await checksUpdateCheck(vercel, {
     deploymentId: "dpl_2qn7PZrx89yxY34vEZPD31Y9XVj6",
     checkId: "check_2qn7PZrx89yxY34vEZPD31Y9XVj6",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "Performance Check",
       path: "/",
@@ -372,15 +389,12 @@ async function run() {
       externalId: "1234abc",
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("checksUpdateCheck failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -390,27 +404,30 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.UpdateCheckRequest](../../models/operations/updatecheckrequest.md)                                                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.UpdateCheckRequest](../../models/updatecheckrequest.md)                                                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.UpdateCheckResponseBody](../../models/operations/updatecheckresponsebody.md)\>**
+**Promise\<[models.UpdateCheckResponseBody](../../models/updatecheckresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
-## rerequestCheck
+## ~~rerequestCheck~~
 
 Rerequest a selected check that has failed.
 
+> :warning: **DEPRECATED**: This will be removed in a future release, please migrate away from it as soon as possible.
+
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="rerequestCheck" method="post" path="/v1/deployments/{deploymentId}/checks/{checkId}/rerequest" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -422,9 +439,10 @@ async function run() {
   const result = await vercel.checks.rerequestCheck({
     deploymentId: "dpl_2qn7PZrx89yxY34vEZPD31Y9XVj6",
     checkId: "check_2qn7PZrx89yxY34vEZPD31Y9XVj6",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -449,16 +467,15 @@ async function run() {
   const res = await checksRerequestCheck(vercel, {
     deploymentId: "dpl_2qn7PZrx89yxY34vEZPD31Y9XVj6",
     checkId: "check_2qn7PZrx89yxY34vEZPD31Y9XVj6",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("checksRerequestCheck failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -468,17 +485,17 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.RerequestCheckRequest](../../models/operations/rerequestcheckrequest.md)                                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.RerequestCheckRequest](../../models/rerequestcheckrequest.md)                                                                                                          | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.RerequestCheckResponseBody](../../models/operations/rerequestcheckresponsebody.md)\>**
+**Promise\<[models.RerequestCheckResponseBody](../../models/rerequestcheckresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |

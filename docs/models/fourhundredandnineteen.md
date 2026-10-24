@@ -1,0 +1,20 @@
+# FourHundredAndNineteen
+
+The payload of the event, if requested.
+
+## Example Usage
+
+```typescript
+import { FourHundredAndNineteen } from "@vercel/sdk/models/usereventpayload377type.js";
+
+let value: FourHundredAndNineteen = {
+  plan: "enterprise",
+};
+```
+
+## Fields
+
+| Field                                                            | Type                                                             | Required                                                         | Description                                                      |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `plan`                                                           | [models.UserEventPayloadPlan](../models/usereventpayloadplan.md) | :heavy_check_mark:                                               | N/A                                                              |
+| `trial`                                                          | [models.Trial](../models/trial.md)                               | :heavy_minus_sign:                                               | N/A                                                              |

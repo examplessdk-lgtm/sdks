@@ -1,0 +1,21 @@
+# GetDeploymentResponseBodyAliasWarning
+
+## Example Usage
+
+```typescript
+import { GetDeploymentResponseBodyAliasWarning } from "@vercel/sdk/models/getdeploymentgitsourcedeploymentsresponse200applicationjsonresponsebody219type.js";
+
+let value: GetDeploymentResponseBodyAliasWarning = {
+  code: "<value>",
+  message: "<value>",
+};
+```
+
+## Fields
+
+| Field              | Type               | Required           | Description        |
+| ------------------ | ------------------ | ------------------ | ------------------ |
+| `action`           | *string*           | :heavy_minus_sign: | N/A                |
+| `code`             | *string*           | :heavy_check_mark: | N/A                |
+| `link`             | *string*           | :heavy_minus_sign: | N/A                |
+| `message`          | *string*           | :heavy_check_mark: | N/A                |

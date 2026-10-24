@@ -1,0 +1,20 @@
+# CancelDeploymentHasDeploymentsResponse2
+
+## Example Usage
+
+```typescript
+import { CancelDeploymentHasDeploymentsResponse2 } from "@vercel/sdk/models/canceldeploymentmissingdeploymentsresponse2.js";
+
+let value: CancelDeploymentHasDeploymentsResponse2 = {
+  key: "<key>",
+  type: "query",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                                    | Type                                                                                                                                                                                     | Required                                                                                                                                                                                 | Description                                                                                                                                                                              |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `key`                                                                                                                                                                                    | *string*                                                                                                                                                                                 | :heavy_check_mark:                                                                                                                                                                       | N/A                                                                                                                                                                                      |
+| `type`                                                                                                                                                                                   | [models.CancelDeploymentHasDeploymentsResponse200ApplicationJSONResponseBodyServicesType](../models/canceldeploymenthasdeploymentsresponse200applicationjsonresponsebodyservicestype.md) | :heavy_check_mark:                                                                                                                                                                       | N/A                                                                                                                                                                                      |
+| `value`                                                                                                                                                                                  | *models.CancelDeploymentHasDeploymentsResponse200ApplicationJSONResponseBodyValue*                                                                                                       | :heavy_minus_sign:                                                                                                                                                                       | N/A                                                                                                                                                                                      |

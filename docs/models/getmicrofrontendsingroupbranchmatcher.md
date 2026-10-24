@@ -1,0 +1,21 @@
+# GetMicrofrontendsInGroupBranchMatcher
+
+Configuration for matching git branches to this environment
+
+## Example Usage
+
+```typescript
+import { GetMicrofrontendsInGroupBranchMatcher } from "@vercel/sdk/models/getmicrofrontendsingroupreadysubstate.js";
+
+let value: GetMicrofrontendsInGroupBranchMatcher = {
+  pattern: "<value>",
+  type: "startsWith",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                                                                                        | Type                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                  |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pattern`                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                           | The pattern to match against branch names                                                                                                                                                                                                    |
+| `type`                                                                                                                                                                                                                                       | [models.GetMicrofrontendsInGroupMicrofrontendsResponse200ApplicationJSONResponseBodyProjectsCustomEnvironmentsType](../models/getmicrofrontendsingroupmicrofrontendsresponse200applicationjsonresponsebodyprojectscustomenvironmentstype.md) | :heavy_check_mark:                                                                                                                                                                                                                           | The type of matching to perform                                                                                                                                                                                                              |

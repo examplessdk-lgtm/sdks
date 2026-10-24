@@ -1,0 +1,19 @@
+# CreateDeploymentHasDeploymentsResponse200ApplicationJSONValue
+
+
+## Supported Types
+
+### `string`
+
+```typescript
+const value: string = "<value>";
+```
+
+### `models.CreateDeploymentValueDeploymentsResponse200ApplicationJSONResponseBody2Services22`
+
+```typescript
+const value:
+  models.CreateDeploymentValueDeploymentsResponse200ApplicationJSONResponseBody2Services22 =
+    {};
+```
+

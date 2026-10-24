@@ -1,5 +1,4 @@
 # Teams
-(*teams*)
 
 ## Overview
 
@@ -16,8 +15,11 @@
 * [patchTeam](#patchteam) - Update a Team
 * [getTeams](#getteams) - List all teams
 * [createTeam](#createteam) - Create a Team
+* [postTeamDsyncRoles](#postteamdsyncroles) - Update Team Directory Sync Role Mappings
 * [deleteTeam](#deleteteam) - Delete a Team
 * [deleteTeamInviteCode](#deleteteaminvitecode) - Delete a Team invite code
+* [updateMicrofrontendsGroup](#updatemicrofrontendsgroup) - Update a microfrontends group
+* [deleteMicrofrontendsGroup](#deletemicrofrontendsgroup) - Delete a microfrontends group
 
 ## getTeamMembers
 
@@ -25,6 +27,7 @@ Get a paginated list of team members for the provided team.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getTeamMembers" method="get" path="/v3/teams/{teamId}/members" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -38,10 +41,10 @@ async function run() {
     since: 1540095775951,
     until: 1540095775951,
     role: "OWNER",
-    teamId: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -68,17 +71,15 @@ async function run() {
     since: 1540095775951,
     until: 1540095775951,
     role: "OWNER",
-    teamId: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("teamsGetTeamMembers failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -88,27 +89,28 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetTeamMembersRequest](../../models/operations/getteammembersrequest.md)                                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetTeamMembersRequest](../../models/getteammembersrequest.md)                                                                                                          | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetTeamMembersResponseBody](../../models/operations/getteammembersresponsebody.md)\>**
+**Promise\<[models.GetTeamMembersResponseBody](../../models/getteammembersresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## inviteUserToTeam
 
-Invite a user to join the team specified in the URL. The authenticated user needs to be an `OWNER` in order to successfully invoke this endpoint. The user can be specified with an email or an ID. If both email and ID are provided, ID will take priority.
+Invite a user to join the team specified in the URL. The authenticated user needs to be an `OWNER` in order to successfully invoke this endpoint. The user to be invited must be specified by email.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="inviteUserToTeam" method="post" path="/v2/teams/{teamId}/members" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -118,21 +120,26 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.teams.inviteUserToTeam({
-    teamId: "<value>",
-    requestBody: {
-      uid: "kr1PsOIzqEL5Xg6M4VZcZosf",
-      email: "john@example.com",
-      role: "VIEWER",
-      projects: [
-        {
-          projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
-          role: "ADMIN",
-        },
-      ],
-    },
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: [
+      {
+        email: "john@example.com",
+        role: "DEVELOPER",
+        projects: [
+          {
+            projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+            role: "ADMIN",
+          },
+          {
+            projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+            role: "ADMIN",
+          },
+        ],
+      },
+    ],
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -155,28 +162,31 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await teamsInviteUserToTeam(vercel, {
-    teamId: "<value>",
-    requestBody: {
-      uid: "kr1PsOIzqEL5Xg6M4VZcZosf",
-      email: "john@example.com",
-      role: "VIEWER",
-      projects: [
-        {
-          projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
-          role: "ADMIN",
-        },
-      ],
-    },
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: [
+      {
+        email: "john@example.com",
+        role: "DEVELOPER",
+        projects: [
+          {
+            projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+            role: "ADMIN",
+          },
+          {
+            projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+            role: "ADMIN",
+          },
+        ],
+      },
+    ],
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("teamsInviteUserToTeam failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -186,27 +196,28 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.InviteUserToTeamRequest](../../models/operations/inviteusertoteamrequest.md)                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.InviteUserToTeamRequest](../../models/inviteusertoteamrequest.md)                                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.InviteUserToTeamResponseBody](../../models/operations/inviteusertoteamresponsebody.md)\>**
+**Promise\<[models.InvitedTeamMember](../../models/invitedteammember.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## requestAccessToTeam
 
-Request access to a team as a member. An owner has to approve the request. Only 10 users can request access to a team at the same time.
+Request access to a team as a member. An owner has to approve the request. Only 100 users can request access to a team at the same time.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="requestAccessToTeam" method="post" path="/v1/teams/{teamId}/request" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -216,7 +227,7 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.teams.requestAccessToTeam({
-    teamId: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
     requestBody: {
       joinedFrom: {
         origin: "github",
@@ -229,7 +240,6 @@ async function run() {
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -252,7 +262,7 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await teamsRequestAccessToTeam(vercel, {
-    teamId: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
     requestBody: {
       joinedFrom: {
         origin: "github",
@@ -264,15 +274,12 @@ async function run() {
       },
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("teamsRequestAccessToTeam failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -282,20 +289,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.RequestAccessToTeamRequest](../../models/operations/requestaccesstoteamrequest.md)                                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.RequestAccessToTeamRequest](../../models/requestaccesstoteamrequest.md)                                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.RequestAccessToTeamResponseBody](../../models/operations/requestaccesstoteamresponsebody.md)\>**
+**Promise\<[models.RequestAccessToTeamResponseBody](../../models/requestaccesstoteamresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getTeamAccessRequest
 
@@ -303,6 +310,7 @@ Check the status of a join request. It'll respond with a 404 if the request has 
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getTeamAccessRequest" method="get" path="/v1/teams/{teamId}/request/{userId}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -312,11 +320,10 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.teams.getTeamAccessRequest({
-    userId: "<value>",
-    teamId: "<value>",
+    userId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -339,18 +346,15 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await teamsGetTeamAccessRequest(vercel, {
-    userId: "<value>",
-    teamId: "<value>",
+    userId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("teamsGetTeamAccessRequest failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -360,20 +364,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetTeamAccessRequestRequest](../../models/operations/getteamaccessrequestrequest.md)                                                                               | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetTeamAccessRequestRequest](../../models/getteamaccessrequestrequest.md)                                                                                              | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetTeamAccessRequestResponseBody](../../models/operations/getteamaccessrequestresponsebody.md)\>**
+**Promise\<[models.GetTeamAccessRequestResponseBody](../../models/getteamaccessrequestresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## joinTeam
 
@@ -381,6 +385,7 @@ Join a team with a provided invite code or team ID.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="joinTeam" method="post" path="/v1/teams/{teamId}/members/teams/join" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -390,13 +395,12 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.teams.joinTeam({
-    teamId: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
     requestBody: {
       inviteCode: "fisdh38aejkeivn34nslfore9vjtn4ls",
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -419,20 +423,17 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await teamsJoinTeam(vercel, {
-    teamId: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
     requestBody: {
       inviteCode: "fisdh38aejkeivn34nslfore9vjtn4ls",
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("teamsJoinTeam failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -442,20 +443,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.JoinTeamRequest](../../models/operations/jointeamrequest.md)                                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.JoinTeamRequest](../../models/jointeamrequest.md)                                                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.JoinTeamResponseBody](../../models/operations/jointeamresponsebody.md)\>**
+**Promise\<[models.JoinTeamResponseBody](../../models/jointeamresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## updateTeamMember
 
@@ -463,6 +464,7 @@ Update the membership of a Team Member on the Team specified by `teamId`, such a
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="updateTeamMember" method="patch" path="/v1/teams/{teamId}/members/{uid}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -473,11 +475,22 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.teams.updateTeamMember({
     uid: "ndfasllgPyCtREAqxxdyFKb",
-    teamId: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
     requestBody: {
-      confirmed: true,
-      role: "[\"MEMBER\",\"VIEWER\"]",
+      role: "VIEWER",
+      teamPermissions: [
+        "CreateProject",
+        "FullProductionDeployment",
+      ],
       projects: [
+        {
+          projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+          role: "ADMIN",
+        },
+        {
+          projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+          role: "ADMIN",
+        },
         {
           projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
           role: "ADMIN",
@@ -486,7 +499,6 @@ async function run() {
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -510,11 +522,22 @@ const vercel = new VercelCore({
 async function run() {
   const res = await teamsUpdateTeamMember(vercel, {
     uid: "ndfasllgPyCtREAqxxdyFKb",
-    teamId: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
     requestBody: {
-      confirmed: true,
-      role: "[\"MEMBER\",\"VIEWER\"]",
+      role: "VIEWER",
+      teamPermissions: [
+        "CreateProject",
+        "FullProductionDeployment",
+      ],
       projects: [
+        {
+          projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+          role: "ADMIN",
+        },
+        {
+          projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
+          role: "ADMIN",
+        },
         {
           projectId: "prj_ndlgr43fadlPyCtREAqxxdyFK",
           role: "ADMIN",
@@ -522,15 +545,12 @@ async function run() {
       ],
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("teamsUpdateTeamMember failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -540,27 +560,28 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.UpdateTeamMemberRequest](../../models/operations/updateteammemberrequest.md)                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.UpdateTeamMemberRequest](../../models/updateteammemberrequest.md)                                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.UpdateTeamMemberResponseBody](../../models/operations/updateteammemberresponsebody.md)\>**
+**Promise\<[models.UpdateTeamMemberResponseBody](../../models/updateteammemberresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## removeTeamMember
 
-Remove a Team Member from the Team, or dismiss a user that requested access, or leave a team.
+Remove a Team Member from the Team, or dismiss a user that requested access, or leave a team. Directory Sync members can be removed when their directory email is absent or does not match the user's primary or verified secondary emails.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="removeTeamMember" method="delete" path="/v1/teams/{teamId}/members/{uid}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -572,10 +593,9 @@ async function run() {
   const result = await vercel.teams.removeTeamMember({
     uid: "ndlgr43fadlPyCtREAqxxdyFK",
     newDefaultTeamId: "team_nllPyCtREAqxxdyFKbbMDlxd",
-    teamId: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -600,17 +620,14 @@ async function run() {
   const res = await teamsRemoveTeamMember(vercel, {
     uid: "ndlgr43fadlPyCtREAqxxdyFK",
     newDefaultTeamId: "team_nllPyCtREAqxxdyFKbbMDlxd",
-    teamId: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("teamsRemoveTeamMember failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -620,20 +637,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.RemoveTeamMemberRequest](../../models/operations/removeteammemberrequest.md)                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.RemoveTeamMemberRequest](../../models/removeteammemberrequest.md)                                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.RemoveTeamMemberResponseBody](../../models/operations/removeteammemberresponsebody.md)\>**
+**Promise\<[models.RemoveTeamMemberResponseBody](../../models/removeteammemberresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getTeam
 
@@ -641,6 +658,7 @@ Get information for the Team specified by the `teamId` parameter.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getTeam" method="get" path="/v2/teams/{teamId}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -650,10 +668,10 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.teams.getTeam({
-    teamId: "<value>",
+    slug: "my-team-url-slug",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -676,17 +694,15 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await teamsGetTeam(vercel, {
-    teamId: "<value>",
+    slug: "my-team-url-slug",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("teamsGetTeam failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -696,20 +712,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetTeamRequest](../../models/operations/getteamrequest.md)                                                                                                         | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetTeamRequest](../../models/getteamrequest.md)                                                                                                                        | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[{ [k: string]: any }](../../models/.md)\>**
+**Promise\<[models.Team](../../models/team.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## patchTeam
 
@@ -717,6 +733,7 @@ Update the information of a Team specified by the `teamId` parameter. The reques
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="patchTeam" method="patch" path="/v2/teams/{teamId}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -726,7 +743,8 @@ const vercel = new Vercel({
 
 async function run() {
   const result = await vercel.teams.patchTeam({
-    teamId: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       description: "Our mission is to make cloud computing accessible to everyone",
       emailDomain: "example.com",
@@ -740,15 +758,41 @@ async function run() {
       enablePreviewFeedback: "on",
       enableProductionFeedback: "on",
       sensitiveEnvironmentVariablePolicy: "on",
+      disjunctiveProductionSecretPolicy: "on",
       remoteCaching: {
         enabled: true,
       },
       hideIpAddresses: false,
       hideIpAddressesInLogDrains: false,
+      dpAccessRequestsMode: "none",
+      requireVerifiedCommits: true,
+      disableRepositoryDispatchEvents: false,
+      defaultExpirationSettings: {
+        expiration: "1y",
+        expirationProduction: "1y",
+        expirationCanceled: "1y",
+        expirationErrored: "1y",
+      },
+      strictDeploymentProtectionSettings: {
+        enabled: true,
+      },
+      strictShareableLinks: {
+        enabled: true,
+      },
+      strictPasswordProtectionSettings: {
+        enabled: true,
+      },
+      strictConnectors: {
+        enabled: true,
+      },
+      resourceConfig: {
+        buildMachine: {
+          default: "standard",
+        },
+      },
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -771,7 +815,8 @@ const vercel = new VercelCore({
 
 async function run() {
   const res = await teamsPatchTeam(vercel, {
-    teamId: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       description: "Our mission is to make cloud computing accessible to everyone",
       emailDomain: "example.com",
@@ -785,22 +830,46 @@ async function run() {
       enablePreviewFeedback: "on",
       enableProductionFeedback: "on",
       sensitiveEnvironmentVariablePolicy: "on",
+      disjunctiveProductionSecretPolicy: "on",
       remoteCaching: {
         enabled: true,
       },
       hideIpAddresses: false,
       hideIpAddressesInLogDrains: false,
+      dpAccessRequestsMode: "none",
+      requireVerifiedCommits: true,
+      disableRepositoryDispatchEvents: false,
+      defaultExpirationSettings: {
+        expiration: "1y",
+        expirationProduction: "1y",
+        expirationCanceled: "1y",
+        expirationErrored: "1y",
+      },
+      strictDeploymentProtectionSettings: {
+        enabled: true,
+      },
+      strictShareableLinks: {
+        enabled: true,
+      },
+      strictPasswordProtectionSettings: {
+        enabled: true,
+      },
+      strictConnectors: {
+        enabled: true,
+      },
+      resourceConfig: {
+        buildMachine: {
+          default: "standard",
+        },
+      },
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("teamsPatchTeam failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -810,20 +879,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.PatchTeamRequest](../../models/operations/patchteamrequest.md)                                                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.PatchTeamRequest](../../models/patchteamrequest.md)                                                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[{ [k: string]: any }](../../models/.md)\>**
+**Promise\<[models.Team](../../models/team.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getTeams
 
@@ -831,6 +900,7 @@ Get a paginated list of all the Teams the authenticated User is a member of.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getTeams" method="get" path="/v2/teams" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -845,7 +915,6 @@ async function run() {
     until: 1540095775951,
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -872,15 +941,12 @@ async function run() {
     since: 1540095775951,
     until: 1540095775951,
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("teamsGetTeams failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -890,20 +956,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetTeamsRequest](../../models/operations/getteamsrequest.md)                                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetTeamsRequest](../../models/getteamsrequest.md)                                                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetTeamsResponseBody](../../models/operations/getteamsresponsebody.md)\>**
+**Promise\<[models.GetTeamsResponseBody](../../models/getteamsresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## createTeam
 
@@ -911,6 +977,7 @@ Create a new Team under your account. You need to send a POST request with the d
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="createTeam" method="post" path="/v1/teams" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -924,7 +991,6 @@ async function run() {
     name: "A Random Team",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -950,15 +1016,12 @@ async function run() {
     slug: "a-random-team",
     name: "A Random Team",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("teamsCreateTeam failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -968,27 +1031,103 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.CreateTeamRequestBody](../../models/operations/createteamrequestbody.md)                                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.CreateTeamRequestBody](../../models/createteamrequestbody.md)                                                                                                          | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.CreateTeamResponseBody](../../models/operations/createteamresponsebody.md)\>**
+**Promise\<[models.CreateTeamResponseBody](../../models/createteamresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
-## deleteTeam
+## postTeamDsyncRoles
 
-Delete a team under your account. You need to send a `DELETE` request with the desired team `id`. An optional array of reasons for deletion may also be sent.
+Update the Directory Sync role mappings for a Team. This endpoint allows updating the mapping between directory groups and team roles or access groups.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="postTeamDsyncRoles" method="post" path="/v1/teams/{teamId}/dsync-roles" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.teams.postTeamDsyncRoles({
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { teamsPostTeamDsyncRoles } from "@vercel/sdk/funcs/teamsPostTeamDsyncRoles.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await teamsPostTeamDsyncRoles(vercel, {
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("teamsPostTeamDsyncRoles failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.PostTeamDsyncRolesRequest](../../models/postteamdsyncrolesrequest.md)                                                                                                  | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.PostTeamDsyncRolesResponseBody](../../models/postteamdsyncrolesresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## deleteTeam
+
+Delete a team under your account. You need to send a `DELETE` request with the desired team `id`. An optional array of reasons for deletion may also be sent. Enterprise teams can only be deleted in test billing mode and when not linked to an organization.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="deleteTeam" method="delete" path="/v1/teams/{teamId}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -999,10 +1138,11 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.teams.deleteTeam({
     newDefaultTeamId: "team_LLHUOMOoDlqOp8wPE4kFo9pE",
-    teamId: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {},
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -1026,17 +1166,16 @@ const vercel = new VercelCore({
 async function run() {
   const res = await teamsDeleteTeam(vercel, {
     newDefaultTeamId: "team_LLHUOMOoDlqOp8wPE4kFo9pE",
-    teamId: "<value>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {},
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("teamsDeleteTeam failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -1046,20 +1185,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.DeleteTeamRequest](../../models/operations/deleteteamrequest.md)                                                                                                   | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.DeleteTeamRequest](../../models/deleteteamrequest.md)                                                                                                                  | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.DeleteTeamResponseBody](../../models/operations/deleteteamresponsebody.md)\>**
+**Promise\<[models.DeleteTeamResponseBody](../../models/deleteteamresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## deleteTeamInviteCode
 
@@ -1067,6 +1206,7 @@ Delete an active Team invite code.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="deleteTeamInviteCode" method="delete" path="/v1/teams/{teamId}/invites/{inviteId}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -1077,10 +1217,9 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.teams.deleteTeamInviteCode({
     inviteId: "2wn2hudbr4chb1ecywo9dvzo7g9sscs6mzcz8htdde0txyom4l",
-    teamId: "team_LLHUOMOoDlqOp8wPE4kFo9pE",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -1104,17 +1243,14 @@ const vercel = new VercelCore({
 async function run() {
   const res = await teamsDeleteTeamInviteCode(vercel, {
     inviteId: "2wn2hudbr4chb1ecywo9dvzo7g9sscs6mzcz8htdde0txyom4l",
-    teamId: "team_LLHUOMOoDlqOp8wPE4kFo9pE",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("teamsDeleteTeamInviteCode failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -1124,17 +1260,177 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.DeleteTeamInviteCodeRequest](../../models/operations/deleteteaminvitecoderequest.md)                                                                               | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.DeleteTeamInviteCodeRequest](../../models/deleteteaminvitecoderequest.md)                                                                                              | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.DeleteTeamInviteCodeResponseBody](../../models/operations/deleteteaminvitecoderesponsebody.md)\>**
+**Promise\<[models.DeleteTeamInviteCodeResponseBody](../../models/deleteteaminvitecoderesponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## updateMicrofrontendsGroup
+
+Updates a microfrontends group's settings.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="updateMicrofrontendsGroup" method="patch" path="/v1/teams/{teamId}/microfrontends/{groupId}" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.teams.updateMicrofrontendsGroup({
+    groupId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      name: "MFE Group 1",
+    },
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { teamsUpdateMicrofrontendsGroup } from "@vercel/sdk/funcs/teamsUpdateMicrofrontendsGroup.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await teamsUpdateMicrofrontendsGroup(vercel, {
+    groupId: "<id>",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+    requestBody: {
+      name: "MFE Group 1",
+    },
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("teamsUpdateMicrofrontendsGroup failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.UpdateMicrofrontendsGroupRequest](../../models/updatemicrofrontendsgrouprequest.md)                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.UpdateMicrofrontendsGroupResponseBody](../../models/updatemicrofrontendsgroupresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
+
+## deleteMicrofrontendsGroup
+
+Deletes a microfrontends group from the team associated with the group ID.
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="deleteMicrofrontendsGroup" method="delete" path="/v1/teams/{teamId}/microfrontends/{groupId}" -->
+```typescript
+import { Vercel } from "@vercel/sdk";
+
+const vercel = new Vercel({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await vercel.teams.deleteMicrofrontendsGroup({
+    groupId: "mfe_",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { VercelCore } from "@vercel/sdk/core.js";
+import { teamsDeleteMicrofrontendsGroup } from "@vercel/sdk/funcs/teamsDeleteMicrofrontendsGroup.js";
+
+// Use `VercelCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const vercel = new VercelCore({
+  bearerToken: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await teamsDeleteMicrofrontendsGroup(vercel, {
+    groupId: "mfe_",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("teamsDeleteMicrofrontendsGroup failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [models.DeleteMicrofrontendsGroupRequest](../../models/deletemicrofrontendsgrouprequest.md)                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.DeleteMicrofrontendsGroupResponseBody](../../models/deletemicrofrontendsgroupresponsebody.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| models.SDKError | 4XX, 5XX        | \*/\*           |

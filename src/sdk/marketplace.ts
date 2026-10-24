@@ -3,42 +3,132 @@
  */
 
 import { marketplaceCreateEvent } from "../funcs/marketplaceCreateEvent.js";
+import { marketplaceCreateInstallationIntegrationConfiguration } from "../funcs/marketplaceCreateInstallationIntegrationConfiguration.js";
+import { marketplaceDeleteInstallationIntegrationConfiguration } from "../funcs/marketplaceDeleteInstallationIntegrationConfiguration.js";
+import { marketplaceDeleteIntegrationResource } from "../funcs/marketplaceDeleteIntegrationResource.js";
 import { marketplaceExchangeSsoToken } from "../funcs/marketplaceExchangeSsoToken.js";
+import { marketplaceFinalizeInstallation } from "../funcs/marketplaceFinalizeInstallation.js";
 import { marketplaceGetAccountInfo } from "../funcs/marketplaceGetAccountInfo.js";
+import {
+  marketplaceGetInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfig,
+} from "../funcs/marketplaceGetInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfig.js";
+import { marketplaceGetIntegrationResource } from "../funcs/marketplaceGetIntegrationResource.js";
+import { marketplaceGetIntegrationResources } from "../funcs/marketplaceGetIntegrationResources.js";
 import { marketplaceGetInvoice } from "../funcs/marketplaceGetInvoice.js";
 import { marketplaceGetMember } from "../funcs/marketplaceGetMember.js";
+import {
+  marketplaceHeadInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfig,
+} from "../funcs/marketplaceHeadInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfig.js";
+import { marketplaceImportResource } from "../funcs/marketplaceImportResource.js";
+import {
+  marketplaceReplaceInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfig,
+} from "../funcs/marketplaceReplaceInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfig.js";
+import { marketplaceRevokeInstallationCredential } from "../funcs/marketplaceRevokeInstallationCredential.js";
+import { marketplaceRotateInstallationCredential } from "../funcs/marketplaceRotateInstallationCredential.js";
 import { marketplaceSubmitBillingData } from "../funcs/marketplaceSubmitBillingData.js";
 import { marketplaceSubmitInvoice } from "../funcs/marketplaceSubmitInvoice.js";
+import { marketplaceSubmitPrepaymentBalances } from "../funcs/marketplaceSubmitPrepaymentBalances.js";
+import { marketplaceUpdateInstallation } from "../funcs/marketplaceUpdateInstallation.js";
+import { marketplaceUpdateInstallationIntegrationConfiguration } from "../funcs/marketplaceUpdateInstallationIntegrationConfiguration.js";
 import { marketplaceUpdateInvoice } from "../funcs/marketplaceUpdateInvoice.js";
+import { marketplaceUpdateResource } from "../funcs/marketplaceUpdateResource.js";
 import { marketplaceUpdateResourceSecrets } from "../funcs/marketplaceUpdateResourceSecrets.js";
+import { marketplaceUpdateResourceSecretsById } from "../funcs/marketplaceUpdateResourceSecretsById.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
-import { CreateEventRequest } from "../models/operations/createevent.js";
+import { CreateEventRequest } from "../models/createeventop.js";
+import {
+  CreateInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationItemsRequest,
+} from "../models/createinstallationsbyintegrationconfigurationidresourcesbyresourceidexperimentationitemsop.js";
+import {
+  DeleteInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationItemsByItemIdRequest,
+} from "../models/deleteinstallationsbyintegrationconfigurationidresourcesbyresourceidexperimentationitemsbyitemidop.js";
+import { DeleteIntegrationResourceRequest } from "../models/deleteintegrationresourceop.js";
 import {
   ExchangeSsoTokenRequestBody,
   ExchangeSsoTokenResponseBody,
-} from "../models/operations/exchangessotoken.js";
+} from "../models/exchangessotokenop.js";
+import { FinalizeInstallationRequest } from "../models/finalizeinstallationop.js";
 import {
   GetAccountInfoRequest,
   GetAccountInfoResponseBody,
-} from "../models/operations/getaccountinfo.js";
+} from "../models/getaccountinfoop.js";
+import {
+  GetInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfigRequest,
+  GetInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfigResponseBody,
+} from "../models/getinstallationsbyintegrationconfigurationidresourcesbyresourceidexperimentationglobalconfigop.js";
+import {
+  GetIntegrationResourceRequest,
+  GetIntegrationResourceResponseBody,
+} from "../models/getintegrationresourceop.js";
+import {
+  GetIntegrationResourcesRequest,
+  GetIntegrationResourcesResponseBody,
+} from "../models/getintegrationresourcesop.js";
 import {
   GetInvoiceRequest,
   GetInvoiceResponseBody,
-} from "../models/operations/getinvoice.js";
+} from "../models/getinvoiceop.js";
 import {
   GetMemberRequest,
   GetMemberResponseBody,
-} from "../models/operations/getmember.js";
-import { SubmitBillingDataRequest } from "../models/operations/submitbillingdata.js";
+} from "../models/getmemberop.js";
+import {
+  HeadInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfigRequest,
+  HeadInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfigResponseBody,
+} from "../models/headinstallationsbyintegrationconfigurationidresourcesbyresourceidexperimentationglobalconfigop.js";
+import {
+  ImportResourceRequest,
+  ImportResourceResponseBody,
+} from "../models/importresourceop.js";
+import {
+  ReplaceInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfigRequest,
+  ReplaceInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfigResponseBody,
+} from "../models/replaceinstallationsbyintegrationconfigurationidresourcesbyresourceidexperimentationglobalconfigop.js";
+import {
+  RevokeInstallationCredentialRequest,
+  RevokeInstallationCredentialResponseBody,
+} from "../models/revokeinstallationcredentialop.js";
+import {
+  RotateInstallationCredentialRequest,
+  RotateInstallationCredentialResponseBody,
+} from "../models/rotateinstallationcredentialop.js";
+import { SubmitBillingDataRequest } from "../models/submitbillingdataop.js";
 import {
   SubmitInvoiceRequest,
   SubmitInvoiceResponseBody,
-} from "../models/operations/submitinvoice.js";
-import { UpdateInvoiceRequest } from "../models/operations/updateinvoice.js";
-import { UpdateResourceSecretsRequest } from "../models/operations/updateresourcesecrets.js";
+} from "../models/submitinvoiceop.js";
+import { SubmitPrepaymentBalancesRequest } from "../models/submitprepaymentbalancesop.js";
+import { UpdateInstallationRequest } from "../models/updateinstallationop.js";
+import {
+  UpdateInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationItemsByItemIdRequest,
+} from "../models/updateinstallationsbyintegrationconfigurationidresourcesbyresourceidexperimentationitemsbyitemidop.js";
+import { UpdateInvoiceRequest } from "../models/updateinvoiceop.js";
+import {
+  UpdateResourceRequest,
+  UpdateResourceResponseBody,
+} from "../models/updateresourceop.js";
+import { UpdateResourceSecretsByIdRequest } from "../models/updateresourcesecretsbyidop.js";
+import { UpdateResourceSecretsRequest } from "../models/updateresourcesecretsop.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Marketplace extends ClientSDK {
+  /**
+   * Update Installation
+   *
+   * @remarks
+   * This endpoint updates an integration installation.
+   */
+  async updateInstallation(
+    request: UpdateInstallationRequest,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(marketplaceUpdateInstallation(
+      this,
+      request,
+      options,
+    ));
+  }
+
   /**
    * Get Account Information
    *
@@ -74,10 +164,44 @@ export class Marketplace extends ClientSDK {
   }
 
   /**
+   * Rotate Installation Credential
+   *
+   * @remarks
+   * Issues a replacement access token for an installation, so a partner can rotate a credential it believes is compromised without the customer having to reinstall. Authenticated by the credential being replaced plus the integration's client secret: a leaked access token on its own cannot rotate itself, which would otherwise let an attacker take over the installation and lock the partner out. The previous credential intentionally stays valid so in-flight requests keep working. Retiring it is a separate, explicit operation — a partner is never left mid-rotation without a working credential.
+   */
+  async rotateInstallationCredential(
+    request: RotateInstallationCredentialRequest,
+    options?: RequestOptions,
+  ): Promise<RotateInstallationCredentialResponseBody> {
+    return unwrapAsync(marketplaceRotateInstallationCredential(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Revoke Installation Credential
+   *
+   * @remarks
+   * Retires a superseded installation credential, so a partner can complete a rotation it started with `POST /credentials/rotate` — the leaked credential stops working without the customer having to reinstall. Authenticated by a live installation credential plus the integration's client secret. The credential to retire is named in the body rather than being the one that authenticates, so the ordinary flow is: rotate, store the replacement, then authenticate with the replacement and revoke the old one. Refuses to retire an installation's last live credential. Rotation exists so remediation is not customer-visible; revoking the only credential would undo that and leave the install needing a reinstall.
+   */
+  async revokeInstallationCredential(
+    request: RevokeInstallationCredentialRequest,
+    options?: RequestOptions,
+  ): Promise<RevokeInstallationCredentialResponseBody> {
+    return unwrapAsync(marketplaceRevokeInstallationCredential(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
    * Create Event
    *
    * @remarks
-   * Partner notifies Vercel of any changes made to an Installation or a Resource. Vercel is expected to use `list-resources` and other read APIs to get the new state. <br/> <br/> `resource.updated` event should be dispatched when any state of a resource linked to Vercel is modified by the partner. <br/> <br/> Use cases: <br/> <br/> - The user renames a database in the partner’s application. The partner should dispatch a `resource.updated` event to notify Vercel to update the resource in Vercel’s datastores. <br/>
+   * Partner notifies Vercel of any changes made to an Installation or a Resource. Vercel is expected to use `list-resources` and other read APIs to get the new state.<br/> <br/> `resource.updated` event should be dispatched when any state of a resource linked to Vercel is modified by the partner.<br/> `installation.updated` event should be dispatched when an installation's billing plan is changed via the provider instead of Vercel.<br/> <br/> Resource update use cases: <br/> <br/> - The user renames a database in the partner’s application. The partner should dispatch a `resource.updated` event to notify Vercel to update the resource in Vercel’s datastores.<br/> - A resource has been suspended due to a lack of use. The partner should dispatch a `resource.updated` event to notify Vercel to update the resource's status in Vercel's datastores.<br/>
    */
   async createEvent(
     request: CreateEventRequest,
@@ -91,10 +215,95 @@ export class Marketplace extends ClientSDK {
   }
 
   /**
+   * Get Integration Resources
+   *
+   * @remarks
+   * Get all resources for a given installation ID.
+   */
+  async getIntegrationResources(
+    request: GetIntegrationResourcesRequest,
+    options?: RequestOptions,
+  ): Promise<GetIntegrationResourcesResponseBody> {
+    return unwrapAsync(marketplaceGetIntegrationResources(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Get Integration Resource
+   *
+   * @remarks
+   * Get a resource by its partner ID.
+   */
+  async getIntegrationResource(
+    request: GetIntegrationResourceRequest,
+    options?: RequestOptions,
+  ): Promise<GetIntegrationResourceResponseBody> {
+    return unwrapAsync(marketplaceGetIntegrationResource(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Delete Integration Resource
+   *
+   * @remarks
+   * Delete a resource owned by the selected installation ID.
+   */
+  async deleteIntegrationResource(
+    request: DeleteIntegrationResourceRequest,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(marketplaceDeleteIntegrationResource(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Import Resource
+   *
+   * @remarks
+   * This endpoint imports (upserts) a resource to Vercel's installation. This may be needed if resources can be independently created on the partner's side and need to be synchronized to Vercel. When importing as part of the user-initiated import flow, call this endpoint before redirecting the user back to Vercel. See the [Import existing resources flow](https://vercel.com/docs/integrations/create-integration/marketplace-flows#import-existing-resources-flow) for the full contract.
+   */
+  async importResource(
+    request: ImportResourceRequest,
+    options?: RequestOptions,
+  ): Promise<ImportResourceResponseBody> {
+    return unwrapAsync(marketplaceImportResource(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Update Resource
+   *
+   * @remarks
+   * This endpoint updates an existing resource in the installation. All parameters are optional, allowing partial updates.
+   */
+  async updateResource(
+    request: UpdateResourceRequest,
+    options?: RequestOptions,
+  ): Promise<UpdateResourceResponseBody> {
+    return unwrapAsync(marketplaceUpdateResource(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
    * Submit Billing Data
    *
    * @remarks
-   * Sends the billing and usage data. The partner should do this at least once a day and ideally once per hour.
+   * Sends the billing and usage data. The partner should do this at least once a day and ideally once per hour. <br/> Use the `credentials.access_token` we provided in the [Upsert Installation](#upsert-installation) body to authorize this request.
    */
   async submitBillingData(
     request: SubmitBillingDataRequest,
@@ -111,7 +320,7 @@ export class Marketplace extends ClientSDK {
    * Submit Invoice
    *
    * @remarks
-   * This endpoint allows the partner to submit an invoice to Vercel. The invoice is created in Vercel's billing system and sent to the customer. Depending on the type of billing plan, the invoice can be sent at a time of signup, at the start of the billing period, or at the end of the billing period.<br/> <br/> There are several limitations to the invoice submission:<br/> <br/> 1. A resource can only be billed once per the billing period and the billing plan.<br/> 2. The billing plan used to bill the resource must have been active for this resource during the billing period.<br/> 3. The billing plan used must be a subscription plan.<br/> 4. The interim usage data must be sent hourly for all types of subscriptions. See [Send subscription billing and usage data](#send-subscription-billing-and-usage-data) API on how to send interim billing and usage data.<br/>
+   * This endpoint allows the partner to submit an invoice to Vercel. The invoice is created in Vercel's billing system and sent to the customer. Depending on the type of billing plan, the invoice can be sent at a time of signup, at the start of the billing period, or at the end of the billing period.<br/> <br/> Use the `credentials.access_token` we provided in the [Upsert Installation](#upsert-installation) body to authorize this request. <br/> There are several limitations to the invoice submission:<br/> <br/> 1. A resource can only be billed once per the billing period and the billing plan.<br/> 2. The billing plan used to bill the resource must have been active for this resource during the billing period.<br/> 3. The billing plan used must be a subscription plan.<br/> 4. The interim usage data must be sent hourly for all types of subscriptions. See [Send subscription billing and usage data](#send-subscription-billing-and-usage-data) API on how to send interim billing and usage data.<br/> 5. If provided, `externalId` must be unique for the installation.<br/>
    */
   async submitInvoice(
     request: SubmitInvoiceRequest,
@@ -125,10 +334,27 @@ export class Marketplace extends ClientSDK {
   }
 
   /**
+   * Finalize Installation
+   *
+   * @remarks
+   * This endpoint allows the partner to mark an installation as finalized. This means you will not send any more invoices for the installation. Use this after a customer has requested uninstall and you have sent any remaining invoices. This will allow the uninstall process to proceed immediately after all invoices have been paid. <br/> Use the `credentials.access_token` we provided in the [Upsert Installation](#upsert-installation) body to authorize this request.
+   */
+  async finalizeInstallation(
+    request: FinalizeInstallationRequest,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(marketplaceFinalizeInstallation(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
    * Get Invoice
    *
    * @remarks
-   * Get Invoice details and status for a given invoice ID.<br/> <br/> See Billing Events with Webhooks documentation on how to receive invoice events. This endpoint is used to retrieve the invoice details.
+   * Get Invoice details and status for a given invoice ID.<br/> <br/> See [Billing Events with Webhooks documentation](https://vercel.com/docs/integrations/create-integration/marketplace-api#working-with-billing-events-through-webhooks) on how to receive invoice events. This endpoint is used to retrieve the invoice details.
    */
   async getInvoice(
     request: GetInvoiceRequest,
@@ -159,10 +385,29 @@ export class Marketplace extends ClientSDK {
   }
 
   /**
-   * Update Resource Secrets
+   * Submit Prepayment Balances
    *
    * @remarks
-   * This endpoint updates the secrets of a resource. If a resource has projects connected, the connected secrets are updated with the new secrets. The old secrets may still be used by existing connected projects because they are not automatically redeployed. Redeployment is a manual action and must be completed by the user. All new project connections will use the new secrets.<br/> <br/> Use cases for this endpoint:<br/> <br/> - Resetting the credentials of a database in the partner. If the user requests the credentials to be updated in the partner’s application, the partner post the new set of secrets to Vercel, the user should redeploy their application and the expire the old credentials.<br/>
+   * Sends the prepayment balances. The partner should do this at least once a day and ideally once per hour. <br/> Use the `credentials.access_token` we provided in the [Upsert Installation](#upsert-installation) body to authorize this request.
+   */
+  async submitPrepaymentBalances(
+    request: SubmitPrepaymentBalancesRequest,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(marketplaceSubmitPrepaymentBalances(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Deprecated: true. Update Resource Secrets (Deprecated)
+   *
+   * @remarks
+   * This endpoint is deprecated and replaced with the endpoint [Update Resource Secrets](#update-resource-secrets). <br/> This endpoint updates the secrets of a resource. If a resource has projects connected, the connected secrets are updated with the new secrets. The old secrets may still be used by existing connected projects because they are not automatically redeployed. Redeployment is a manual action and must be completed by the user. All new project connections will use the new secrets.<br/> <br/> Use cases for this endpoint:<br/> <br/> - Resetting the credentials of a database in the partner. If the user requests the credentials to be updated in the partner’s application, the partner post the new set of secrets to Vercel, the user should redeploy their application and the expire the old credentials.<br/>
+   *
+   * @deprecated method: This will be removed in a future release, please migrate away from it as soon as possible.
    */
   async updateResourceSecrets(
     request: UpdateResourceSecretsRequest,
@@ -176,13 +421,30 @@ export class Marketplace extends ClientSDK {
   }
 
   /**
+   * Update Resource Secrets
+   *
+   * @remarks
+   * This endpoint updates the secrets of a resource. If a resource has projects connected, the connected secrets are updated with the new secrets. The old secrets may still be used by existing connected projects because they are not automatically redeployed. Redeployment is a manual action and must be completed by the user. All new project connections will use the new secrets.<br/> <br/> Use cases for this endpoint:<br/> <br/> - Resetting the credentials of a database in the partner. If the user requests the credentials to be updated in the partner’s application, the partner post the new set of secrets to Vercel, the user should redeploy their application and the expire the old credentials.<br/>
+   */
+  async updateResourceSecretsById(
+    request: UpdateResourceSecretsByIdRequest,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(marketplaceUpdateResourceSecretsById(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
    * SSO Token Exchange
    *
    * @remarks
-   * During the autorization process, Vercel sends the user to the provider [redirectLoginUrl](https://vercel.com/docs/integrations/create-integration/submit-integration#redirect-login-url), that includes the OAuth authorization `code` parameter. The provider then calls the SSO Token Exchange endpoint with the sent code and receives the OIDC token. They log the user in based on this token and redirects the user back to the Vercel account using deep-link parameters included the redirectLoginUrl. This is used to verify the identity of the user during the [**Open in Provider** flow](https://vercel.com/docs/integrations/marketplace-flows#open-in-provider-button-flow). Providers should not persist the returned `id_token` in a database since the token will expire.
+   * During the autorization process, Vercel sends the user to the provider [redirectLoginUrl](https://vercel.com/docs/integrations/create-integration/submit-integration#redirect-login-url), that includes the OAuth authorization `code` parameter. The provider then calls the SSO Token Exchange endpoint with the sent code and receives the OIDC token. They log the user in based on this token and redirects the user back to the Vercel account using deep-link parameters included the redirectLoginUrl. Providers should not persist the returned `id_token` in a database since the token will expire. See [**Authentication with SSO**](https://vercel.com/docs/integrations/create-integration/marketplace-api#authentication-with-sso) for more details.
    */
   async exchangeSsoToken(
-    request?: ExchangeSsoTokenRequestBody | undefined,
+    request: ExchangeSsoTokenRequestBody,
     options?: RequestOptions,
   ): Promise<ExchangeSsoTokenResponseBody> {
     return unwrapAsync(marketplaceExchangeSsoToken(
@@ -190,5 +452,127 @@ export class Marketplace extends ClientSDK {
       request,
       options,
     ));
+  }
+
+  /**
+   * Create one or multiple experimentation items
+   *
+   * @remarks
+   * Create one or multiple experimentation items
+   */
+  async createInstallationIntegrationConfiguration(
+    request:
+      CreateInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationItemsRequest,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(marketplaceCreateInstallationIntegrationConfiguration(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Patch an existing experimentation item
+   *
+   * @remarks
+   * Patch an existing experimentation item
+   */
+  async updateInstallationIntegrationConfiguration(
+    request:
+      UpdateInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationItemsByItemIdRequest,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(marketplaceUpdateInstallationIntegrationConfiguration(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Delete an existing experimentation item
+   *
+   * @remarks
+   * Delete an existing experimentation item
+   */
+  async deleteInstallationIntegrationConfiguration(
+    request:
+      DeleteInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationItemsByItemIdRequest,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(marketplaceDeleteInstallationIntegrationConfiguration(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Get the data of a user-provided Global Config
+   *
+   * @remarks
+   * When the user enabled Global Config syncing, then this endpoint can be used by the partner to fetch the contents of the Global Config.
+   */
+  async headInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfig(
+    request:
+      HeadInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfigRequest,
+    options?: RequestOptions,
+  ): Promise<
+    | HeadInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfigResponseBody
+    | undefined
+  > {
+    return unwrapAsync(
+      marketplaceHeadInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfig(
+        this,
+        request,
+        options,
+      ),
+    );
+  }
+
+  /**
+   * Get the data of a user-provided Global Config
+   *
+   * @remarks
+   * When the user enabled Global Config syncing, then this endpoint can be used by the partner to fetch the contents of the Global Config.
+   */
+  async getInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfig(
+    request:
+      GetInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfigRequest,
+    options?: RequestOptions,
+  ): Promise<
+    | GetInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfigResponseBody
+    | undefined
+  > {
+    return unwrapAsync(
+      marketplaceGetInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfig(
+        this,
+        request,
+        options,
+      ),
+    );
+  }
+
+  /**
+   * Push data into a user-provided Global Config
+   *
+   * @remarks
+   * When the user enabled Global Config syncing, then this endpoint can be used by the partner to push their configuration data into the relevant Global Config.
+   */
+  async replaceInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfig(
+    request:
+      ReplaceInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfigRequest,
+    options?: RequestOptions,
+  ): Promise<
+    ReplaceInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfigResponseBody
+  > {
+    return unwrapAsync(
+      marketplaceReplaceInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfig(
+        this,
+        request,
+        options,
+      ),
+    );
   }
 }

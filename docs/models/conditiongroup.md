@@ -1,0 +1,22 @@
+# ConditionGroup
+
+## Example Usage
+
+```typescript
+import { ConditionGroup } from "@vercel/sdk/models/putfirewallconfigop.js";
+
+let value: ConditionGroup = {
+  conditions: [
+    {
+      type: "header",
+      op: "lt",
+    },
+  ],
+};
+```
+
+## Fields
+
+| Field                                                                            | Type                                                                             | Required                                                                         | Description                                                                      |
+| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `conditions`                                                                     | [models.PutFirewallConfigConditions](../models/putfirewallconfigconditions.md)[] | :heavy_check_mark:                                                               | N/A                                                                              |

@@ -1,0 +1,23 @@
+# GetDeploymentGitSource16
+
+## Example Usage
+
+```typescript
+import { GetDeploymentGitSource16 } from "@vercel/sdk/models/getdeploymentmaxdurationdeploymentsresponse2002.js";
+
+let value: GetDeploymentGitSource16 = {
+  projectId: 6321.06,
+  ref: "<value>",
+  sha: "<value>",
+  type: "gitlab",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                                | Type                                                                                                                                                                                 | Required                                                                                                                                                                             | Description                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `projectId`                                                                                                                                                                          | *number*                                                                                                                                                                             | :heavy_check_mark:                                                                                                                                                                   | N/A                                                                                                                                                                                  |
+| `ref`                                                                                                                                                                                | *string*                                                                                                                                                                             | :heavy_check_mark:                                                                                                                                                                   | N/A                                                                                                                                                                                  |
+| `sha`                                                                                                                                                                                | *string*                                                                                                                                                                             | :heavy_check_mark:                                                                                                                                                                   | N/A                                                                                                                                                                                  |
+| `type`                                                                                                                                                                               | [models.GetDeploymentGitSourceDeploymentsResponse200ApplicationJSONResponseBody216Type](../models/getdeploymentgitsourcedeploymentsresponse200applicationjsonresponsebody216type.md) | :heavy_check_mark:                                                                                                                                                                   | N/A                                                                                                                                                                                  |

@@ -1,0 +1,20 @@
+# ResponseBodyManualProvisioning
+
+Present when deployment was created with manual provisioning enabled, either explicitly or via the experimental BYOC git flow. The deployment stays in INITIALIZING until /continue is called.
+
+## Example Usage
+
+```typescript
+import { ResponseBodyManualProvisioning } from "@vercel/sdk/models/getdeploymentgitsourcedeploymentsresponse200applicationjsonresponsebody219type.js";
+
+let value: ResponseBodyManualProvisioning = {
+  state: "COMPLETE",
+};
+```
+
+## Fields
+
+| Field                                                      | Type                                                       | Required                                                   | Description                                                |
+| ---------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------- |
+| `completedAt`                                              | *number*                                                   | :heavy_minus_sign:                                         | Timestamp when manual provisioning completed               |
+| `state`                                                    | [models.ResponseBodyState](../models/responsebodystate.md) | :heavy_check_mark:                                         | Current provisioning state                                 |

@@ -1,0 +1,20 @@
+# CreateDeploymentHasDeploymentsResponse2002
+
+## Example Usage
+
+```typescript
+import { CreateDeploymentHasDeploymentsResponse2002 } from "@vercel/sdk/models/createdeploymentresponsebody.js";
+
+let value: CreateDeploymentHasDeploymentsResponse2002 = {
+  key: "<key>",
+  type: "query",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                                      | Type                                                                                                                                                                                       | Required                                                                                                                                                                                   | Description                                                                                                                                                                                |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `key`                                                                                                                                                                                      | *string*                                                                                                                                                                                   | :heavy_check_mark:                                                                                                                                                                         | N/A                                                                                                                                                                                        |
+| `type`                                                                                                                                                                                     | [models.CreateDeploymentHasDeploymentsResponse200ApplicationJSONResponseBody2ServicesType](../models/createdeploymenthasdeploymentsresponse200applicationjsonresponsebody2servicestype.md) | :heavy_check_mark:                                                                                                                                                                         | N/A                                                                                                                                                                                        |
+| `value`                                                                                                                                                                                    | *models.CreateDeploymentHasDeploymentsResponse200ApplicationJSONResponseBody2ServicesValue*                                                                                                | :heavy_minus_sign:                                                                                                                                                                         | N/A                                                                                                                                                                                        |

@@ -1,0 +1,16 @@
+# CreateDeploymentRoutesLocale
+
+## Example Usage
+
+```typescript
+import { CreateDeploymentRoutesLocale } from "@vercel/sdk/models/createdeploymentresponsebody.js";
+
+let value: CreateDeploymentRoutesLocale = {};
+```
+
+## Fields
+
+| Field                    | Type                     | Required                 | Description              |
+| ------------------------ | ------------------------ | ------------------------ | ------------------------ |
+| `cookie`                 | *string*                 | :heavy_minus_sign:       | N/A                      |
+| `redirect`               | Record<string, *string*> | :heavy_minus_sign:       | N/A                      |

@@ -1,11 +1,11 @@
 # Standalone Functions
 
 > [!NOTE]
-> This section is useful if you are using a bundler and targetting browsers and
+> This section is useful if you are using a bundler and targeting browsers and
 > runtimes where the size of an application affects performance and load times. 
 
 Every method in this SDK is also available as a standalone function. This
-alternative API is suitable when targetting the browser or serverless runtimes
+alternative API is suitable when targeting the browser or serverless runtimes
 and using a bundler to build your application since all unused functionality
 will be tree-shaken away. This includes code for unused methods, Zod schemas,
 encoding helpers and response handlers. The result is dramatically smaller
@@ -21,7 +21,6 @@ specific category of applications.
 ```typescript
 import { VercelCore } from "@vercel/sdk/core.js";
 import { projectsUpdateProject } from "@vercel/sdk/funcs/projectsUpdateProject.js";
-import { SDKValidationError } from "@vercel/sdk/models/errors/sdkvalidationerror.js";
 
 // Use `VercelCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -32,32 +31,25 @@ const vercel = new VercelCore({
 async function run() {
   const res = await projectsUpdateProject(vercel, {
     idOrName: "prj_12HKQaOmR5t5Uy6vdcQsNIiZgHGB",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       name: "a-project-name",
+      sandbox: {
+        region: "iad1",
+        failoverRegions: [
+          "sfo1",
+          "cle1",
+        ],
+      },
     },
   });
-
-  switch (true) {
-    case res.ok:
-      // The success case will be handled outside of the switch block
-      break;
-    case res.error instanceof SDKValidationError:
-      // Pretty-print validation errors.
-      return console.log(res.error.pretty());
-    case res.error instanceof Error:
-      return console.log(res.error);
-    default:
-      // TypeScript's type checking will fail on the following line if the above
-      // cases were not exhaustive.
-      res.error satisfies never;
-      throw new Error("Assertion failed: expected error checks to be exhaustive: " + res.error);
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectsUpdateProject failed:", res.error);
   }
-
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();

@@ -1,0 +1,31 @@
+# GetAllLogDrainsDeliveryLogDrains4
+
+## Example Usage
+
+```typescript
+import { GetAllLogDrainsDeliveryLogDrains4 } from "@vercel/sdk/models/getalllogdrainsop.js";
+
+let value: GetAllLogDrainsDeliveryLogDrains4 = {
+  compression: "none",
+  encoding: "json",
+  endpoint: "<value>",
+  fileStructure: "hive",
+  region: "<value>",
+  roleArn: "<value>",
+  type: "s3",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                | Type                                                                                                                                 | Required                                                                                                                             | Description                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `compression`                                                                                                                        | [models.GetAllLogDrainsDeliveryLogDrainsResponse200Compression](../models/getalllogdrainsdeliverylogdrainsresponse200compression.md) | :heavy_check_mark:                                                                                                                   | N/A                                                                                                                                  |
+| `encoding`                                                                                                                           | [models.GetAllLogDrainsDeliveryLogDrainsEncoding](../models/getalllogdrainsdeliverylogdrainsencoding.md)                             | :heavy_check_mark:                                                                                                                   | N/A                                                                                                                                  |
+| `endpoint`                                                                                                                           | *string*                                                                                                                             | :heavy_check_mark:                                                                                                                   | N/A                                                                                                                                  |
+| `fileStructure`                                                                                                                      | [models.GetAllLogDrainsDeliveryFileStructure](../models/getalllogdrainsdeliveryfilestructure.md)                                     | :heavy_check_mark:                                                                                                                   | N/A                                                                                                                                  |
+| `objectAcl`                                                                                                                          | [models.GetAllLogDrainsDeliveryObjectAcl](../models/getalllogdrainsdeliveryobjectacl.md)                                             | :heavy_minus_sign:                                                                                                                   | N/A                                                                                                                                  |
+| `region`                                                                                                                             | *string*                                                                                                                             | :heavy_check_mark:                                                                                                                   | N/A                                                                                                                                  |
+| `roleArn`                                                                                                                            | *string*                                                                                                                             | :heavy_check_mark:                                                                                                                   | N/A                                                                                                                                  |
+| `serverSideEncryption`                                                                                                               | [models.GetAllLogDrainsDeliveryServerSideEncryption](../models/getalllogdrainsdeliveryserversideencryption.md)                       | :heavy_minus_sign:                                                                                                                   | N/A                                                                                                                                  |
+| `type`                                                                                                                               | *"s3"*                                                                                                                               | :heavy_check_mark:                                                                                                                   | N/A                                                                                                                                  |

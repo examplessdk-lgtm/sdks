@@ -1,0 +1,28 @@
+# HeadInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfigResponseBody
+
+The Global Config data
+
+## Example Usage
+
+```typescript
+import {
+  HeadInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfigResponseBody,
+} from "@vercel/sdk/models/headinstallationsbyintegrationconfigurationidresourcesbyresourceidexperimentationglobalconfigop.js";
+
+let value:
+  HeadInstallationsByIntegrationConfigurationIdResourcesByResourceIdExperimentationGlobalConfigResponseBody =
+    {
+      digest: "<value>",
+      items: {},
+      updatedAt: 9378.73,
+    };
+```
+
+## Fields
+
+| Field                                          | Type                                           | Required                                       | Description                                    |
+| ---------------------------------------------- | ---------------------------------------------- | ---------------------------------------------- | ---------------------------------------------- |
+| `digest`                                       | *string*                                       | :heavy_check_mark:                             | N/A                                            |
+| `items`                                        | Record<string, *models.GlobalConfigItemValue*> | :heavy_check_mark:                             | N/A                                            |
+| `purpose`                                      | [models.Purpose](../models/purpose.md)         | :heavy_minus_sign:                             | N/A                                            |
+| `updatedAt`                                    | *number*                                       | :heavy_check_mark:                             | N/A                                            |

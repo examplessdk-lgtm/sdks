@@ -1,5 +1,4 @@
 # ProjectMembers
-(*projectMembers*)
 
 ## Overview
 
@@ -15,6 +14,7 @@ Lists all members of a project.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getProjectMembers" method="get" path="/v1/projects/{idOrName}/members" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -28,9 +28,10 @@ async function run() {
     limit: 20,
     since: 1540095775951,
     until: 1540095775951,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -57,16 +58,15 @@ async function run() {
     limit: 20,
     since: 1540095775951,
     until: 1540095775951,
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectMembersGetProjectMembers failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -76,20 +76,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.GetProjectMembersRequest](../../models/operations/getprojectmembersrequest.md)                                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.GetProjectMembersRequest](../../models/getprojectmembersrequest.md)                                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.GetProjectMembersResponseBody](../../models/operations/getprojectmembersresponsebody.md)\>**
+**Promise\<[models.GetProjectMembersResponseBody](../../models/getprojectmembersresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## addProjectMember
 
@@ -97,6 +97,7 @@ Adds a new member to the project.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="addProjectMember" method="post" path="/v1/projects/{idOrName}/members" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -107,6 +108,8 @@ const vercel = new Vercel({
 async function run() {
   const result = await vercel.projectMembers.addProjectMember({
     idOrName: "prj_pavWOn1iLObbXLRiwVvzmPrTWyTf",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       uid: "ndlgr43fadlPyCtREAqxxdyFK",
       username: "example",
@@ -115,7 +118,6 @@ async function run() {
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -139,6 +141,8 @@ const vercel = new VercelCore({
 async function run() {
   const res = await projectMembersAddProjectMember(vercel, {
     idOrName: "prj_pavWOn1iLObbXLRiwVvzmPrTWyTf",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
     requestBody: {
       uid: "ndlgr43fadlPyCtREAqxxdyFK",
       username: "example",
@@ -146,15 +150,12 @@ async function run() {
       role: "ADMIN",
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectMembersAddProjectMember failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -164,20 +165,20 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.AddProjectMemberRequest](../../models/operations/addprojectmemberrequest.md)                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.AddProjectMemberRequest](../../models/addprojectmemberrequest.md)                                                                                                      | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.AddProjectMemberResponseBody](../../models/operations/addprojectmemberresponsebody.md)\>**
+**Promise\<[models.AddProjectMemberResponseBody](../../models/addprojectmemberresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## removeProjectMember
 
@@ -185,6 +186,7 @@ Remove a member from a specific project
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="removeProjectMember" method="delete" path="/v1/projects/{idOrName}/members/{uid}" -->
 ```typescript
 import { Vercel } from "@vercel/sdk";
 
@@ -196,9 +198,10 @@ async function run() {
   const result = await vercel.projectMembers.removeProjectMember({
     idOrName: "prj_pavWOn1iLObbXLRiwVvzmPrTWyTf",
     uid: "ndlgr43fadlPyCtREAqxxdyFK",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -223,16 +226,15 @@ async function run() {
   const res = await projectMembersRemoveProjectMember(vercel, {
     idOrName: "prj_pavWOn1iLObbXLRiwVvzmPrTWyTf",
     uid: "ndlgr43fadlPyCtREAqxxdyFK",
+    teamId: "team_1a2b3c4d5e6f7g8h9i0j1k2l",
+    slug: "my-team-url-slug",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("projectMembersRemoveProjectMember failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -242,17 +244,17 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.RemoveProjectMemberRequest](../../models/operations/removeprojectmemberrequest.md)                                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [models.RemoveProjectMemberRequest](../../models/removeprojectmemberrequest.md)                                                                                                | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.RemoveProjectMemberResponseBody](../../models/operations/removeprojectmemberresponsebody.md)\>**
+**Promise\<[models.RemoveProjectMemberResponseBody](../../models/removeprojectmemberresponsebody.md)\>**
 
 ### Errors
 
 | Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4XX, 5XX        | \*/\*           |
+| models.SDKError | 4XX, 5XX        | \*/\*           |
